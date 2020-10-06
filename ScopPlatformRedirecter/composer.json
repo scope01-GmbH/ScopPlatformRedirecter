@@ -1,0 +1,28 @@
+{
+	"name" : "scopplatformredirecter/scopplatformredirecter",
+	"description" : "XXX",
+	"version" : "v2.0.0",
+	"type" : "shopware-platform-plugin",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "scope01 GmbH",
+			"role" : "Manufacturer",
+			"homepage" : "https://scope01.com/"
+		}
+	],
+	"require" : {
+		"shopware/core" : "6.*"
+	},
+	"extra" : {
+		"shopware-plugin-class" : "Scop\\PlatformRedirecter\\ScopPlatformRedirecter",
+		"label" : {
+			"de-DE" : "PlatformRedirecter Plugin",
+			"en-GB" : "PlatformRedirecter plugin"
+		}
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Scop\\PlatformRedirecter\\" : "src/"
+		}
+	}
+}
