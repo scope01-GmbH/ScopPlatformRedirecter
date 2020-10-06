@@ -12,7 +12,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
 class RedirectDefinition extends EntityDefinition
 {
 
-    public const ENTITY_NAME = 'Redirect';
+    public const ENTITY_NAME = 'scop_platform_redirecter_redirect';
 
     public function getEntityName(): string
     {

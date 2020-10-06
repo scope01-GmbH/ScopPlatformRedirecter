@@ -6,7 +6,7 @@
 
 	<services>
 		<service id="Scop\PlatformRedirecter\Redirect\RedirectDefinition">
-			<tag name="shopware.entity.definition" entity="Redirect"/>
+			<tag name="shopware.entity.definition" entity="scop_platform_redirecter_redirect"/>
 		</service>
 	</services>
 </container>

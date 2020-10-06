@@ -15,7 +15,7 @@ class Migration160198215Redirect extends MigrationStep
     public function update(Connection $connection): void
     {
         $sql = <<<SQL
-        CREATE TABLE IF NOT EXISTS `Redirect` (
+        CREATE TABLE IF NOT EXISTS `scop_platform_redirecter_redirect` (
         `id` BINARY(16) NOT NULL,
         `sourceURL` VARCHAR(255) NOT NULL,
         `targetURL` VARCHAR(255) NOT NULL,
