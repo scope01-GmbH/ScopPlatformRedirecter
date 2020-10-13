@@ -1,7 +1,22 @@
 {
 	"scopplatformredirecter": {
 		"general": {
+			"title": "Weiterleitungen",
 			"mainMenuItem" : "Weiterleitungen"
-		}	
+		},
+		"list": {
+			"columnSourceUrl": "Quell URL",
+			"columnTargetUrl": "Ziel URL",
+			"columnHttpCode": "Http Code",
+			"createButton": "Weiterleitung anlegen"
+		},
+		"detail": {
+			"sourceUrlLabel": "Quell URL",
+			"targetUrlLabel": "Ziel URL",
+			"httpCodeLabel": "Http Code",
+			"cancelButton": "Abbrechen",
+			"saveButton": "Speichern",
+			"errorTitle": "Fehler"
+		}
 	}
 }

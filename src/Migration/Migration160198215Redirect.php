@@ -19,7 +19,9 @@ class Migration160198215Redirect extends MigrationStep
         `id` BINARY(16) NOT NULL,
         `sourceURL` VARCHAR(255) NOT NULL,
         `targetURL` VARCHAR(255) NOT NULL,
-        `httpCode` INT(3)
+        `httpCode` INT(3),
+        `created_at` DATETIME(3) NOT NULL,
+        `updated_at` DATETIME(3) NULL
         )
         ENGINE = InnoDB
         DEFAULT CHARSET = utf8mb4

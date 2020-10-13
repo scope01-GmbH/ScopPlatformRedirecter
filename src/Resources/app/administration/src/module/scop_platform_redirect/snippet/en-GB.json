@@ -1,7 +1,22 @@
 {
 	"scopplatformredirecter": {
 		"general": {
+			"title": "Redirects",
 			"mainMenuItem": "Redirects"
+		},
+		"list": {
+			"columnSourceUrl": "Source URL",
+			"columnTargetUrl": "Target URL",
+			"columnHttpCode": "Http Code",
+			"createButton": "Add Redirect"
+		},
+		"detail": {
+			"sourceUrlLabel": "Source URL",
+			"targetUrlLabel": "Target URL",
+			"httpCodeLabel": "Http Code",
+			"cancelButton": "Cancel",
+			"saveButton": "Save",
+			"errorTitle": "Error"
 		}
 	}
 }

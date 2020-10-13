@@ -1,0 +1,21 @@
+{% block scop_platform_redirect_details %}
+<sw-page class="scop-platform-redirect-details">
+<template slot="smart-bar-actions">
+	<sw-button :routerLink="{name: 'scop.platform.redirect.list'}">
+	{{ $t('scopplatformredirecter.detail.cancelButton') }}</sw-button>
+	<sw-button-process :isLoading="isLoading"
+		:processSuccess="processSuccess" variant="primary"
+		@process-finish="saveFinish" @click="onClickSave">
+	{{ $t('scopplatformredirecter.detail.saveButton') }}</sw-button-process>
+</template>
+<template slot="content">
+	<sw-card-view>
+		<sw-card v-if="redirect" :isLoading="isLoading">
+			<sw-field :label="$t('scopplatformredirecter.detail.sourceUrlLabel')" v-model="redirect.sourceURL" validation="required"></sw-field>
+			<sw-field :label="$t('scopplatformredirecter.detail.targetUrlLabel')" v-model="redirect.targetURL" validation="required"></sw-field>
+			<sw-field :label="$t('scopplatformredirecter.detail.httpCodeLabel')" v-model="redirect.httpCode" type="number"></sw-field>
+		</sw-card>
+	</sw-card-view>
+</template>
+</sw-page>
+{% endblock %}
