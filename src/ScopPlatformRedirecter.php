@@ -6,12 +6,12 @@
  * @license MIT License
  * @link https://scope01.com
  */
-
 declare(strict_types = 1);
 namespace Scop\PlatformRedirecter;
 
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin;
+use Doctrine\DBAL\Connection;
 
 /**
  * Shopware-Plugin ScopPlatformRedirecter
@@ -20,15 +20,28 @@ class ScopPlatformRedirecter extends Plugin
 {
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Shopware\Core\Framework\Plugin::uninstall()
      */
     public function uninstall(UninstallContext $uninstallContext): void
     {
         parent::uninstall($uninstallContext);
-        
+
         if ($uninstallContext->keepUserData()) {
             return;
         }
+
+        /**
+         *
+         * @var Connection $connection
+         */
+        $connection = $this->container->get(Connection::class);
+
+        $sql = <<<SQL
+        DROP TABLE IF EXISTS `scop_platform_redirecter_redirect`;
+SQL;
+
+        $connection->executeUpdate($sql);
     }
 }
