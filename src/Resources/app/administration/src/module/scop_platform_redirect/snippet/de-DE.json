@@ -1,8 +1,7 @@
 {
 	"scopplatformredirecter": {
 		"general": {
-			"title": "Weiterleitungen",
-			"mainMenuItem": "Weiterleitungen"
+			"title": "Weiterleitungen"
 		},
 		"list": {
 			"columnSourceUrl": "Quell URL",

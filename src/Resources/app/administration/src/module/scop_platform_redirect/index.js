@@ -25,12 +25,10 @@ Shopware.Module.register('scop-platform-redirect', {
 			path: 'create'
 		}
 	},
-	navigation: [{
-		label: 'scopplatformredirecter.general.mainMenuItem',
-		color: '#2288FF',
-		path: 'scop.platform.redirect.list',
-		icon: 'small-arrow-large-double-right',
-		position: 100
+	settingsItem: [{
+		to: 'scop.platform.redirect.list',
+		group: 'shop',
+		icon: 'small-arrow-large-double-right'
 	}],
 	snippets: {
 		'de-DE': deDE,

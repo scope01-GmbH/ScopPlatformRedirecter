@@ -1,8 +1,7 @@
 {
 	"scopplatformredirecter": {
 		"general": {
-			"title": "Redirects",
-			"mainMenuItem": "Redirects"
+			"title": "Redirects"
 		},
 		"list": {
 			"columnSourceUrl": "Source URL",
