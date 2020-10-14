@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace Scop\PlatformRedirecter\Redirect;
 
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
@@ -26,17 +27,17 @@ class Redirect extends Entity
         return $this->httpCode;
     }
 
-    public function setSourceURL($sourceURL): void
+    public function setSourceURL(String $sourceURL): void
     {
         $this->sourceURL = $sourceURL;
     }
 
-    public function setTargetURL($targetURL): void
+    public function setTargetURL(String $targetURL): void
     {
         $this->targetURL = $targetURL;
     }
 
-    public function setHttpCode($httpCode): void
+    public function setHttpCode(int $httpCode): void
     {
         $this->httpCode = $httpCode;
     }

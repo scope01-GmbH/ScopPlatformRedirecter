@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace Scop\PlatformRedirecter\Subscriber;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
