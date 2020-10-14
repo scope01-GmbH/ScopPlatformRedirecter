@@ -13,23 +13,42 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
 class RedirectDefinition extends EntityDefinition
 {
 
+    /**
+     * @var string
+     */
     public const ENTITY_NAME = 'scop_platform_redirecter_redirect';
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition::getEntityName()
+     */
     public function getEntityName(): string
     {
         return self::ENTITY_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition::getCollectionClass()
+     */
     public function getCollectionClass(): string
     {
         return RedirectCollection::class;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition::getEntityClass()
+     */
     public function getEntityClass(): string
     {
         return Redirect::class;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition::defineFields()
+     */
     protected function defineFields(): FieldCollection
     {
         return new FieldCollection([

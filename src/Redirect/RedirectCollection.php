@@ -16,6 +16,10 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 class RedirectCollection extends EntityCollection
 {
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\DataAbstractionLayer\EntityCollection::getExpectedClass()
+     */
     protected function getExpectedClass(): string
     {
         return Redirect::class;

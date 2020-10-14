@@ -1,4 +1,11 @@
 <?php
+/**
+ * Implemented by scope01 GmbH team https://scope01.com
+ *
+ * @copyright scope01 GmbH https://scope01.com
+ * @license MIT License
+ * @link https://scope01.com
+ */
 declare(strict_types = 1);
 namespace Scop\PlatformRedirecter\Subscriber;
 
@@ -14,6 +21,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class RequestSubscriber implements EventSubscriberInterface
 {
 
+    /**
+     *
+     * @return array
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -21,17 +32,23 @@ class RequestSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     *
+     * @param RequestEvent $event
+     */
     public function onRequest(RequestEvent $event)
     {
         $requestURI = $event->getRequest()->getUri();
         $requestHost = $event->getRequest()->getHost();
         $requestBase = $event->getRequest()->getPathInfo();
 
+        // Block overriding /admin and /api, so you can't lock out of the administration.
         if (substr($requestBase, 0, 6) === "/admin")
             return;
         if (substr($requestBase, 0, 4) === "/api")
             return;
 
+        // Search for Redirect
         $search = [
             $requestBase, // e.g. "/test"
             substr($requestBase, 1, strlen($requestBase) - 1), // e.g. "test"
@@ -42,12 +59,15 @@ class RequestSubscriber implements EventSubscriberInterface
         $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))
             ->setLimit(1), Context::createDefaultContext(null));
         if ($redirects->count() == 0)
-            return;
+            return; // No Redirect found for this URL
 
         $redirect = $redirects->first();
         $targetURL = $redirect->getTargetURL();
         $code = $redirect->getHttpCode();
 
+        /*
+         *  checks if $targetURL is a full url or path and redirects accordingly
+         */
         if (! (substr($targetURL, 0, 5) === "http:" || substr($targetURL, 0, 6) === "https:")) {
             if (substr($targetURL, 0, 4) === "www.") {
                 $targetURL = "http://" . $targetURL;
@@ -60,8 +80,12 @@ class RequestSubscriber implements EventSubscriberInterface
         $event->setResponse(new RedirectResponse($targetURL, $code));
     }
 
+    /**
+     * @param EntityRepositoryInterface $redirectRepository
+     */
     public function __construct(EntityRepositoryInterface $redirectRepository)
     {
+        /** @var EntityRepositoryInterface $repository*/
         $this->repository = $redirectRepository;
     }
 }

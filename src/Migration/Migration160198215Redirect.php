@@ -1,4 +1,11 @@
 <?php
+/**
+ * Implemented by scope01 GmbH team https://scope01.com
+ *
+ * @copyright scope01 GmbH https://scope01.com
+ * @license MIT License
+ * @link https://scope01.com
+ */
 declare(strict_types = 1);
 namespace Scop\PlatformRedirecter\Migration;
 
@@ -8,11 +15,19 @@ use Shopware\Core\Framework\Migration\MigrationStep;
 class Migration160198215Redirect extends MigrationStep
 {
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\Migration\MigrationStep::getCreationTimestamp()
+     */
     public function getCreationTimestamp(): int
     {
         return 160198215;
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\Migration\MigrationStep::update()
+     */
     public function update(Connection $connection): void
     {
         $sql = <<<SQL
@@ -31,6 +46,10 @@ SQL;
         $connection->executeUpdate($sql);
     }
 
+    /**
+     * {@inheritDoc}
+     * @see \Shopware\Core\Framework\Migration\MigrationStep::updateDestructive()
+     */
     public function updateDestructive(Connection $connection): void
     {}
 }
