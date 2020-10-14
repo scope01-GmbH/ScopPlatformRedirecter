@@ -3,6 +3,7 @@ Shopware.Component.extend('scop-platform-redirect-create', 'scop-platform-redire
 	methods: {
 		getRedirect(){
 			this.redirect = this.repository.create(Shopware.Context.api);
+			this.redirect.httpCode = 302; //Default Value für httpCode
 		},
 		
 		onClickSave() {

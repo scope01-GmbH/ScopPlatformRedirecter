@@ -13,7 +13,10 @@
 		<sw-card v-if="redirect" :isLoading="isLoading">
 			<sw-field :label="$t('scopplatformredirecter.detail.sourceUrlLabel')" v-model="redirect.sourceURL" validation="required"></sw-field>
 			<sw-field :label="$t('scopplatformredirecter.detail.targetUrlLabel')" v-model="redirect.targetURL" validation="required"></sw-field>
-			<sw-field :label="$t('scopplatformredirecter.detail.httpCodeLabel')" v-model="redirect.httpCode" type="number"></sw-field>
+			<sw-select-number-field :label="$t('scopplatformredirecter.detail.httpCodeLabel')" v-model="redirect.httpCode" validation="required">
+				<option value=301>{{ $t('scopplatformredirecter.detail.httpCodeLabelValues.301') }}</option>
+				<option value=302>{{ $t('scopplatformredirecter.detail.httpCodeLabelValues.302') }}</option>
+			</sw-select-number-field>
 		</sw-card>
 	</sw-card-view>
 </template>

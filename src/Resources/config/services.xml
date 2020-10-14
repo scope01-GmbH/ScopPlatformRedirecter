@@ -8,5 +8,9 @@
 		<service id="Scop\PlatformRedirecter\Redirect\RedirectDefinition">
 			<tag name="shopware.entity.definition" entity="scop_platform_redirecter_redirect"/>
 		</service>
+		<service id="Scop\PlatformRedirecter\Subscriber\RequestSubscriber">
+			<tag name="kernel.event_subscriber"/>
+			 <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
+		</service>
 	</services>
 </container>

@@ -2,7 +2,7 @@
 	"scopplatformredirecter": {
 		"general": {
 			"title": "Weiterleitungen",
-			"mainMenuItem" : "Weiterleitungen"
+			"mainMenuItem": "Weiterleitungen"
 		},
 		"list": {
 			"columnSourceUrl": "Quell URL",
@@ -16,7 +16,11 @@
 			"httpCodeLabel": "Http Code",
 			"cancelButton": "Abbrechen",
 			"saveButton": "Speichern",
-			"errorTitle": "Fehler"
+			"errorTitle": "Fehler",
+			"httpCodeLabelValues": {
+				"301": "301 (Permanent verschoben)",
+				"302": "302 (Gefunden / Temporär verschoben)"
+			}
 		}
 	}
 }

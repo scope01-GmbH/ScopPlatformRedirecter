@@ -41,7 +41,6 @@ Shopware.Component.register('scop-platform-redirect-list', {
 				property: 'httpCode',
 				dataIndex: 'httpCode',
 				label: this.$tc('scopplatformredirecter.list.columnHttpCode'),
-				inlineEdit: 'number',
 				allowResize: true
 			}];
 		}

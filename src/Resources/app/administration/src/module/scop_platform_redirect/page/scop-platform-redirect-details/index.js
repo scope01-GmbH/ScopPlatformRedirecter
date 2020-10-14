@@ -8,6 +8,11 @@ Component.register('scop-platform-redirect-details', {
 	inject: [
 		'repositoryFactory'
 	],
+	
+	mixins: [
+		Mixin.getByName('notification')		
+	],
+	
 
 	metaInfo() {
 		return {
@@ -37,7 +42,7 @@ Component.register('scop-platform-redirect-details', {
 		onClickSave() {
 			this.isLoading = true;
 			this.repository.save(this.redirect, Shopware.Context.api).then(() => {
-				this.getBundle();
+				this.getRedirect();
 				this.isLoading = false;
 				this.processSuccess = true;
 			}).catch((exception) => {
