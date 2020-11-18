@@ -1,5 +1,13 @@
 <?php
 declare(strict_types = 1);
+/**
+ * Implemented by scope01 GmbH team https://scope01.com
+ *
+ * @copyright scope01 GmbH https://scope01.com
+ * @license proprietär
+ * @link https://scope01.com
+ */
+
 namespace Scop\PlatformRedirecter\Redirect;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
@@ -25,4 +33,3 @@ class RedirectCollection extends EntityCollection
         return Redirect::class;
     }
 }
-

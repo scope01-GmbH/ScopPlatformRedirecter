@@ -8,9 +8,9 @@ Shopware.Module.register('scop-platform-redirect', {
 	type: 'plugin',
 	name: 'scop-platform-redirect',
 	title: 'scopplatformredirecter.general.title',
-	description: 'XXX',
-	color: '#2288FF',
-	icon: 'small-arrow-large-double-right',
+	description: 'scopplatformredirecter.general.title',
+	color: '#019994',
+	icon: 'small-copy',
 	routes: {
 		list: {
 			component: 'scop-platform-redirect-list',
@@ -22,7 +22,10 @@ Shopware.Module.register('scop-platform-redirect', {
 		},
 		create: {
 			component: 'scop-platform-redirect-create',
-			path: 'create'
+			path: 'create',
+            meta: {
+                parentPath: 'scop.platform.redirect.list'
+            }
 		}
 	},
 	settingsItem: [{

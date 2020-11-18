@@ -7,6 +7,14 @@
  * @link https://scope01.com
  */
 declare(strict_types = 1);
+/**
+ * Implemented by scope01 GmbH team https://scope01.com
+ *
+ * @copyright scope01 GmbH https://scope01.com
+ * @license proprietär
+ * @link https://scope01.com
+ */
+
 namespace Scop\PlatformRedirecter\Redirect;
 
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
@@ -14,7 +22,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
 class Redirect extends Entity
 {
-
     use EntityIdTrait;
 
     /**
@@ -22,7 +29,9 @@ class Redirect extends Entity
      * @var String $targetURL
      * @var int $httpCode
      */
-    protected $sourceURL, $targetURL, $httpCode;
+    protected $sourceURL;
+    protected $targetURL;
+    protected $httpCode;
 
     /**
      * @return string
@@ -72,4 +81,3 @@ class Redirect extends Entity
         $this->httpCode = $httpCode;
     }
 }
-
