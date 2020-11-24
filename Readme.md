@@ -1,8 +1,8 @@
 # Shopware 6 redirecter plugin
 
-| Version 	| Requirements               	                                                            | Availability   |
-|---------	|-------------------------------------------------------------------------------------------|----------------|
-| 1.0.0     |Initial release|                                                                | Github         |
+| Version 	| Requirements               	                                                             | Availability   |
+|---------	|------------------------------------------------------------------------------------------- |----------------|
+| 1.0.0     | Initial release                                                                          | Github         |
 
 
 
