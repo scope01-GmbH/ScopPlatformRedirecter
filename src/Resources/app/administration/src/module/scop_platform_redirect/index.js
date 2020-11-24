@@ -18,7 +18,10 @@ Shopware.Module.register('scop-platform-redirect', {
 		},
 		details: {
 			component: 'scop-platform-redirect-details',
-			path: 'details'
+			path: 'details',
+            meta: {
+                parentPath: 'scop.platform.redirect.list'
+            }
 		},
 		create: {
 			component: 'scop-platform-redirect-create',
