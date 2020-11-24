@@ -11,7 +11,7 @@ declare(strict_types = 1);
  * Implemented by scope01 GmbH team https://scope01.com
  *
  * @copyright scope01 GmbH https://scope01.com
- * @license proprietär
+ * @license MIT
  * @link https://scope01.com
  */
 
@@ -36,6 +36,7 @@ class ScopPlatformRedirecter extends Plugin
     {
         parent::uninstall($uninstallContext);
 
+        // keep data for plugin
         if ($uninstallContext->keepUserData()) {
             return;
         }
@@ -46,9 +47,7 @@ class ScopPlatformRedirecter extends Plugin
          */
         $connection = $this->container->get(Connection::class);
 
-        $sql = <<<SQL
-        DROP TABLE IF EXISTS `scop_platform_redirecter_redirect`;
-SQL;
+        $sql = "DROP TABLE IF EXISTS `scop_platform_redirecter_redirect`;";
 
         $connection->executeUpdate($sql);
     }

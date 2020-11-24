@@ -7,29 +7,64 @@
  * @link https://scope01.com
  */
 declare(strict_types = 1);
+
+/**
+ * Implemented by scope01 GmbH team https://scope01.com
+ *
+ * @copyright scope01 GmbH https://scope01.com
+ * @license MIT
+ * @link https://scope01.com
+ */
+
 namespace Scop\PlatformDirecter\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Doctrine\DBAL\Connection;
-use Shopware\Core\Framework\Test\TestCaseBase\AdminFunctionalTestBehaviour;
+use Shopware\Core\Checkout\Test\Customer\Rule\OrderFixture;
+use Shopware\Core\Framework\Context;
 use GuzzleHttp\Client;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\Test\TestCaseBase\DatabaseTransactionBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\KernelTestBehaviour;
+use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\System\StateMachine\StateMachineRegistry;
+use Swag\PayPal\Util\PaymentStatusUtilV2;
 
 /**
- *  SQL doesn't work. But if you insert the required Redirects by hand, the tests work sucessfully.
+ * Class RedirectTest
+ * @package Scop\PlatformDirecter\Tests
  */
 class RedirectTest extends TestCase
 {
 
-    use AdminFunctionalTestBehaviour;
+    use DatabaseTransactionBehaviour;
+    use KernelTestBehaviour;
+    use OrderFixture;
 
-    /** @var Connection $connection **/
-    public $connection;
+    /**
+     * @var StateMachineRegistry
+     */
+    private $stateMachineRegistry;
+
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $orderTransactionRepository;
+
+    /**
+     * @var PaymentStatusUtilV2
+     */
+    private $paymentStatusUtil;
+
+    /**
+     * @var Context
+     */
+    private $context;
 
     /**
      *
      * @var string $host The hostname for Requests.
      */
-    public $host = "http://localhost";
+    public $host = "http://shopware-platform.local";
 
     /**
      * dummy redirects and expected results
@@ -79,27 +114,28 @@ class RedirectTest extends TestCase
         ]
     ];
 
+    /**
+     * Set up test case
+     */
     public function setUp(): void
     {
         parent::setUp();
-        $this->clearCacheData();
-        $this->connection = $this->getContainer()->get(Connection::class);
-        $createString = "";
-        foreach ($this->set as $testredirect) {
-            $createString = $createString . ", (" . rand(100000, 1000000) . ", '" . $testredirect[0] . "', '" . $testredirect[1] . "', " . $testredirect[2] . ", Current_Timestamp())";
+        /** @var \Shopware\Core\Framework\DataAbstractionLayer\EntityRepository $entityRepo */
+        $entityRepo = $this->getContainer()->get("scop_platform_redirecter_redirect.repository");
+        foreach ($this->set as $testRedirect) {
+            $data = [
+                'id' => Uuid::randomHex(),
+                'sourceURL' => $testRedirect[0],
+                'targetURL' => $testRedirect[1],
+                'httpCodes' => $testRedirect[2],
+                'created_at' => (new \DateTime())
+            ];
+            $entityRepo->create([$data], Context::createDefaultContext());
         }
-        $createString = substr($createString, 2);
-
-        $sql = <<<SQL
-        INSERT INTO shopware.scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, created_at) VALUES $createString;
-SQL;
-        $rows = $this->connection->executeUpdate($sql);
-        self::assertCount($rows, $this->set);
-        $this->clearCacheData();
     }
 
     /**
-     *
+     * Test redirect status codes
      */
     public function testRedirectStatusCodes(): void
     {
@@ -108,17 +144,17 @@ SQL;
             'http_errors' => false
         ]);
 
-        foreach ($this->set as $testredirect) {
-            $response = $client->get($testredirect[0], [
+        foreach ($this->set as $testreDirect) {
+            $response = $client->get($testreDirect[0], [
                 'allow_redirects' => false
             ]);
 
-            self::assertSame($response->getStatusCode(), $testredirect[2]);
+            self::assertSame($response->getStatusCode(), $testreDirect[2]);
         }
     }
 
     /**
-     *
+     * Test redirect links
      */
     public function testRedirectLinks(): void
     {
@@ -134,7 +170,7 @@ SQL;
 
             $has = $response->hasHeader("location");
             self::assertTrue($has);
-            if($has){
+            if ($has) {
                 self::assertContains($response->getHeader("location")[0], [$testredirect[1], "http://" . $testredirect[1]]);
             }
         }
