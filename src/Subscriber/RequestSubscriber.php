@@ -31,14 +31,19 @@ class RequestSubscriber implements EventSubscriberInterface
      * @var EntityRepositoryInterface
      */
     private $repository;
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $seoUrlRepository;
 
     /**
      * @param EntityRepositoryInterface $redirectRepository
      */
-    public function __construct(EntityRepositoryInterface $redirectRepository)
+    public function __construct(EntityRepositoryInterface $redirectRepository, EntityRepositoryInterface $seoUrlRepository)
     {
         /** @var EntityRepositoryInterface $repository */
         $this->repository = $redirectRepository;
+        $this->seoUrlRepository = $seoUrlRepository;
     }
 
     /**
@@ -61,7 +66,7 @@ class RequestSubscriber implements EventSubscriberInterface
      */
     public function redirectBeforeSendResponse(BeforeSendResponseEvent $event): void
     {
-        $requestUri = $event->getRequest()->getUri();
+        $requestUri = $event->getRequest()->get('resolved-uri');
         $requestHost = $event->getRequest()->getHost();
         $requestBase = $event->getRequest()->getPathInfo();
 
@@ -76,16 +81,28 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // try to load the seo route
+        $context = Context::createDefaultContext();
+        $redirects = $this->seoUrlRepository->search((new Criteria())->addFilter(new EqualsAnyFilter('pathInfo', [$requestUri]))->addFilter(new EqualsAnyFilter('isDeleted', [0]))
+            ->setLimit(1), $context);
+
+        // if found overwrite search term with the seo route
+        if ($redirects->count() !== 0) {
+            $requestBase = $redirects->first()->getSeoPathInfo();
+        }
+
         // Search for Redirect
         $search = [
             $requestBase, // e.g. "/test"
+            '/' . $requestBase,
             \substr($requestBase, 1, strlen($requestBase) - 1), // e.g. "test"
             $requestHost . $requestBase, // e.g. "localhost/test"
             $requestUri // e.g. "http://localhost/test" or "https://localhost/test"
         ];
 
+        // search for the redirect in the database
         $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))
-            ->setLimit(1), Context::createDefaultContext(null));
+            ->setLimit(1), $context);
 
         // No Redirect found for this URL, do nothing
         if ($redirects->count() === 0) {
