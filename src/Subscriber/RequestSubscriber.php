@@ -67,8 +67,9 @@ class RequestSubscriber implements EventSubscriberInterface
     public function redirectBeforeSendResponse(BeforeSendResponseEvent $event): void
     {
         $requestUri = $event->getRequest()->get('resolved-uri');
-        $requestHost = $event->getRequest()->getHost();
+        $storefrontUri = $event->getRequest()->get('sw-storefront-url');
         $requestBase = $event->getRequest()->getPathInfo();
+        $requestBaseUrl = $event->getRequest()->getBaseUrl();
 
         // Block overriding /admin and /api and widgets, so you can't lock out of the administration.
         if (\strpos($requestBase, "/admin") === 0) {
@@ -83,7 +84,9 @@ class RequestSubscriber implements EventSubscriberInterface
 
         // try to load the seo route
         $context = Context::createDefaultContext();
-        $redirects = $this->seoUrlRepository->search((new Criteria())->addFilter(new EqualsAnyFilter('pathInfo', [$requestUri]))->addFilter(new EqualsAnyFilter('isDeleted', [0]))
+        $redirects = $this->seoUrlRepository->search((new Criteria())
+            ->addFilter(new EqualsAnyFilter('pathInfo', [$requestUri]))
+            ->addFilter(new EqualsAnyFilter('isDeleted', [0]))
             ->setLimit(1), $context);
 
         // if found overwrite search term with the seo route
@@ -93,12 +96,14 @@ class RequestSubscriber implements EventSubscriberInterface
 
         // Search for Redirect
         $search = [
-            $requestBase, // e.g. "/test"
-            '/' . $requestBase,
-            \substr($requestBase, 1, strlen($requestBase) - 1), // e.g. "test"
-            $requestHost . $requestBase, // e.g. "localhost/test"
-            $requestUri // e.g. "http://localhost/test" or "https://localhost/test"
+            $requestBaseUrl . '/' . $requestBase, // relative url with shopware 6 in sub folder: /public/Ergonomic-Concrete-Cough-Machine/48314803f1244f609a2ce907bfb48f53
+            $requestBaseUrl . $requestBase, // relative url with shopware 6 in sub folder url is not shopware seo url: /public/test
+            $storefrontUri . $requestBase, // absolute url with shopware 6 in sub folder, full url with host: http://shopware-platform.local/public/test1
+            $requestBase, // relative url domain configured in public folder: /Ergonomic-Concrete-Cough-Machine/48314803f1244f609a2ce907bfb48f53 or /test4
+            '/' . $requestBase, // absolute url domain configured in public folder: http://shopware-platform.local/Shoes-Baby/
+            \substr($requestBase, 1), // e.g. "test"
         ];
+
 
         // search for the redirect in the database
         $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))
