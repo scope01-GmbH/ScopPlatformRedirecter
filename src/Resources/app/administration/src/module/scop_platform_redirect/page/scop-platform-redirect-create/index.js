@@ -9,6 +9,13 @@ Shopware.Component.extend('scop-platform-redirect-create', 'scop-platform-redire
 		},
 
 		onClickSave() {
+		    if (this.redirect.sourceURL === this.redirect.targetURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
+                })
+                return;
+            }
 			this.isLoading = true;
 			this.repository.save(this.redirect, Shopware.Context.api).then(() => {
 				this.isLoading = false;

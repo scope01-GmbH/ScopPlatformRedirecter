@@ -16,6 +16,7 @@
 			"cancelButton": "Cancel",
 			"saveButton": "Save",
 			"errorTitle": "Error",
+            "errorSameUrlDescription": "The source URL and target URL must not be the same",
 			"httpCodeLabelValues": {
 				"301": "301 (Moved Permanently)",
 				"302": "302 (Found / Moved Temporarily)"
