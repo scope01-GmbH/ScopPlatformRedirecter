@@ -8,11 +8,11 @@ Component.register('scop-platform-redirect-details', {
 	inject: [
 		'repositoryFactory'
 	],
-	
+
 	mixins: [
-		Mixin.getByName('notification')		
+		Mixin.getByName('notification')
 	],
-	
+
 
 	metaInfo() {
 		return {
@@ -40,6 +40,13 @@ Component.register('scop-platform-redirect-details', {
 		},
 
 		onClickSave() {
+            if (this.redirect.sourceURL === this.redirect.targetURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
+                })
+                return;
+            }
 			this.isLoading = true;
 			this.repository.save(this.redirect, Shopware.Context.api).then(() => {
 				this.getRedirect();
@@ -53,7 +60,7 @@ Component.register('scop-platform-redirect-details', {
 				})
 			});
 		},
-		
+
 		saveFinish(){
 			this.processSuccess = false;
 		}
