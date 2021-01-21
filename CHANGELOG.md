@@ -2,3 +2,5 @@
 - First release of the plugin
 # v1.0.1
 - Fixed redirect resolving within multiple seo urls
+# v1.0.2
+- Fixed redirect resolving within not existing sourse urls   

@@ -4,6 +4,7 @@
 |---------	|------------------------------------------------------------------------------------------- |----------------|
 | 1.0.0     | Initial release                                                                          | Github         |
 | 1.0.1     | Fixed redirect resolving within multiple seo urls                                                                       | Github         |
+| 1.0.2     | Fixed redirect resolving within not existing sourse urls                                                                     | Github         |
 
 
 
