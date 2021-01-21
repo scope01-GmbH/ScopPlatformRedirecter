@@ -3,6 +3,7 @@
 | Version 	| Requirements               	                                                             | Availability   |
 |---------	|------------------------------------------------------------------------------------------- |----------------|
 | 1.0.0     | Initial release                                                                          | Github         |
+| 1.0.1     | Fixed redirect reslving within multiple seo urls                                                                       | Github         |
 
 
 
@@ -10,7 +11,7 @@
 
 ## Zip Installation package for the Shopware Plugin Manager
 
-* Download the [latest plugin version](https://github.com/scope01-GmbH/ScopPlatformRedirecter/releases/latest/) (e.g. `ScopPlatformRedirecter-1.0.0.zip`)
+* Download the [latest plugin version](https://github.com/scope01-GmbH/ScopPlatformRedirecter/releases/latest/) (e.g. `ScopPlatformRedirecter-1.0.1.zip`)
 * Upload and install plugin using Plugin Manager
 
 ## Git Version
