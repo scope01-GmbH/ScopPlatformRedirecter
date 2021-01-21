@@ -3,7 +3,7 @@
 | Version 	| Requirements               	                                                             | Availability   |
 |---------	|------------------------------------------------------------------------------------------- |----------------|
 | 1.0.0     | Initial release                                                                          | Github         |
-| 1.0.1     | Fixed redirect reslving within multiple seo urls                                                                       | Github         |
+| 1.0.1     | Fixed redirect resolving within multiple seo urls                                                                       | Github         |
 
 
 
