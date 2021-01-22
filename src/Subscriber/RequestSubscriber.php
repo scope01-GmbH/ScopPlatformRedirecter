@@ -85,8 +85,7 @@ class RequestSubscriber implements EventSubscriberInterface
         // try to load the seo route
         $context = Context::createDefaultContext();
         $redirects = $this->seoUrlRepository->search((new Criteria())
-            ->addFilter(new EqualsAnyFilter('pathInfo', [$requestUri]))
-            ->addFilter(new EqualsAnyFilter('isDeleted', [0])), $context);
+            ->addFilter(new EqualsAnyFilter('pathInfo', [$requestUri])), $context);
 
         // if found overwrite search term with the seo route
         if ($redirects->count() !== 0) {
