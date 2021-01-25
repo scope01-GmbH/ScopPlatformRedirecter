@@ -6,3 +6,5 @@
 - Fixed redirect resolving within not existing sourse urls   
 # v1.0.3
 - Allow redirect deleted urls  
+# v1.0.4
+- Exclude store api from redirects  

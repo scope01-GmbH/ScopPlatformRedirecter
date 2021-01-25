@@ -66,7 +66,7 @@ class RequestSubscriber implements EventSubscriberInterface
      */
     public function redirectBeforeSendResponse(BeforeSendResponseEvent $event): void
     {
-        $requestUri = $event->getRequest()->get('resolved-uri');
+        $requestUri = (string)$event->getRequest()->get('resolved-uri');
         $storefrontUri = $event->getRequest()->get('sw-storefront-url');
         $requestBase = $event->getRequest()->getPathInfo();
         $requestBaseUrl = $event->getRequest()->getBaseUrl();
@@ -79,6 +79,9 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
         if (\strpos($requestBase, "/widgets") === 0) {
+            return;
+        }
+        if (\strpos($requestBase, "/store-api") === 0) {
             return;
         }
 
