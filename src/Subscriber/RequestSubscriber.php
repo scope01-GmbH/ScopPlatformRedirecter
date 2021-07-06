@@ -70,6 +70,7 @@ class RequestSubscriber implements EventSubscriberInterface
         $storefrontUri = $event->getRequest()->get('sw-storefront-url');
         $requestBase = $event->getRequest()->getPathInfo();
         $requestBaseUrl = $event->getRequest()->getBaseUrl();
+        $queryString = (string)$event->getRequest()->getQueryString();
         $search = [];
         // Block overriding /admin and /api and widgets, so you can't lock out of the administration.
         if (\strpos($requestBase, "/admin") === 0) {
@@ -83,6 +84,11 @@ class RequestSubscriber implements EventSubscriberInterface
         }
         if (\strpos($requestBase, "/store-api") === 0) {
             return;
+        }
+
+        if ($queryString !== '') {
+            $queryString = urldecode($queryString);
+            $requestUri .= '?' . $queryString;
         }
 
         // try to load the seo route

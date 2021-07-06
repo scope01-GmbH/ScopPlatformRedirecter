@@ -8,3 +8,5 @@
 - Allow redirect deleted urls  
 # v1.0.4
 - Exclude store api from redirects  
+# v1.0.5
+- Fix redirects with query params
