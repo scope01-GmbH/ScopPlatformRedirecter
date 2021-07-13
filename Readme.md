@@ -7,6 +7,7 @@
 | 1.0.2     | Fixed redirect resolving within not existing source urls                                                                     | Github         |
 | 1.0.3     | Allow redirect deleted urls                                                                   | Github         |
 | 1.0.4     | Exclude store api from redirects                                                                   | Github         |
+| 1.0.5     | Fix redirects with query params                                                                   | Github         |
 
 
 
