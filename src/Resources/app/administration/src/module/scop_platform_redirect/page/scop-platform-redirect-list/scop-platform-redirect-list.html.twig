@@ -5,6 +5,9 @@
 				<sw-button variant="primary" :routerLink="{name: 'scop.platform.redirect.create'}">
 					{{ $t('scopplatformredirecter.list.createButton') }}
 				</sw-button>
+				<sw-button @click="onClickExport">
+					{{ $t('scopplatformredirecter.list.exportAllButton') }}
+				</sw-button>
 			{% endblock %}
 		</template>
 		<template slot="content">
@@ -13,7 +16,7 @@
 					v-if="redirect"
 					:items="redirect"
 					:repository="repository"
-					:columns="columns" 
+					:columns="columns"
 					detailRoute="scop.platform.redirect.details">
 				</sw-entity-listing>
 			{% endblock %}

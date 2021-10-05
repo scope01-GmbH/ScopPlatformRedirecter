@@ -1,11 +1,17 @@
 import template from './scop-platform-redirect-list.html.twig';
 const Criteria = Shopware.Data.Criteria;
 
+const { Component, Mixin } = Shopware;
+
 Shopware.Component.register('scop-platform-redirect-list', {
 	template,
 
 	inject: [
 		'repositoryFactory'
+	],
+
+	mixins: [
+		Mixin.getByName('notification')
 	],
 	
 	data() {
@@ -50,6 +56,15 @@ Shopware.Component.register('scop-platform-redirect-list', {
 		this.repository = this.repositoryFactory.create('scop_platform_redirecter_redirect');
 		this.repository.search(new Criteria(), Shopware.Context.api).then((result) => {
 			this.redirect = result; });
-	}
+	},
+
+	methods: {
+		onClickExport(){
+			this.createNotificationError({
+				title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+				message: this.$tc('scopplatformredirecter.detail.notdone')
+			});
+		}
+	},
 
 });

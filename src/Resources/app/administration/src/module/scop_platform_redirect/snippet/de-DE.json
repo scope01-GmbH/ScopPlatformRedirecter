@@ -7,7 +7,8 @@
 			"columnSourceUrl": "Quell URL",
 			"columnTargetUrl": "Ziel URL",
 			"columnHttpCode": "Http Code",
-			"createButton": "Weiterleitung anlegen"
+			"createButton": "Weiterleitung anlegen",
+			"exportAllButton": "Alle Exportieren"
 		},
 		"detail": {
 			"sourceUrlLabel": "Quell URL",
@@ -16,6 +17,7 @@
 			"cancelButton": "Abbrechen",
 			"saveButton": "Speichern",
 			"errorTitle": "Fehler",
+			"notdone": "Diese Funktion muss noch implementiert werden.",
             "errorSameUrlDescription": "Die Quell URL und Ziel URL dürfen nicht gleich sein",
 			"httpCodeLabelValues": {
 				"301": "301 (Permanent verschoben)",
