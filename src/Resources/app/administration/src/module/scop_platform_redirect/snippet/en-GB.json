@@ -7,7 +7,8 @@
 			"columnSourceUrl": "Source URL",
 			"columnTargetUrl": "Target URL",
 			"columnHttpCode": "Http Code",
-			"createButton": "Add Redirect"
+			"createButton": "Add Redirect",
+			"exportAllButton": "Export All"
 		},
 		"detail": {
 			"sourceUrlLabel": "Source URL",
@@ -16,6 +17,7 @@
 			"cancelButton": "Cancel",
 			"saveButton": "Save",
 			"errorTitle": "Error",
+			"fileNotCreated": "The file could not be created",
             "errorSameUrlDescription": "The source URL and target URL must not be the same",
 			"httpCodeLabelValues": {
 				"301": "301 (Moved Permanently)",

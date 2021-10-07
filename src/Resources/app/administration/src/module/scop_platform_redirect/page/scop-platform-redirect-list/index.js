@@ -7,7 +7,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
 	template,
 
 	inject: [
-		'repositoryFactory'
+		'repositoryFactory',  'syncService','loginService'
 	],
 
 	mixins: [
@@ -17,7 +17,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
 	data() {
 		return {
 			repository: null,
-			redirect: null
+			redirect: null,
+			exportLoading: false
 		};
 	},
 
@@ -59,11 +60,39 @@ Shopware.Component.register('scop-platform-redirect-list', {
 	},
 
 	methods: {
-		onClickExport(){
-			this.createNotificationError({
-				title: this.$tc('scopplatformredirecter.detail.errorTitle'),
-				message: this.$tc('scopplatformredirecter.detail.notdone')
+		async onClickExport(){
+
+			this.exportLoading = true;
+
+			const headers = {
+				Authorization: `Bearer ${this.loginService.getToken()}`
+			};
+			const httpClient = this.syncService.httpClient;
+
+			const response = await httpClient.post('/_action/scop/platform/redirecter/prepare-export', {}, {headers: headers}).catch((err) => {
+				this.createNotificationError({
+					title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+					message: this.$tc('scopplatformredirecter.detail.fileNotCreated')
+				});
+				this.exportLoading = false;
+				return;
 			});
+
+			if(!this.exportLoading)
+				return;
+
+			this.exportLoading = false;
+
+			if(response['status'] != 200){
+				this.createNotificationError({
+					title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+					message: this.$tc('scopplatformredirecter.detail.fileNotCreated')
+				});
+				return;
+			}
+
+			await window.open('/api/_action/scop/platform/redirecter/download-export?filename=' + response['data']['file'], '_blank');
+
 		}
 	},
 

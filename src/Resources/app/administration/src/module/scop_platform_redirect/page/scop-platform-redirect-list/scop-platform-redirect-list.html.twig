@@ -5,7 +5,7 @@
 				<sw-button variant="primary" :routerLink="{name: 'scop.platform.redirect.create'}">
 					{{ $t('scopplatformredirecter.list.createButton') }}
 				</sw-button>
-				<sw-button @click="onClickExport">
+				<sw-button @click="onClickExport" :isLoading="exportLoading">
 					{{ $t('scopplatformredirecter.list.exportAllButton') }}
 				</sw-button>
 			{% endblock %}

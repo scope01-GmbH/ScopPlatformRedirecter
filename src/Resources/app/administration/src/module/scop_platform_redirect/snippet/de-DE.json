@@ -17,7 +17,7 @@
 			"cancelButton": "Abbrechen",
 			"saveButton": "Speichern",
 			"errorTitle": "Fehler",
-			"notdone": "Diese Funktion muss noch implementiert werden.",
+			"fileNotCreated": "Die Datei konnte nicht erstellt werden",
             "errorSameUrlDescription": "Die Quell URL und Ziel URL dürfen nicht gleich sein",
 			"httpCodeLabelValues": {
 				"301": "301 (Permanent verschoben)",
