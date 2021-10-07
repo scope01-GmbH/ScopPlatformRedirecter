@@ -18,7 +18,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
 		return {
 			repository: null,
 			redirect: null,
-			exportLoading: false
+			exportLoading: false,
+			noRedirect: true
 		};
 	},
 
@@ -56,7 +57,9 @@ Shopware.Component.register('scop-platform-redirect-list', {
 	created() {
 		this.repository = this.repositoryFactory.create('scop_platform_redirecter_redirect');
 		this.repository.search(new Criteria(), Shopware.Context.api).then((result) => {
-			this.redirect = result; });
+			this.redirect = result;
+			//this.noRedirect = this.redirect.length === 0;
+		});
 	},
 
 	methods: {
@@ -93,7 +96,10 @@ Shopware.Component.register('scop-platform-redirect-list', {
 
 			await window.open('/api/_action/scop/platform/redirecter/download-export?filename=' + response['data']['file'], '_blank');
 
+		},
+		onUpdate(records){
+			this.noRedirect = records.length === 0;
 		}
-	},
+},
 
 });
