@@ -1,6 +1,7 @@
 import './page/scop-platform-redirect-list';
 import './page/scop-platform-redirect-details';
 import './page/scop-platform-redirect-create';
+import './page/scop-platform-redirect-import-modal';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
 
@@ -29,7 +30,7 @@ Shopware.Module.register('scop-platform-redirect', {
                 meta: {
                     parentPath: 'scop.platform.redirect.list'
                 }
-            }
+            },
         },
         settingsItem: [{
             to: 'scop.platform.redirect.list',

@@ -11,7 +11,7 @@ Shopware.Component.extend('scop-platform-redirect-create', 'scop-platform-redire
 		onClickSave() {
 		    if (this.redirect.sourceURL === this.redirect.targetURL) {
                 this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
                     message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
                 })
                 return;
@@ -23,7 +23,7 @@ Shopware.Component.extend('scop-platform-redirect-create', 'scop-platform-redire
 			}).catch((exception) => {
 				this.isLoading = false;
 				this.createNotificationError({
-					title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+					title: this.$tc('scopplatformredirecter.general.errorTitle'),
 					message: exception
 				})
 			});

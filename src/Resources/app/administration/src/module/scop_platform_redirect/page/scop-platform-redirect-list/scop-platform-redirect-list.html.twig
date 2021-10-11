@@ -8,12 +8,9 @@
                 <sw-button @click="onClickExport" :isLoading="exportLoading" :disabled="noRedirect">
                     {{ $t('scopplatformredirecter.list.exportAllButton') }}
                 </sw-button>
-                <!-- <sw-file-input
-                        v-model="selectedFile"
-                        label="My file input"
-                        :allowedMimeTypes="['text/csv','text/xml']"
-                        :maxFileSize="8*1024*1024">
-                </sw-file-input> -->
+                <sw-button @click="onClickImport">
+                    {{ $t('scopplatformredirecter.list.importButton') }}
+                </sw-button>
             {% endblock %}
         </template>
         <template slot="content">
@@ -27,6 +24,14 @@
                         @update-records="onUpdate"
                 >
                 </sw-entity-listing>
+            {% endblock %}
+            {% block scop_platform_redirect_list_view_import_modal %}
+                <scop-platform-redirect-import-modal
+                    :show="showImport"
+                    @close="closeImport"
+                    @updateList="updateList"
+                >
+                </scop-platform-redirect-import-modal>
             {% endblock %}
         </template>
     </sw-page>

@@ -1,14 +1,31 @@
 {
 	"scopplatformredirecter": {
 		"general": {
-			"title": "Weiterleitungen"
+			"title": "Weiterleitungen",
+			"errorTitle": "Fehler"
 		},
 		"list": {
 			"columnSourceUrl": "Quell URL",
 			"columnTargetUrl": "Ziel URL",
 			"columnHttpCode": "Http Code",
 			"createButton": "Weiterleitung anlegen",
-			"exportAllButton": "Alle Exportieren"
+			"exportAllButton": "Alle Exportieren",
+			"importButton": "Importieren",
+			"fileNotCreated": "Die Datei konnte nicht erstellt werden",
+			"fileNotImported": "Die Datei konnte nicht importiert werden",
+			"invalidFile": "Ungültige Datei",
+			"importDone": "Import abgeschlossen",
+			"fileImportedNoSkip": "Es wurden {amount} Weiterleitungen importiert",
+			"fileImported": "Es wurden {amount} Weiterleitungen importiert.<br>{skipped} Weiterleitungen wurden nicht importiert, da sie bereits vorhanden waren und nicht überschrieben werden sollten",
+			"importModal": {
+				"title": "Importieren",
+				"cancel": "Abbrechen",
+				"import": "Importieren",
+				"override": "Gleiche Quell URLs überschreiben",
+				"overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene Http Code überschrieben",
+				"overrideID": "Bei gleicher ID überschreiben",
+				"overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschreiben"
+			}
 		},
 		"detail": {
 			"sourceUrlLabel": "Quell URL",
@@ -16,8 +33,6 @@
 			"httpCodeLabel": "Http Code",
 			"cancelButton": "Abbrechen",
 			"saveButton": "Speichern",
-			"errorTitle": "Fehler",
-			"fileNotCreated": "Die Datei konnte nicht erstellt werden",
             "errorSameUrlDescription": "Die Quell URL und Ziel URL dürfen nicht gleich sein",
 			"httpCodeLabelValues": {
 				"301": "301 (Permanent verschoben)",

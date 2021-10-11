@@ -24,8 +24,11 @@ use Scop\PlatformRedirecter\Redirect\Redirect;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\MultiFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -138,6 +141,103 @@ class ImportExportRedirectsController extends AbstractController
         return new StreamedResponse(function () use ($stream): void {
             fpassthru($stream);
         }, Response::HTTP_OK, $headers);
+    }
+
+    /**
+     * @Route("/api/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport", methods={"POST"})
+     */
+    public function import(Request $request, Context $context)
+    {
+        $answer = array();
+
+        /**
+         * @var UploadedFile $file
+         */
+        $file = $request->files->get("file");
+        $overrideID = ($request->get("overrideID") === "true");
+        $override = ($request->get("override") === "true");
+
+        $fileStream = fopen($file->getPathname(), 'r');
+
+        $title = fgetcsv($fileStream, 0, ';');
+        if ($title === null) {
+            $response['detail'] = "File not found";
+            return new Response(json_encode($response), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        if ($title === false) {
+            $response['detail'] = "Invalid File";
+            return new Response(json_encode($response), Response::HTTP_OK);
+        }
+
+        if (count($title) != 4) {
+            $response['detail'] = "File is not a Redirects Export";
+            return new Response(json_encode($response), Response::HTTP_OK);
+        }
+        if ($title[0] !== "id" || $title[1] !== "source_url" || $title[2] !== "target_url" || $title[3] !== "http_code") {
+            $response['detail'] = "File is not a Redirects Export";
+            return new Response(json_encode($response), Response::HTTP_OK);
+        }
+
+        $count = 0;
+        $skip = 0;
+
+        while ($line = fgetcsv($fileStream, 0, ";")) {
+            $id = $line[0];
+            $sourceURL = $line[1];
+            $targetURL = $line[2];
+            $httpCode = intval($line[3]);
+
+            $criteria = new Criteria();
+            $criteria->addFilter(new MultiFilter(MultiFilter::CONNECTION_OR, [
+                new EqualsFilter('id', $id),
+                new EqualsFilter('sourceURL', $sourceURL)
+            ]));
+
+            $contained = $this->redirectRepository->search($criteria, $context);
+
+            if (count($contained) > 0) {
+
+                /**
+                 * @var Redirect $redirect ;
+                 */
+                $redirect = $contained->first();
+
+                if ($redirect->getId() === $id && $overrideID) {
+                    $this->redirectRepository->update([[
+                        'id' => $id,
+                        'sourceURL' => $sourceURL,
+                        'targetURL' => $targetURL,
+                        'httpCode' => $httpCode
+                    ]], $context);
+                    $count++;
+                } else if (strcasecmp($redirect->getSourceURL(), $sourceURL) == 0 && $override) {
+                    $this->redirectRepository->update([[
+                        'id' => $redirect->getId(),
+                        'sourceURL' => $sourceURL,
+                        'targetURL' => $targetURL,
+                        'httpCode' => $httpCode
+                    ]], $context);
+                    $count++;
+                } else {
+                    $skip++;
+                }
+
+            } else {
+                $this->redirectRepository->create([[
+                    'id' => $id,
+                    'sourceURL' => $sourceURL,
+                    'targetURL' => $targetURL,
+                    'httpCode' => $httpCode
+                ]], $context);
+                $count++;
+            }
+
+        }
+
+        $answer['detail'] = 'File Imported!';
+        $answer['amount'] = $count;
+        $answer['skipped'] = $skip;
+        return new Response(json_encode($answer), Response::HTTP_OK);
     }
 }
 

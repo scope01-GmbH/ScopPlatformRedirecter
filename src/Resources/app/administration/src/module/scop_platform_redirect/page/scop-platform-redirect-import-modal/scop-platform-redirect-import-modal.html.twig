@@ -1,0 +1,45 @@
+{% block scop_platform_redirect_import_modal %}
+    <div class="scop-platform-redirect-import-modal">
+        <sw-modal
+                v-if="show"
+                class="scop-platform-redirect-import-modal"
+                :title="$tc('scopplatformredirecter.list.importModal.title')"
+                variant="small"
+                @modal-close="onClose"
+        >
+            {% block scop_platform_redirect_import_modal_content %}
+
+                <sw-card :hero="true" :isLoading="processing">
+                    <sw-file-input
+                            v-model="selectedFile"
+                            :allowedMimeTypes="['text/csv']"
+                            :maxFileSize="8*1024*1024"
+                            @change="onFileChange">
+                    </sw-file-input>
+                </sw-card>
+            {% endblock %}
+            {% block scop_platform_redirect_import_modal_options %}
+                <sw-switch-field
+                        :label="$tc('scopplatformredirecter.list.importModal.overrideID')"
+                        v-model="overrideID"
+                        :help-text="$tc('scopplatformredirecter.list.importModal.overrideIDHelp')"
+                ></sw-switch-field>
+                <sw-switch-field
+                        :label="$tc('scopplatformredirecter.list.importModal.override')"
+                        v-model="override"
+                        :help-text="$tc('scopplatformredirecter.list.importModal.overrideHelp')"
+                ></sw-switch-field>
+            {% endblock %}
+            {% block scop_platform_redirect_import_modal_footer %}
+                <template slot="modal-footer">
+                    <sw-button @click="onClose" :disabled="processing">
+                        {{ $t('scopplatformredirecter.list.importModal.cancel') }}
+                    </sw-button>
+                    <sw-button variant="primary" :disabled="noFile" :isLoading="processing" @click="startImport">
+                        {{ $t('scopplatformredirecter.list.importModal.import') }}
+                    </sw-button>
+                </template>
+            {% endblock %}
+        </sw-modal>
+    </div>
+{% endblock %}

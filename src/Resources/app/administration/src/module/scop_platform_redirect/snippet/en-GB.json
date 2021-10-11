@@ -1,14 +1,31 @@
 {
 	"scopplatformredirecter": {
 		"general": {
-			"title": "Redirects"
+			"title": "Redirects",
+			"errorTitle": "Error"
 		},
 		"list": {
 			"columnSourceUrl": "Source URL",
 			"columnTargetUrl": "Target URL",
 			"columnHttpCode": "Http Code",
 			"createButton": "Add Redirect",
-			"exportAllButton": "Export All"
+			"exportAllButton": "Export All",
+			"importButton": "Import",
+			"fileNotCreated": "The file could not be created",
+			"fileNotImported": "The file could not be imported",
+			"invalidFile": "Invalid File",
+			"importDone": "Import finished",
+			"fileImportedNoSkip": "{amount} Redirects where imported",
+			"fileImported": "{amount} Redirects where imported.<br>{skipped} Redirects where not imported because they already existed and should not be overridden",
+			"importModal": {
+				"title": "Import",
+				"cancel": "Cancel",
+				"import": "Import",
+				"override": "Override same Source URL",
+				"overrideHelp": "If a Source URL already exists, the Target URL and the Http Code will be overridden with this option",
+				"overrideID": "Override same ID",
+				"overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option"
+			}
 		},
 		"detail": {
 			"sourceUrlLabel": "Source URL",
@@ -16,8 +33,6 @@
 			"httpCodeLabel": "Http Code",
 			"cancelButton": "Cancel",
 			"saveButton": "Save",
-			"errorTitle": "Error",
-			"fileNotCreated": "The file could not be created",
             "errorSameUrlDescription": "The source URL and target URL must not be the same",
 			"httpCodeLabelValues": {
 				"301": "301 (Moved Permanently)",

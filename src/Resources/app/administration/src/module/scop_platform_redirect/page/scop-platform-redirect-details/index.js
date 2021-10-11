@@ -42,7 +42,7 @@ Component.register('scop-platform-redirect-details', {
 		onClickSave() {
             if (this.redirect.sourceURL === this.redirect.targetURL) {
                 this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
                     message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
                 })
                 return;
@@ -55,7 +55,7 @@ Component.register('scop-platform-redirect-details', {
 			}).catch((exception) => {
 				this.isLoading = false;
 				this.createNotificationError({
-					title: this.$tc('scopplatformredirecter.detail.errorTitle'),
+					title: this.$tc('scopplatformredirecter.general.errorTitle'),
 					message: exception
 				})
 			});
