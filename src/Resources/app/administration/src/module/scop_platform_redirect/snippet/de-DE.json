@@ -7,7 +7,7 @@
 		"list": {
 			"columnSourceUrl": "Quell URL",
 			"columnTargetUrl": "Ziel URL",
-			"columnHttpCode": "Http Code",
+			"columnHttpCode": "Http Status Code",
 			"createButton": "Weiterleitung anlegen",
 			"exportAllButton": "Alle Exportieren",
 			"importButton": "Importieren",
@@ -30,13 +30,13 @@
 		"detail": {
 			"sourceUrlLabel": "Quell URL",
 			"targetUrlLabel": "Ziel URL",
-			"httpCodeLabel": "Http Code",
+			"httpCodeLabel": "Http Status Code",
 			"cancelButton": "Abbrechen",
 			"saveButton": "Speichern",
             "errorSameUrlDescription": "Die Quell URL und Ziel URL dürfen nicht gleich sein",
 			"httpCodeLabelValues": {
 				"301": "301 (Permanent verschoben)",
-				"302": "302 (Gefunden / Temporär verschoben)"
+				"302": "302 (Temporär verschoben)"
 			}
 		}
 	}

@@ -17,8 +17,8 @@
 		"shopware-plugin-class" : "Scop\\PlatformRedirecter\\ScopPlatformRedirecter",
         "copyright": "(c) scope01 GmbH",
         "label" : {
-            "de-DE" : "PlatformRedirecter Plugin",
-            "en-GB" : "PlatformRedirecter plugin"
+            "de-DE" : "SEO Redirect Plugin",
+            "en-GB" : "SEO Redirect plugin"
         },
         "description": {
             "de-DE": "Mit dem SEO Redirekt Plugin der Internetagentur scope01 aus Frankfurt am Main (https://scope01.com/) können Sie schnell und einfach Weiterleitungen im admin von Shopware 6 verwalten.",
