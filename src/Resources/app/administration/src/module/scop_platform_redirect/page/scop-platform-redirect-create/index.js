@@ -19,7 +19,7 @@ Shopware.Component.extend('scop-platform-redirect-create', 'scop-platform-redire
 			this.isLoading = true;
 			this.repository.save(this.redirect, Shopware.Context.api).then(() => {
 				this.isLoading = false;
-				this.$router.push({name: 'scop.platform.redirect.details', params: {id: this.redirect.id}});
+				this.$router.push({name: 'scop.platform.redirect.list', params: {id: this.redirect.id}});
 			}).catch((exception) => {
 				this.isLoading = false;
 				this.createNotificationError({
