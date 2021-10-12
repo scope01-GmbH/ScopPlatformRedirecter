@@ -35,17 +35,20 @@ Component.register('scop-platform-redirect-details', {
     },
 
     computed: {
-      helptext(){
-          return '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>';
-      }
+        helptext() {
+            return '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>';
+        }
     },
 
     methods: {
         getRedirect() {
-            this.repository.get(this.$route.params.id, Shopware.Context.api).then((entity) => {this.redirect = entity;})
+            this.repository.get(this.$route.params.id, Shopware.Context.api).then((entity) => {
+                this.redirect = entity;
+            })
         },
 
         onClickSave() {
+            //Checking if source and target URL are the same, otherwise proceed
             if (this.redirect.sourceURL === this.redirect.targetURL) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
@@ -54,7 +57,7 @@ Component.register('scop-platform-redirect-details', {
                 return;
             }
             this.isLoading = true;
-            this.repository.save(this.redirect, Shopware.Context.api).then(() => {
+            this.repository.save(this.redirect, Shopware.Context.api).then(() => { //Updating the Redirect in the Database
                 this.getRedirect();
                 this.isLoading = false;
                 this.processSuccess = true;
@@ -69,6 +72,7 @@ Component.register('scop-platform-redirect-details', {
 
         saveFinish() {
             this.processSuccess = false;
+            this.$router.push({name: 'scop.platform.redirect.list'});
         }
     }
 

@@ -74,11 +74,13 @@ Shopware.Component.register('scop-platform-redirect-list', {
 
             this.exportLoading = true;
 
+            //Get Authorization
             const headers = {
                 Authorization: `Bearer ${this.loginService.getToken()}`
             };
             const httpClient = this.syncService.httpClient;
 
+            //Requesting to create the export file, catching an error
             const response = await httpClient.post('/_action/scop/platform/redirecter/prepare-export', {}, {headers: headers}).catch((err) => {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
@@ -87,11 +89,12 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 this.exportLoading = false;
             });
 
-            if (!this.exportLoading)
+            if (!this.exportLoading) //Returning if an error was caught
                 return;
 
             this.exportLoading = false;
 
+            //Checking if the creation of the file was successfully, otherwise returning
             if (response['status'] !== 200) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
@@ -100,6 +103,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 return;
             }
 
+            //Opening a new Tab to download the file
             await window.open('/api/_action/scop/platform/redirecter/download-export?filename=' + response['data']['file'], '_blank');
 
         },

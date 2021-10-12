@@ -1,12 +1,28 @@
 # v1.0.0
+
 - Erstes Release des Plugins
+
 # v1.0.1
+
 - Fehlerbehebung Weiterleitung bei mehreren SEO-Urls
+
 # v1.0.2
+
 - Weiterleitung bei nicht existierender Quellurl
+
 # v1.0.3
+
 - Erlaube Weiterleitung der gelöschten Urls
+
 # v1.0.4
+
 - Schließe store api von redirects aus
+
 # v1.0.5
+
 - Fehlerbehebung Weiterleitungen mit Paramatern in den Links
+
+# v1.1.0
+
+- Importieren und Exportieren hinzugefügt
+- Deaktivieren von Weiterleitungen hinzugefügt

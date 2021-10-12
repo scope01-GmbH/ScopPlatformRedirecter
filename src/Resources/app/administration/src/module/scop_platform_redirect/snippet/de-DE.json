@@ -1,47 +1,48 @@
 {
-	"scopplatformredirecter": {
-		"general": {
-			"title": "Weiterleitungen",
-			"errorTitle": "Fehler",
-			"moreInformation": "Weitere Informationen",
-			"moreInformationLink": "https://scope01.com/shopware-redirect-plugin/"
-		},
-		"list": {
-			"columnSourceUrl": "Quell URL",
-			"columnTargetUrl": "Ziel URL",
-			"columnHttpCode": "HTTP Status Code",
-			"columnEnabled": "Aktiviert",
-			"createButton": "Weiterleitung anlegen",
-			"exportAllButton": "Alle Exportieren",
-			"importButton": "Importieren",
-			"fileNotCreated": "Die Datei konnte nicht erstellt werden",
-			"fileNotImported": "Die Datei konnte nicht importiert werden",
-			"invalidFile": "Ungültige Datei",
-			"importDone": "Import abgeschlossen",
-			"fileImportedNoSkip": "Es wurden {amount} Weiterleitungen importiert",
-			"fileImported": "Es wurden {amount} Weiterleitungen importiert.<br>{skipped} Weiterleitungen wurden nicht importiert, da sie bereits vorhanden waren und nicht überschrieben werden sollten",
-			"importModal": {
-				"title": "Importieren",
-				"cancel": "Abbrechen",
-				"import": "Importieren",
-				"override": "Bei gleicher Quell URL überschreiben",
-				"overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene HTTP Status Code überschrieben. {moreInformation}",
-				"overrideID": "Bei gleicher ID überschreiben",
-				"overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschrieben. {moreInformation}"
-			}
-		},
-		"detail": {
-			"sourceUrlLabel": "Quell URL",
-			"targetUrlLabel": "Ziel URL",
-			"httpCodeLabel": "HTTP Status Code",
-			"enabledLabel": "Aktiviert",
-			"cancelButton": "Abbrechen",
-			"saveButton": "Speichern",
-            "errorSameUrlDescription": "Die Quell URL und Ziel URL dürfen nicht gleich sein",
-			"httpCodeLabelValues": {
-				"301": "301 (Permanent verschoben)",
-				"302": "302 (Temporär verschoben)"
-			}
-		}
-	}
+  "scopplatformredirecter": {
+    "general": {
+      "title": "Weiterleitungen",
+      "errorTitle": "Fehler",
+      "moreInformation": "Weitere Informationen",
+      "moreInformationLink": "https://scope01.com/shopware-redirect-plugin/"
+    },
+    "list": {
+      "columnSourceUrl": "Quell URL",
+      "columnTargetUrl": "Ziel URL",
+      "columnHttpCode": "HTTP Status Code",
+      "columnEnabled": "Aktiviert",
+      "createButton": "Weiterleitung anlegen",
+      "exportAllButton": "Alle Exportieren",
+      "importButton": "Importieren",
+      "fileNotCreated": "Die Datei konnte nicht erstellt werden",
+      "fileNotImported": "Die Datei konnte nicht importiert werden",
+      "invalidFile": "Ungültige Datei",
+      "importDone": "Import abgeschlossen",
+      "fileImportedNoSkip": "Es wurden {amount} Weiterleitungen importiert",
+      "fileImported": "Es wurden {amount} Weiterleitungen importiert.<br>{skipped} Weiterleitungen wurden nicht importiert, da sie bereits vorhanden waren und nicht überschrieben werden sollten",
+      "fileImportedError": "Es wurden {amount} Weiterleitungen importiert.<br>{skipped} Weiterleitungen wurden nicht importiert, da sie bereits vorhanden waren und nicht überschrieben werden sollten.<br><b>{error} Weiterleitungen in der Datei sind ungültig!</b>",
+      "importModal": {
+        "title": "Importieren",
+        "cancel": "Abbrechen",
+        "import": "Importieren",
+        "override": "Bei gleicher Quell URL überschreiben",
+        "overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene HTTP Status Code überschrieben. {moreInformation}",
+        "overrideID": "Bei gleicher ID überschreiben",
+        "overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschrieben. {moreInformation}"
+      }
+    },
+    "detail": {
+      "sourceUrlLabel": "Quell URL",
+      "targetUrlLabel": "Ziel URL",
+      "httpCodeLabel": "HTTP Status Code",
+      "enabledLabel": "Aktiviert",
+      "cancelButton": "Abbrechen",
+      "saveButton": "Speichern",
+      "errorSameUrlDescription": "Die Quell URL und Ziel URL dürfen nicht gleich sein",
+      "httpCodeLabelValues": {
+        "301": "301 (Permanent verschoben)",
+        "302": "302 (Temporär verschoben)"
+      }
+    }
+  }
 }

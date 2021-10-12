@@ -1,41 +1,42 @@
 {
-	"name" : "scop/scopplatformredirecter",
-	"description" : "With the redirect plugin of the agency scope01 from frankfurt(m) (https://scope01.com/) you are able to create and manage redirects from the admin area of shopware 6",
-    "version": "v1.1.0",
-	"type" : "shopware-platform-plugin",
-	"license" : "MIT",
-	"authors" : [{
-			"name" : "scope01 GmbH",
-			"role" : "Manufacturer",
-			"homepage" : "https://scope01.com/"
-		}
-	],
-	"require" : {
-		"shopware/core" : "6.*"
-	},
-	"extra" : {
-		"shopware-plugin-class" : "Scop\\PlatformRedirecter\\ScopPlatformRedirecter",
-        "copyright": "(c) scope01 GmbH",
-        "label" : {
-            "de-DE" : "SEO Redirect Plugin",
-            "en-GB" : "SEO Redirect plugin"
-        },
-        "description": {
-            "de-DE": "Mit dem SEO Redirekt Plugin der Internetagentur scope01 aus Frankfurt am Main (https://scope01.com/) können Sie schnell und einfach Weiterleitungen im admin von Shopware 6 verwalten.",
-            "en-GB": "With the SEO redirect plugin of the agency scope01 from frankfurt(m) (https://scope01.com/) you are able to create and manage redirects from the admin area of shopware 6"
-        },
-        "manufacturerLink": {
-            "de-DE": "https://scope01.com/",
-            "en-GB": "https://scope01.com/"
-        },
-        "supportLink": {
-            "de-DE": "https://scope01.com/internetagentur-frankfurt/",
-            "en-GB": "https://scope01.com/internetagentur-frankfurt/"
-        }
-	},
-	"autoload" : {
-		"psr-4" : {
-			"Scop\\PlatformRedirecter\\" : "src/"
-		}
-	}
+  "name": "scop/scopplatformredirecter",
+  "description": "With the redirect plugin of the agency scope01 from frankfurt(m) (https://scope01.com/) you are able to create and manage redirects from the admin area of shopware 6",
+  "version": "v1.1.0",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "scope01 GmbH",
+      "role": "Manufacturer",
+      "homepage": "https://scope01.com/"
+    }
+  ],
+  "require": {
+    "shopware/core": "6.*"
+  },
+  "extra": {
+    "shopware-plugin-class": "Scop\\PlatformRedirecter\\ScopPlatformRedirecter",
+    "copyright": "(c) scope01 GmbH",
+    "label": {
+      "de-DE": "SEO Redirect Plugin",
+      "en-GB": "SEO Redirect plugin"
+    },
+    "description": {
+      "de-DE": "Mit dem SEO Redirekt Plugin der Internetagentur scope01 aus Frankfurt am Main (https://scope01.com/) können Sie schnell und einfach Weiterleitungen im admin von Shopware 6 verwalten.",
+      "en-GB": "With the SEO redirect plugin of the agency scope01 from frankfurt(m) (https://scope01.com/) you are able to create and manage redirects from the admin area of shopware 6"
+    },
+    "manufacturerLink": {
+      "de-DE": "https://scope01.com/",
+      "en-GB": "https://scope01.com/"
+    },
+    "supportLink": {
+      "de-DE": "https://scope01.com/internetagentur-frankfurt/",
+      "en-GB": "https://scope01.com/internetagentur-frankfurt/"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Scop\\PlatformRedirecter\\": "src/"
+    }
+  }
 }

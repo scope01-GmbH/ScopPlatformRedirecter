@@ -1,47 +1,48 @@
 {
-	"scopplatformredirecter": {
-		"general": {
-			"title": "Redirects",
-			"errorTitle": "Error",
-			"moreInformation": "Further information",
-			"moreInformationLink": "https://scope01.com/en/shopware-redirect-plugin/"
-		},
-		"list": {
-			"columnSourceUrl": "Source URL",
-			"columnTargetUrl": "Target URL",
-			"columnHttpCode": "HTTP Status Code",
-			"columnEnabled": "Enabled",
-			"createButton": "Add Redirect",
-			"exportAllButton": "Export All",
-			"importButton": "Import",
-			"fileNotCreated": "The file could not be created",
-			"fileNotImported": "The file could not be imported",
-			"invalidFile": "Invalid File",
-			"importDone": "Import finished",
-			"fileImportedNoSkip": "{amount} Redirects where imported",
-			"fileImported": "{amount} Redirects where imported.<br>{skipped} Redirects where not imported because they already existed and should not be overridden",
-			"importModal": {
-				"title": "Import",
-				"cancel": "Cancel",
-				"import": "Import",
-				"override": "Override same Source URL",
-				"overrideHelp": "If a Source URL already exists, the Target URL and the HTTP Status Code will be overridden with this option. {moreInformation}",
-				"overrideID": "Override same ID",
-				"overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option. {moreInformation}"
-			}
-		},
-		"detail": {
-			"sourceUrlLabel": "Source URL",
-			"targetUrlLabel": "Target URL",
-			"httpCodeLabel": "HTTP Status Code",
-			"enabledLabel": "Enabled",
-			"cancelButton": "Cancel",
-			"saveButton": "Save",
-            "errorSameUrlDescription": "The source URL and target URL must not be the same",
-			"httpCodeLabelValues": {
-				"301": "301 (Moved Permanently)",
-				"302": "302 (Moved Temporarily)"
-			}
-		}
-	}
+  "scopplatformredirecter": {
+    "general": {
+      "title": "Redirects",
+      "errorTitle": "Error",
+      "moreInformation": "Further information",
+      "moreInformationLink": "https://scope01.com/en/shopware-redirect-plugin/"
+    },
+    "list": {
+      "columnSourceUrl": "Source URL",
+      "columnTargetUrl": "Target URL",
+      "columnHttpCode": "HTTP Status Code",
+      "columnEnabled": "Enabled",
+      "createButton": "Add Redirect",
+      "exportAllButton": "Export All",
+      "importButton": "Import",
+      "fileNotCreated": "The file could not be created",
+      "fileNotImported": "The file could not be imported",
+      "invalidFile": "Invalid File",
+      "importDone": "Import finished",
+      "fileImportedNoSkip": "{amount} Redirects where imported",
+      "fileImported": "{amount} Redirects where imported.<br>{skipped} Redirects where not imported because they already existed and should not be overridden",
+      "fileImportedError": "{amount} Redirects where imported.<br>{skipped} Redirects where not imported because they already existed and should not be overridden.<br><b>{error} Redirects in this file are invalid!</b>",
+      "importModal": {
+        "title": "Import",
+        "cancel": "Cancel",
+        "import": "Import",
+        "override": "Override same Source URL",
+        "overrideHelp": "If a Source URL already exists, the Target URL and the HTTP Status Code will be overridden with this option. {moreInformation}",
+        "overrideID": "Override same ID",
+        "overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option. {moreInformation}"
+      }
+    },
+    "detail": {
+      "sourceUrlLabel": "Source URL",
+      "targetUrlLabel": "Target URL",
+      "httpCodeLabel": "HTTP Status Code",
+      "enabledLabel": "Enabled",
+      "cancelButton": "Cancel",
+      "saveButton": "Save",
+      "errorSameUrlDescription": "The source URL and target URL must not be the same",
+      "httpCodeLabelValues": {
+        "301": "301 (Moved Permanently)",
+        "302": "302 (Moved Temporarily)"
+      }
+    }
+  }
 }

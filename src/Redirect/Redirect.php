@@ -6,7 +6,7 @@
  * @license MIT License
  * @link https://scope01.com
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 /**
  * Implemented by scope01 GmbH team https://scope01.com
  *
@@ -71,7 +71,7 @@ class Redirect extends Entity
     /**
      * @param String $sourceURL
      */
-    public function setSourceURL(String $sourceURL): void
+    public function setSourceURL(string $sourceURL): void
     {
         $this->sourceURL = $sourceURL;
     }
@@ -79,7 +79,7 @@ class Redirect extends Entity
     /**
      * @param String $targetURL
      */
-    public function setTargetURL(String $targetURL): void
+    public function setTargetURL(string $targetURL): void
     {
         $this->targetURL = $targetURL;
     }
