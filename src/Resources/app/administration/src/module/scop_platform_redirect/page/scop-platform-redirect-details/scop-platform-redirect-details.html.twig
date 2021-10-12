@@ -20,6 +20,9 @@
                         <option value=301>{{ $t('scopplatformredirecter.detail.httpCodeLabelValues.301') }}</option>
                         <option value=302>{{ $t('scopplatformredirecter.detail.httpCodeLabelValues.302') }}</option>
                     </sw-select-number-field>
+                    <sw-switch-field :label="$tc('scopplatformredirecter.detail.enabledLabel')" v-model="redirect.enabled" validation="required">
+
+                    </sw-switch-field>
                 </sw-card>
             </sw-card-view>
         </template>

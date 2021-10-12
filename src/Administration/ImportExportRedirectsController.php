@@ -94,9 +94,9 @@ class ImportExportRedirectsController extends AbstractController
          * @var Redirect $redirect
          */
 
-        fputcsv($fileStream, array('id', 'source_url', "target_url", "http_code"), ';');
+        fputcsv($fileStream, array('id', 'source_url', "target_url", "http_code", "enabled"), ';');
         foreach ($redirects as $redirect) {
-            fputcsv($fileStream, array($redirect->getId(), $redirect->getSourceURL(), $redirect->getTargetURL(), $redirect->getHttpCode()), ';');
+            fputcsv($fileStream, array($redirect->getId(), $redirect->getSourceURL(), $redirect->getTargetURL(), $redirect->getHttpCode(), $redirect->isEnabled()), ';');
         }
 
         fclose($fileStream);
@@ -169,11 +169,11 @@ class ImportExportRedirectsController extends AbstractController
             return new Response(json_encode($response), Response::HTTP_OK);
         }
 
-        if (count($title) != 4) {
+        if (count($title) != 5) {
             $response['detail'] = "File is not a Redirects Export";
             return new Response(json_encode($response), Response::HTTP_OK);
         }
-        if ($title[0] !== "id" || $title[1] !== "source_url" || $title[2] !== "target_url" || $title[3] !== "http_code") {
+        if ($title[0] !== "id" || $title[1] !== "source_url" || $title[2] !== "target_url" || $title[3] !== "http_code" || $title[4] !== "enabled") {
             $response['detail'] = "File is not a Redirects Export";
             return new Response(json_encode($response), Response::HTTP_OK);
         }
@@ -186,6 +186,7 @@ class ImportExportRedirectsController extends AbstractController
             $sourceURL = $line[1];
             $targetURL = $line[2];
             $httpCode = intval($line[3]);
+            $enabled = boolval($line[4]);
 
             $criteria = new Criteria();
             $criteria->addFilter(new MultiFilter(MultiFilter::CONNECTION_OR, [
@@ -207,7 +208,8 @@ class ImportExportRedirectsController extends AbstractController
                         'id' => $id,
                         'sourceURL' => $sourceURL,
                         'targetURL' => $targetURL,
-                        'httpCode' => $httpCode
+                        'httpCode' => $httpCode,
+                        'enabled' => $enabled
                     ]], $context);
                     $count++;
                 } else if (strcasecmp($redirect->getSourceURL(), $sourceURL) == 0 && $override) {
@@ -215,7 +217,8 @@ class ImportExportRedirectsController extends AbstractController
                         'id' => $redirect->getId(),
                         'sourceURL' => $sourceURL,
                         'targetURL' => $targetURL,
-                        'httpCode' => $httpCode
+                        'httpCode' => $httpCode,
+                        'enabled' => $enabled
                     ]], $context);
                     $count++;
                 } else {
@@ -227,7 +230,8 @@ class ImportExportRedirectsController extends AbstractController
                     'id' => $id,
                     'sourceURL' => $sourceURL,
                     'targetURL' => $targetURL,
-                    'httpCode' => $httpCode
+                    'httpCode' => $httpCode,
+                    'enabled' => $enabled
                 ]], $context);
                 $count++;
             }

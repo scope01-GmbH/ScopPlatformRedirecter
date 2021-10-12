@@ -17,6 +17,7 @@ declare(strict_types = 1);
 
 namespace Scop\PlatformRedirecter\Redirect;
 
+use phpDocumentor\Reflection\Types\Boolean;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
@@ -28,10 +29,12 @@ class Redirect extends Entity
      * @var String $sourceURL
      * @var String $targetURL
      * @var int $httpCode
+     * @var boolean $enabled
      */
     protected $sourceURL;
     protected $targetURL;
     protected $httpCode;
+    protected $enabled;
 
     /**
      * @return string
@@ -58,6 +61,14 @@ class Redirect extends Entity
     }
 
     /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
      * @param String $sourceURL
      */
     public function setSourceURL(String $sourceURL): void
@@ -79,5 +90,13 @@ class Redirect extends Entity
     public function setHttpCode(int $httpCode): void
     {
         $this->httpCode = $httpCode;
+    }
+
+    /**
+     * @param boolean $enabled
+     */
+    public function setEnabled(boolean $enabled): void
+    {
+        $this->enabled = $enabled;
     }
 }

@@ -52,7 +52,13 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 dataIndex: 'httpCode',
                 label: this.$tc('scopplatformredirecter.list.columnHttpCode'),
                 allowResize: true
-            }];
+            }, {
+                property: 'enabled',
+                dataIndex: 'enabled',
+                label: this.$tc('scopplatformredirecter.list.columnEnabled'),
+                inlineEdit: 'boolean'
+            },
+            ];
         }
     },
 
@@ -106,7 +112,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
         closeImport() {
             this.showImport = false;
         },
-        updateList(){
+        updateList() {
             this.repository.search(new Criteria(), Shopware.Context.api).then((result) => {
                 this.redirect = result;
             });
