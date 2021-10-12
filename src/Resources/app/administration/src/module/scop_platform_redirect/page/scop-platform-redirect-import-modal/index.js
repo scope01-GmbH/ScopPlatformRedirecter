@@ -38,6 +38,19 @@ Component.register('scop-platform-redirect-import-modal', {
         };
     },
 
+    computed: {
+        overrideIDHelp() {
+            return this.$tc('scopplatformredirecter.list.importModal.overrideIDHelp', 0, {
+                moreInformation: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>'
+            });
+        },
+        overrideHelp() {
+            return this.$tc('scopplatformredirecter.list.importModal.overrideHelp', 0, {
+                moreInformation: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>'
+            });
+        }
+    },
+
     methods: {
         onClose() {
             if (!this.processing)

@@ -113,11 +113,12 @@ Shopware.Component.register('scop-platform-redirect-list', {
             this.showImport = false;
         },
         updateList() {
-            this.repository.search(new Criteria(), Shopware.Context.api).then((result) => {
+            const criteria = this.redirect.criteria;
+
+            this.repository.search(criteria, Shopware.Context.api).then((result) => {
                 this.redirect = result;
             });
         }
-
     },
 
 });

@@ -2,12 +2,14 @@
 	"scopplatformredirecter": {
 		"general": {
 			"title": "Weiterleitungen",
-			"errorTitle": "Fehler"
+			"errorTitle": "Fehler",
+			"moreInformation": "Weitere Informationen",
+			"moreInformationLink": "https://scope01.com/shopware-redirect-plugin/"
 		},
 		"list": {
 			"columnSourceUrl": "Quell URL",
 			"columnTargetUrl": "Ziel URL",
-			"columnHttpCode": "Http Status Code",
+			"columnHttpCode": "HTTP Status Code",
 			"columnEnabled": "Aktiviert",
 			"createButton": "Weiterleitung anlegen",
 			"exportAllButton": "Alle Exportieren",
@@ -22,16 +24,16 @@
 				"title": "Importieren",
 				"cancel": "Abbrechen",
 				"import": "Importieren",
-				"override": "Gleiche Quell URLs überschreiben",
-				"overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene Http Code überschrieben",
+				"override": "Bei gleicher Quell URL überschreiben",
+				"overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene HTTP Status Code überschrieben. {moreInformation}",
 				"overrideID": "Bei gleicher ID überschreiben",
-				"overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschreiben"
+				"overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschrieben. {moreInformation}"
 			}
 		},
 		"detail": {
 			"sourceUrlLabel": "Quell URL",
 			"targetUrlLabel": "Ziel URL",
-			"httpCodeLabel": "Http Status Code",
+			"httpCodeLabel": "HTTP Status Code",
 			"enabledLabel": "Aktiviert",
 			"cancelButton": "Abbrechen",
 			"saveButton": "Speichern",

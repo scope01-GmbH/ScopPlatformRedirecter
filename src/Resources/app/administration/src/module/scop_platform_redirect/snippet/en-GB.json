@@ -2,12 +2,14 @@
 	"scopplatformredirecter": {
 		"general": {
 			"title": "Redirects",
-			"errorTitle": "Error"
+			"errorTitle": "Error",
+			"moreInformation": "Further information",
+			"moreInformationLink": "https://scope01.com/en/shopware-redirect-plugin/"
 		},
 		"list": {
 			"columnSourceUrl": "Source URL",
 			"columnTargetUrl": "Target URL",
-			"columnHttpCode": "Http Status Code",
+			"columnHttpCode": "HTTP Status Code",
 			"columnEnabled": "Enabled",
 			"createButton": "Add Redirect",
 			"exportAllButton": "Export All",
@@ -23,15 +25,15 @@
 				"cancel": "Cancel",
 				"import": "Import",
 				"override": "Override same Source URL",
-				"overrideHelp": "If a Source URL already exists, the Target URL and the Http Code will be overridden with this option",
+				"overrideHelp": "If a Source URL already exists, the Target URL and the HTTP Status Code will be overridden with this option. {moreInformation}",
 				"overrideID": "Override same ID",
-				"overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option"
+				"overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option. {moreInformation}"
 			}
 		},
 		"detail": {
 			"sourceUrlLabel": "Source URL",
 			"targetUrlLabel": "Target URL",
-			"httpCodeLabel": "Http Status Code",
+			"httpCodeLabel": "HTTP Status Code",
 			"enabledLabel": "Enabled",
 			"cancelButton": "Cancel",
 			"saveButton": "Save",

@@ -34,6 +34,12 @@ Component.register('scop-platform-redirect-details', {
         this.getRedirect();
     },
 
+    computed: {
+      helptext(){
+          return '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>';
+      }
+    },
+
     methods: {
         getRedirect() {
             this.repository.get(this.$route.params.id, Shopware.Context.api).then((entity) => {this.redirect = entity;})
