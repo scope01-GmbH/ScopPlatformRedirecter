@@ -103,8 +103,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 return;
             }
 
-            //Opening a new Tab to download the file
-            await window.open('/api/_action/scop/platform/redirecter/download-export?filename=' + response['data']['file'], '_blank');
+            await window.open(httpClient.defaults.baseURL + '/_action/scop/platform/redirecter/download-export?filename=' + response['data']['file'], '_blank');
 
         },
         onUpdate(records) {
