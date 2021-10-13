@@ -182,8 +182,9 @@ class ImportExportRedirectsController extends AbstractController
      *
      * @Route("/api/v{version}/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport-old", methods={"POST"})
      */
-    public function importOLD(Request $request, Context $context){
-        import($request, $context);
+    public function importOLD(Request $request, Context $context)
+    {
+        return $this->import($request, $context);
     }
 
     /**
