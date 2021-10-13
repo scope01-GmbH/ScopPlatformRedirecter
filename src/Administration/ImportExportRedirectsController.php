@@ -129,7 +129,7 @@ class ImportExportRedirectsController extends AbstractController
      *
      * @Route("/api/v{version}/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export-old", defaults={"auth_required"=false}, methods={"GET"})
      */
-    public function downloadOLD(Request $request, Context $context): Request
+    public function downloadOLD(Request $request, Context $context)
     {
         return $this->download($request, $context);
     }
