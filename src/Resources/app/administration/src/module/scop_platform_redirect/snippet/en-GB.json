@@ -39,6 +39,8 @@
       "cancelButton": "Cancel",
       "saveButton": "Save",
       "errorSameUrlDescription": "The source URL and target URL must not be the same",
+      "helpText": "Further information and FAQ can be found {link}",
+      "helpHere": "here",
       "httpCodeLabelValues": {
         "301": "301 (Moved Permanently)",
         "302": "302 (Moved Temporarily)"

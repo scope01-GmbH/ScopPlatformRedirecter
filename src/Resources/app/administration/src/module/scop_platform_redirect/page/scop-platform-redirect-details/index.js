@@ -36,7 +36,7 @@ Component.register('scop-platform-redirect-details', {
 
     computed: {
         helptext() {
-            return '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>';
+            return this.$tc('scopplatformredirecter.detail.helpText', 0, {link: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.detail.helpHere') + '</sw-external-link>'});
         }
     },
 
