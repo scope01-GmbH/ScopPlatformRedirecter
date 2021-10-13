@@ -131,7 +131,7 @@ class ImportExportRedirectsController extends AbstractController
      */
     public function downloadOLD(Request $request, Context $context): Request
     {
-        return download($request, $context);
+        return $this->download($request, $context);
     }
 
     /**
