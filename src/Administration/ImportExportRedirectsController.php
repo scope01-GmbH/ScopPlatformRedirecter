@@ -54,6 +54,17 @@ class ImportExportRedirectsController extends AbstractController
     }
 
     /**
+     * Route for older Shopware Versions
+     *
+     * @Route("/api/v{version}/_action/scop/platform/redirecter/prepare-export", name="api.action.scop.platform.redirecter.prepare-export-old", methods={"POST"})
+     * @throws \Exception
+     */
+    public function prepareExportOLD(Context $context): Response
+    {
+        return $this->prepareExport($context);
+    }
+
+    /**
      * Removes old export files, that are older than 60 Seconds.
      * Then exports all redirects into a new file.
      *
@@ -114,6 +125,16 @@ class ImportExportRedirectsController extends AbstractController
     }
 
     /**
+     * Route for older Shopware Versions
+     *
+     * @Route("/api/v{version}/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export-old", defaults={"auth_required"=false}, methods={"GET"})
+     */
+    public function downloadOLD(Request $request, Context $context): Request
+    {
+        return download($request, $context);
+    }
+
+    /**
      * Downloads an exported file. The Filename must be in the $request.
      *
      * @Route("/api/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export", defaults={"auth_required"=false}, methods={"GET"})
@@ -154,6 +175,15 @@ class ImportExportRedirectsController extends AbstractController
         return new StreamedResponse(function () use ($stream): void {
             fpassthru($stream);
         }, Response::HTTP_OK, $headers);
+    }
+
+    /**
+     * Route for older Shopware Versions
+     *
+     * @Route("/api/v{version}/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport-old", methods={"POST"})
+     */
+    public function importOLD(Request $request, Context $context){
+        import($request, $context);
     }
 
     /**
