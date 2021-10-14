@@ -22,6 +22,7 @@ use Shopware\Core\Framework\Event\BeforeSendResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Context;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -127,7 +128,7 @@ class RequestSubscriber implements EventSubscriberInterface
         }
 
         // search for the redirect in the database
-        $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))
+        $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))
             ->setLimit(1), $context);
 
         // No Redirect found for this URL, do nothing

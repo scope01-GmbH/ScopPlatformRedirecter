@@ -1,17 +1,23 @@
 <?xml version="1.0" ?>
 
 <container xmlns="http://symfony.com/schema/dic/services"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-	<services>
-		<service id="Scop\PlatformRedirecter\Redirect\RedirectDefinition">
-			<tag name="shopware.entity.definition" entity="scop_platform_redirecter_redirect"/>
-		</service>
-		<service id="Scop\PlatformRedirecter\Subscriber\RequestSubscriber">
-			<tag name="kernel.event_subscriber"/>
-			 <argument type="service" id="scop_platform_redirecter_redirect.repository" />
-             <argument type="service" id="seo_url.repository" />
-		</service>
-	</services>
+    <services>
+        <service id="Scop\PlatformRedirecter\Redirect\RedirectDefinition">
+            <tag name="shopware.entity.definition" entity="scop_platform_redirecter_redirect"/>
+        </service>
+        <service id="Scop\PlatformRedirecter\Subscriber\RequestSubscriber">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
+            <argument type="service" id="seo_url.repository"/>
+        </service>
+        <service id="Scop\PlatformRedirecter\Administration\ImportExportRedirectsController" public="true">
+            <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+    </services>
 </container>

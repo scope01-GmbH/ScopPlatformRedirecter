@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 /**
  * Implemented by scope01 GmbH team https://scope01.com
  *
