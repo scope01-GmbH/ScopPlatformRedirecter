@@ -36,7 +36,10 @@ Component.register('scop-platform-redirect-details', {
 
     computed: {
         helptext() {
-            return this.$tc('scopplatformredirecter.detail.helpText', 0, {link: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.detail.helpHere') + '</sw-external-link>'});
+            if (hasExternalLink())
+                return this.$tc('scopplatformredirecter.detail.helpText', 0, {link: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.detail.helpHere') + '</sw-external-link>'});
+            else
+                return this.$tc('scopplatformredirecter.detail.helpText', 0, {link: '<a style="color: #1596ff" href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.detail.helpHere') + '</a>'});
         }
     },
 
@@ -77,3 +80,20 @@ Component.register('scop-platform-redirect-details', {
     }
 
 });
+
+function hasExternalLink() {
+    var version = Shopware.Context.app.config.version.split(".");
+    if (parseInt(version[0]) < 6)
+        return false;
+    if (parseInt(version[0]) > 6)
+        return true;
+
+    if (parseInt(version[1]) < 4)
+        return false;
+    if (parseInt(version[1]) > 4)
+        return true;
+
+    if (parseInt(version[2]) < 3)
+        return false;
+    return true;
+}
