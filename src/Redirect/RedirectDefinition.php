@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 /**
  * Implemented by scope01 GmbH team https://scope01.com
  *
@@ -11,6 +11,7 @@ declare(strict_types = 1);
 namespace Scop\PlatformRedirecter\Redirect;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
@@ -63,7 +64,8 @@ class RedirectDefinition extends EntityDefinition
             (new IdField('id', 'id'))->addFlags(new PrimaryKey(), new Required()),
             new StringField("sourceURL", "sourceURL"),
             new StringField("targetURL", "targetURL"),
-            new IntField("httpCode", "httpCode")
+            new IntField("httpCode", "httpCode"),
+            new BoolField("enabled", "enabled")
         ]);
     }
 }
