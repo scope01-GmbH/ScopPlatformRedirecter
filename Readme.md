@@ -9,7 +9,7 @@
 | 1.0.4     | Exclude store api from redirects                                                                   | Github         |
 | 1.0.5     | Fix redirects with query params                                                                   | Github         |
 | 1.1.0     | Import, export and disabling of redirects                                                           | Github         |
-| 1.1.2     | Fixed csv file identification when importing                                                           | Github         |
+| 1.1.1     | Fixed csv file identification when importing                                                           | Github         |
 
 # Installation
 
