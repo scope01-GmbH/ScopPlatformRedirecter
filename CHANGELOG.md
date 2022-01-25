@@ -26,3 +26,7 @@
 
 - Added Export and Import function
 - Added Disabling of Redirects
+
+# v1.1.1
+
+- Fixed csv file identification when importing

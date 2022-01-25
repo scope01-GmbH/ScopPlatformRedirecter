@@ -26,3 +26,7 @@
 
 - Importieren und Exportieren hinzugefügt
 - Deaktivieren von Weiterleitungen hinzugefügt
+
+# v1.1.1
+
+- Fehlerbehebung csv Dateierkennung bei Import
