@@ -30,3 +30,4 @@
 # v1.1.1
 
 - Fixed csv file identification when importing
+- Fixed endless redirecting within multiple seo urls to the same product

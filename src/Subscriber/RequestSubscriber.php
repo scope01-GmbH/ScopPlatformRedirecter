@@ -87,11 +87,6 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($queryString !== '') {
-            $queryString = urldecode($queryString);
-            $requestUri .= '?' . $queryString;
-        }
-
         $context = Context::createDefaultContext();
 
         $search = [
