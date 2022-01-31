@@ -32,19 +32,14 @@ class RequestSubscriber implements EventSubscriberInterface
      * @var EntityRepositoryInterface
      */
     private $repository;
-    /**
-     * @var EntityRepositoryInterface
-     */
-    private $seoUrlRepository;
 
     /**
      * @param EntityRepositoryInterface $redirectRepository
      */
-    public function __construct(EntityRepositoryInterface $redirectRepository, EntityRepositoryInterface $seoUrlRepository)
+    public function __construct(EntityRepositoryInterface $redirectRepository)
     {
         /** @var EntityRepositoryInterface $repository */
         $this->repository = $redirectRepository;
-        $this->seoUrlRepository = $seoUrlRepository;
     }
 
     /**
