@@ -66,7 +66,6 @@ class RequestSubscriber implements EventSubscriberInterface
         $storefrontUri = $event->getRequest()->get('sw-storefront-url');
         $requestBase = $event->getRequest()->getPathInfo();
         $requestBaseUrl = $event->getRequest()->getBaseUrl();
-        $queryString = (string)$event->getRequest()->getQueryString();
 
         // Block overriding /admin and /api and widgets, so you can't lock out of the administration.
         if (\strpos($requestBase, "/admin") === 0) {
@@ -79,6 +78,9 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
         if (\strpos($requestBase, "/store-api") === 0) {
+            return;
+        }
+        if (\strpos($requestBase, "/_profiler") === 0) {
             return;
         }
 
