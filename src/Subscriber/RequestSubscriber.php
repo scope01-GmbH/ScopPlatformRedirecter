@@ -22,6 +22,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\Event\BeforeSendRedirectResponseEvent;
 use Shopware\Core\Framework\Event\BeforeSendResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,7 +50,8 @@ class RequestSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            BeforeSendResponseEvent::class => 'redirectBeforeSendResponse'
+            BeforeSendResponseEvent::class => 'redirectBeforeSendResponse',
+            BeforeSendRedirectResponseEvent::class => 'redirectBeforeSendResponse'
         ];
     }
 
