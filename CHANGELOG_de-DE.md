@@ -31,3 +31,7 @@
 
 - Fehlerbehebung csv Dateierkennung bei Import
 - Fehlerbehebung Endlosweiterleitung bei mehreren SEO-Urls zum gleichen Produkt
+
+# v1.1.2
+
+- Fehlerbehebung Weiteleitung von alter SEO-Url
