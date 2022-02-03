@@ -18,5 +18,11 @@
                 <argument type="service" id="service_container"/>
             </call>
         </service>
+        <service id="scop.platform_redirecter.test.test_browser" class="Scop\PlatformRedirecter\Test\ScopTestBrowser" shared="false" public="true">
+            <argument type="service" id="kernel" />
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="test.client.history" on-invalid="null"/>
+            <argument type="service" id="test.client.cookiejar" on-invalid="null"/>
+        </service>
     </services>
 </container>

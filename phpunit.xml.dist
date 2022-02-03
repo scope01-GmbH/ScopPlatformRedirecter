@@ -2,7 +2,7 @@
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
-         bootstrap="tests/TestBootstrap.php"
+         bootstrap="../../../vendor/shopware/platform/src/Core/TestBootstrap.php"
          executionOrder="random">
 
     <php>
@@ -16,9 +16,15 @@
 
     <testsuites>
         <testsuite name="Redirecter Testsuite">
-            <directory>tests</directory>
+            <directory>src/Test/RedirectTests</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./</directory>
+        </whitelist>
+    </filter>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
