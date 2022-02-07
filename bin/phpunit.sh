@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-composer dump-autoload
-./../../../vendor/bin/phpunit "$@"
+cd ../../../
+./vendor/bin/phpunit custom/plugins/ScopPlatformRedirecter "$@"

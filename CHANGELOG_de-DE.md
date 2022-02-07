@@ -26,3 +26,12 @@
 
 - Importieren und Exportieren hinzugefügt
 - Deaktivieren von Weiterleitungen hinzugefügt
+
+# v1.1.1
+
+- Fehlerbehebung csv Dateierkennung bei Import
+- Fehlerbehebung Endlosweiterleitung bei mehreren SEO-Urls zum gleichen Produkt
+
+# v1.1.2
+
+- Fehlerbehebung Weiteleitung von alter SEO-Url

@@ -83,6 +83,7 @@ Component.register('scop-platform-redirect-import-modal', {
                 Authorization: `Bearer ${this.loginService.getToken()}`
             };
 
+
             //Sending the Request to the Backend, catching an Error
             const httpClient = this.syncService.httpClient;
             const response = await httpClient.post("/_action/scop/platform/redirecter/import", formData, {headers: headers}).catch((err) => {
@@ -98,10 +99,15 @@ Component.register('scop-platform-redirect-import-modal', {
                 return;
 
             if (response['status'] !== 200 || response['data']['detail'] !== 'File Imported!') { //An Error occurred whilst importing, notify the User
-                if (response['data']['detail'] === 'File is not a Redirects Export') { //It is an invalid file
+                if (response['data']['detail'] === 'Invalid File') { //It is not a valid csv file
                     this.createNotificationError({
                         title: this.$tc('scopplatformredirecter.general.errorTitle'),
                         message: this.$tc('scopplatformredirecter.list.invalidFile')
+                    });
+                } else if (response['data']['detail'] === 'File is not a Redirects Export') { //It is an invalid csv file
+                    this.createNotificationError({
+                        title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                        message: this.$tc('scopplatformredirecter.list.invalidCsvFile')
                     });
                 } else { //Something else went wrong
                     this.createNotificationError({

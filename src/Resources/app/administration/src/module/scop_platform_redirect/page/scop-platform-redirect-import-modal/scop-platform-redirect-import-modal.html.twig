@@ -12,7 +12,6 @@
                 <sw-card :hero="true" :isLoading="processing">
                     <sw-file-input
                             v-model="selectedFile"
-                            :allowedMimeTypes="['text/csv']"
                             :maxFileSize="8*1024*1024"
                             @change="onFileChange">
                     </sw-file-input>

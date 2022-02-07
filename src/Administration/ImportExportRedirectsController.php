@@ -203,6 +203,19 @@ class ImportExportRedirectsController extends AbstractController
         $overrideID = ($request->get("overrideID") === "true");
         $override = ($request->get("override") === "true");
 
+        //Checking if it is a csv File
+        $guessedExtension = $file->guessClientExtension();
+        if ($guessedExtension === 'csv' || $file->getClientOriginalExtension() === 'csv') {
+            $type = 'text/csv';
+        } else {
+            $type = $file->getClientMimeType();
+        }
+
+        if($type !== 'text/csv'){
+            $response['detail'] = "Invalid File";
+            return new Response(json_encode($response), Response::HTTP_OK);
+        }
+
         //Opening the uploaded File
         $fileStream = fopen($file->getPathname(), 'r');
 
