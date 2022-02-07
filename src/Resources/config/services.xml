@@ -11,6 +11,7 @@
         <service id="Scop\PlatformRedirecter\Subscriber\RequestSubscriber">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
+            <argument type="service" id="seo_url.repository"/>
         </service>
         <service id="Scop\PlatformRedirecter\Administration\ImportExportRedirectsController" public="true">
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>

@@ -34,4 +34,8 @@
 
 # v1.1.2
 
-- Fehlerbehebung Weiteleitung von alter SEO-Url
+- Fehlerbehebung Weiterleitung von alter SEO-Url
+
+# v1.1.3
+
+- Fehlerbehebung Weiterleitung in Shopware Versionen unter 6.4.0.0
