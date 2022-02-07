@@ -9,6 +9,8 @@
 | 1.0.4     | Exclude store api from redirects                                                                   | Github         |
 | 1.0.5     | Fix redirects with query params                                                                   | Github         |
 | 1.1.0     | Import, export and disabling of redirects                                                           | Github         |
+| 1.1.1     | Fixed csv file identification when importing<br>Fixed endless redirecting within multiple seo urls to the same product    | Github         |
+| 1.1.2     | Fixed redirecting from old seo url                                              | Github         |
 
 # Installation
 

@@ -26,3 +26,12 @@
 
 - Added Export and Import function
 - Added Disabling of Redirects
+
+# v1.1.1
+
+- Fixed csv file identification when importing
+- Fixed endless redirecting within multiple seo urls to the same product
+
+# v1.1.2
+
+- Fixed redirecting from old seo url
