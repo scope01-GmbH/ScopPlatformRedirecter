@@ -35,3 +35,7 @@
 # v1.1.2
 
 - Fixed redirecting from old seo url
+
+# v1.1.3
+
+- Fixed redirecting in shopware versions below 6.4.0.0
