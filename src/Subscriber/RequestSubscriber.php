@@ -228,7 +228,7 @@ class RequestSubscriber implements EventSubscriberInterface
         $code = $redirect->getHttpCode();
 
         // Prevent endless redirecting when target url belongs to the same seo url like the source url
-        if (in_array($targetURL, $search)) {
+        if (in_array($targetURL, $search, true)) {
             return;
         }
 
