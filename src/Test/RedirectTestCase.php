@@ -19,11 +19,11 @@ declare(strict_types=1);
 namespace Scop\PlatformRedirecter\Test;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Checkout\Test\Customer\SalesChannel\CustomerTestTrait;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Test\TestCaseBase\IntegrationTestBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\SalesChannelApiTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseHelper\TestBrowser;
 use Shopware\Core\Framework\Test\TestDataCollection;
 use Shopware\Core\Framework\Util\Random;
@@ -39,26 +39,26 @@ abstract class RedirectTestCase extends TestCase
 {
 
     use IntegrationTestBehaviour;
-    use CustomerTestTrait;
+    use SalesChannelApiTestBehaviour;
 
     /**
      * @var KernelBrowser
      */
-    private KernelBrowser $browser;
+    private $browser;
 
     /**
      * @var TestDataCollection
      */
-    private TestDataCollection $ids;
+    private $ids;
 
     /**
      * @var string
      */
-    protected string $host = "shopware6.local";
+    protected  $host = "shopware6.local";
 
     /**
      * Set up test case
-     * @throws Exception
+     * @throws \Exception
      */
     public function setUp(): void
     {

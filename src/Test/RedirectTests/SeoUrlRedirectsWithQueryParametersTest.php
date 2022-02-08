@@ -9,7 +9,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 class SeoUrlRedirectsWithQueryParametersTest extends RedirectTestCase
 {
 
-    private array $seoUrlIds = [], $seoUrls = [];
+    private $seoUrlIds = [], $seoUrls = [];
 
     public function setUp(): void
     {
