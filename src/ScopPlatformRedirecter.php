@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Scop\PlatformRedirecter;
 
-use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Shopware\Core\Framework\Plugin;
 use Doctrine\DBAL\Connection;
+use Shopware\Core\Framework\Plugin;
+use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 
 /**
  * Shopware-Plugin ScopPlatformRedirecter

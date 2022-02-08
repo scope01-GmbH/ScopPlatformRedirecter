@@ -5,7 +5,6 @@ namespace Scop\PlatformRedirecter\Test;
 use Shopware\Core\Framework\Event\BeforeSendRedirectResponseEvent;
 use Shopware\Core\Framework\Event\BeforeSendResponseEvent;
 use Shopware\Core\Framework\Routing\CanonicalRedirectService;
-use Shopware\Core\Framework\Routing\RequestTransformerInterface;
 use Shopware\Core\Framework\Test\TestCaseHelper\TestBrowser;
 use Shopware\Core\Kernel;
 use Symfony\Component\BrowserKit\CookieJar;
@@ -21,7 +20,7 @@ class ScopTestBrowser extends TestBrowser
     /**
      * @var EventDispatcherInterface
      */
-    private EventDispatcherInterface $eventDispatcher;
+    private $eventDispatcher;
 
     public function __construct(Kernel $kernel, EventDispatcherInterface $eventDispatcher, ?History $history = null, ?CookieJar $cookieJar = null)
     {
