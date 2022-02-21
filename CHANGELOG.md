@@ -39,3 +39,7 @@
 # v1.1.3
 
 - Fixed redirecting in shopware versions below 6.4.0.0
+
+# v1.1.4
+
+- Fixed endless redirecting when source- and target-url have only different capitalisation

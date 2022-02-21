@@ -39,3 +39,7 @@
 # v1.1.3
 
 - Fehlerbehebung Weiterleitung in Shopware Versionen unter 6.4.0.0
+
+# v1.1.4
+
+- Fehlerbehebung Endlosweiterleitung wenn sich Quell- und Ziel-URL nur in der Groß- und Kleinschreibung unterscheiden.

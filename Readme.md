@@ -12,6 +12,7 @@
 | 1.1.1     | Fixed csv file identification when importing<br>Fixed endless redirecting within multiple seo urls to the same product    | Github         |
 | 1.1.2     | Fixed redirecting from old seo url                                              | Github         |
 | 1.1.3     | Fixed redirecting in shopware versions below 6.4.0.0                                              | Github         |
+| 1.1.4     | Fixed endless redirecting when source- and target-url have only different capitalisation             | Github         |
 
 # Installation
 
