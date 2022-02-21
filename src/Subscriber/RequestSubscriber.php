@@ -125,6 +125,11 @@ class RequestSubscriber implements EventSubscriberInterface
         $targetURL = $redirect->getTargetURL();
         $code = $redirect->getHttpCode();
 
+        // Prevent endless redirecting when target url and source url have only different capitalisation
+        if (in_array($targetURL, $search, true)) {
+            return;
+        }
+
         /*
          *  checks if $targetURL is a full url or path and redirects accordingly
          */
@@ -227,7 +232,7 @@ class RequestSubscriber implements EventSubscriberInterface
         $targetURL = $redirect->getTargetURL();
         $code = $redirect->getHttpCode();
 
-        // Prevent endless redirecting when target url belongs to the same seo url like the source url
+        // Prevent endless redirecting when target url belongs to the same seo url like the source url or when target url and source url have only different capitalisation
         if (in_array($targetURL, $search, true)) {
             return;
         }
