@@ -43,3 +43,7 @@
 # v1.1.4
 
 - Fehlerbehebung Endlosweiterleitung wenn sich Quell- und Ziel-URL nur in der Groß- und Kleinschreibung unterscheiden.
+
+# v1.1.5
+
+- Fehlerbehebung Weiterleitung von einer absoluten URL mit einem virtuellen Path
