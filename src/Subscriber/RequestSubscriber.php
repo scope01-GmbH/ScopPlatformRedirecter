@@ -156,7 +156,7 @@ class RequestSubscriber implements EventSubscriberInterface
     private function oldRedirectBeforeSendResponse(BeforeSendResponseEvent $event): void
     {
         $requestUri = (string)$event->getRequest()->get('resolved-uri');
-        $storefrontUri = $event->getRequest()->get('sw-sales-channel-absolute-base-url');
+        $storefrontUri = $event->getRequest()->get('sw-storefront-url');
         $requestBase = $event->getRequest()->getPathInfo();
         $requestBaseUrl = $event->getRequest()->getBaseUrl();
         $queryString = (string)$event->getRequest()->getQueryString();
