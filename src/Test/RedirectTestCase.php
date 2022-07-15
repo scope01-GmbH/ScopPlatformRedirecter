@@ -57,6 +57,11 @@ abstract class RedirectTestCase extends TestCase
     protected  $host = "shopware6.local";
 
     /**
+     * @var string
+     */
+    protected  $hostWithLanguage = "shopware6.local/de-DE";
+
+    /**
      * Set up test case
      * @throws \Exception
      */

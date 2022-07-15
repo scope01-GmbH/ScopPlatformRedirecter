@@ -43,3 +43,7 @@
 # v1.1.4
 
 - Fixed endless redirecting when source- and target-url have only different capitalisation
+
+# v1.1.5
+
+- Fixed redirecting from an absolute URL with virtual path

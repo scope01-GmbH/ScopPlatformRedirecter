@@ -78,7 +78,7 @@ class RequestSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $storefrontUri = $event->getRequest()->get('sw-storefront-url');
+        $storefrontUri = $event->getRequest()->get('sw-sales-channel-absolute-base-url');
         $requestBase = $event->getRequest()->getPathInfo();
         $requestBaseUrl = $event->getRequest()->getBaseUrl();
 
@@ -110,7 +110,6 @@ class RequestSubscriber implements EventSubscriberInterface
             '/' . $requestUri, // absolute url domain configured in public folder: http://shopware-platform.local/Shoes-Baby/
             \substr($requestUri, 1), // e.g. "test"
         ];
-
 
         // search for the redirect in the database
         $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))
