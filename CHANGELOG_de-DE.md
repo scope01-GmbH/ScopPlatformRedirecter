@@ -47,3 +47,7 @@
 # v1.1.5
 
 - Fehlerbehebung Weiterleitung von einer absoluten URL mit einem virtuellen Path
+
+# v1.2.0
+
+- Neue Option "Query Parameter ignorieren" hinzugefügt

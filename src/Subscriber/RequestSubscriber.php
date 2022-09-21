@@ -115,9 +115,24 @@ class RequestSubscriber implements EventSubscriberInterface
         $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))
             ->setLimit(1), $context);
 
-        // No Redirect found for this URL, do nothing
         if ($redirects->count() === 0) {
-            return;
+            // Checks if the requested URL contains Query parameters, and if so, checks if a redirect can be found with the ignoreQueryParams option
+            if(str_contains($requestUri, '?')) {
+                $searchWithoutQuery = [];
+                foreach ($search as $string)
+                    $searchWithoutQuery[] = explode('?', $string)[0];
+
+                $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $searchWithoutQuery))->addFilter(new EqualsFilter('enabled', true))->addFilter(new EqualsFilter('ignoreQueryParams', true))
+                    ->setLimit(1), $context);
+
+                // No Redirect found for this URL, do nothing
+                if ($redirects->count() === 0) {
+                    return;
+                }
+            } else {
+                // No Redirect found for this URL, do nothing
+                return;
+            }
         }
 
         $redirect = $redirects->first();
@@ -222,9 +237,24 @@ class RequestSubscriber implements EventSubscriberInterface
         $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))
             ->setLimit(1), $context);
 
-        // No Redirect found for this URL, do nothing
         if ($redirects->count() === 0) {
-            return;
+            // Checks if the requested URL contains Query parameters, and if so, checks if a redirect can be found with the ignoreQueryParams option
+            if(str_contains($requestUri, '?')) {
+                $searchWithoutQuery = [];
+                foreach ($search as $string)
+                    $searchWithoutQuery[] = explode('?', $string)[0];
+
+                $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $searchWithoutQuery))->addFilter(new EqualsFilter('enabled', true))->addFilter(new EqualsFilter('ignoreQueryParams', true))
+                    ->setLimit(1), $context);
+
+                // No Redirect found for this URL, do nothing
+                if ($redirects->count() === 0) {
+                    return;
+                }
+            } else {
+                // No Redirect found for this URL, do nothing
+                return;
+            }
         }
 
         $redirect = $redirects->first();

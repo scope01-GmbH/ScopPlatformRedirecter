@@ -22,8 +22,15 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Checkout\Test\Customer\SalesChannel\CustomerTestTrait;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\Test\TestCaseBase\BasicTestDataBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\CacheTestBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\DatabaseTransactionBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\FilesystemBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\IntegrationTestBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\KernelTestBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\RequestStackTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\SalesChannelApiTestBehaviour;
+use Shopware\Core\Framework\Test\TestCaseBase\SessionTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseHelper\TestBrowser;
 use Shopware\Core\Framework\Test\TestDataCollection;
 use Shopware\Core\Framework\Util\Random;
@@ -38,7 +45,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 abstract class RedirectTestCase extends TestCase
 {
 
-    use IntegrationTestBehaviour;
+    use KernelTestBehaviour;
+    use FilesystemBehaviour;
+    use CacheTestBehaviour;
+    use BasicTestDataBehaviour;
+    use SessionTestBehaviour;
+    use RequestStackTestBehaviour;
     use SalesChannelApiTestBehaviour;
 
     /**
@@ -69,7 +81,7 @@ abstract class RedirectTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->ids = new TestDataCollection(Context::createDefaultContext());
+        $this->ids = new TestDataCollection();
 
         $this->browser = $this->createCustomSalesChannelBrowser([
             'id' => $this->ids->create('sales-channel'),
@@ -85,7 +97,7 @@ abstract class RedirectTestCase extends TestCase
 
         $conn->executeUpdate('TRUNCATE scop_platform_redirecter_redirect', []);
         foreach ($this->getDatabaseRedirects() as $testRedirect) {
-            $conn->executeUpdate('INSERT INTO scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, enabled, created_at) VALUES (UNHEX(?), ?, ?, ?, ?, CURRENT_TIMESTAMP())', [UUID::randomHex(), $testRedirect[0], $testRedirect[1], $testRedirect[2], $testRedirect[3] ? 1 : 0]);
+            $conn->executeUpdate('INSERT INTO scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, enabled, ignoreQueryParams, created_at) VALUES (UNHEX(?), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())', [UUID::randomHex(), $testRedirect[0], $testRedirect[1], $testRedirect[2], $testRedirect[3] ? 1 : 0, $testRedirect[4] ?? false ? 1 : 0]);
         }
 
     }

@@ -47,3 +47,7 @@
 # v1.1.5
 
 - Fixed redirecting from an absolute URL with virtual path
+
+# v1.2.0
+
+- Added option "Ignore Query Parameters"

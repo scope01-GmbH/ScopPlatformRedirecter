@@ -14,6 +14,7 @@
 | 1.1.3     | Fixed redirecting in shopware versions below 6.4.0.0                                              | Github         |
 | 1.1.4     | Fixed endless redirecting when source- and target-url have only different capitalisation             | Github         |
 | 1.1.5     | Fixed redirecting from an absolute URL with virtual path             | Github         |
+| 1.2.0     | Added option "Ignore Query Parameters"                               | Github         |
 
 # Installation
 

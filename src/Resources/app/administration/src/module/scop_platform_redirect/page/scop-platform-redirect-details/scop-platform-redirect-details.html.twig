@@ -22,6 +22,8 @@
                     </sw-select-number-field>
                     <sw-switch-field :label="$tc('scopplatformredirecter.detail.enabledLabel')"
                                      v-model="redirect.enabled" validation="required"></sw-switch-field>
+                    <sw-switch-field :label="$tc('scopplatformredirecter.detail.ignoreQueryParamsLabel')"
+                                     v-model="redirect.ignoreQueryParams" validation="required"></sw-switch-field>
                 </sw-card>
             </sw-card-view>
         </template>
