@@ -30,11 +30,13 @@ class Redirect extends Entity
      * @var String $targetURL
      * @var int $httpCode
      * @var boolean $enabled
+     * @var boolean $ignoreQueryParams
      */
     protected $sourceURL;
     protected $targetURL;
     protected $httpCode;
     protected $enabled;
+    protected $ignoreQueryParams;
 
     /**
      * @return string
@@ -69,6 +71,14 @@ class Redirect extends Entity
     }
 
     /**
+     * @return bool
+     */
+    public function isIgnoreQueryParams(): bool
+    {
+        return $this->ignoreQueryParams;
+    }
+
+    /**
      * @param String $sourceURL
      */
     public function setSourceURL(string $sourceURL): void
@@ -98,5 +108,13 @@ class Redirect extends Entity
     public function setEnabled(boolean $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    /**
+     * @param boolean $ignoreQueryParams
+     */
+    public function setIgnoreQueryParams(boolean $ignoreQueryParams): void
+    {
+        $this->ignoreQueryParams = $ignoreQueryParams;
     }
 }

@@ -107,9 +107,9 @@ class ImportExportRedirectsController extends AbstractController
         /**
          * @var Redirect $redirect
          */
-        fputcsv($fileStream, array('id', 'source_url', "target_url", "http_code", "enabled"), ';'); // Writing the CSV Headline
+        fputcsv($fileStream, array('id', 'source_url', "target_url", "http_code", "enabled", "ignore_query_params"), ';'); // Writing the CSV Headline
         foreach ($redirects as $redirect) { // Writing each Redirect into the file
-            fputcsv($fileStream, array($redirect->getId(), $redirect->getSourceURL(), $redirect->getTargetURL(), $redirect->getHttpCode(), $redirect->isEnabled() ? 1 : 0), ';');
+            fputcsv($fileStream, array($redirect->getId(), $redirect->getSourceURL(), $redirect->getTargetURL(), $redirect->getHttpCode(), $redirect->isEnabled() ? 1 : 0, $redirect->isIgnoreQueryParams() ? 1 : 0), ';');
         }
 
         //Closing the File
@@ -226,11 +226,19 @@ class ImportExportRedirectsController extends AbstractController
             return new Response(json_encode($response), Response::HTTP_OK);
         }
 
-        if (count($title) != 5) {
-            $response['detail'] = "File is not a Redirects Export";
-            return new Response(json_encode($response), Response::HTTP_OK);
+        $valid = false;
+        if (count($title) === 5) { // Backward compatibility for exports before v1.2.0
+            if ($title[0] === "id" || $title[1] === "source_url" || $title[2] === "target_url" || $title[3] === "http_code" || $title[4] === "enabled") {
+                $valid = true;
+            }
         }
-        if ($title[0] !== "id" || $title[1] !== "source_url" || $title[2] !== "target_url" || $title[3] !== "http_code" || $title[4] !== "enabled") {
+        if (count($title) === 6) {
+            if ($title[0] === "id" || $title[1] === "source_url" || $title[2] === "target_url" || $title[3] === "http_code" || $title[4] === "enabled" || $title[5] === "ignore_query_params") {
+                $valid = true;
+            }
+        }
+
+        if(!$valid){
             $response['detail'] = "File is not a Redirects Export";
             return new Response(json_encode($response), Response::HTTP_OK);
         }
@@ -246,12 +254,13 @@ class ImportExportRedirectsController extends AbstractController
             $httpCode = intval($line[3]);
 
             //Checking if this line has invalid data
-            if ($sourceURL === "" || ($httpCode != 301 && $httpCode != 302) || ($line[4] !== "1" && $line[4] !== "0")) {
+            if ($sourceURL === "" || ($httpCode != 301 && $httpCode != 302) || ($line[4] !== "1" && $line[4] !== "0") || (count($line) === 6 && $line[5] !== "1" && $line[5] !== "0")) {
                 $error++;
                 continue;
             }
 
             $enabled = boolval($line[4]);
+            $ignoreQueryParams = count($line) === 6 && boolval($line[5]);
 
             //Search either for the id and the sourceURL in the Database, or if the id is empty, only for the sourceURL
             $criteria = new Criteria();
@@ -279,7 +288,8 @@ class ImportExportRedirectsController extends AbstractController
                         'sourceURL' => $sourceURL,
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
-                        'enabled' => $enabled
+                        'enabled' => $enabled,
+                        'ignoreQueryParams' => $ignoreQueryParams
                     ]], $context);
                     $count++;
                 } else if (strcasecmp($redirect->getSourceURL(), $sourceURL) == 0 && $override) { //The SourceURLs match and should be updated, updating it
@@ -288,7 +298,8 @@ class ImportExportRedirectsController extends AbstractController
                         'sourceURL' => $sourceURL,
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
-                        'enabled' => $enabled
+                        'enabled' => $enabled,
+                        'ignoreQueryParams' => $ignoreQueryParams
                     ]], $context);
                     $count++;
                 } else { //The Redirect should not be overridden, skipping it
@@ -302,14 +313,16 @@ class ImportExportRedirectsController extends AbstractController
                         'sourceURL' => $sourceURL,
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
-                        'enabled' => $enabled
+                        'enabled' => $enabled,
+                        'ignoreQueryParams' => $ignoreQueryParams
                     ]], $context);
                 else //... with a new ID
                     $this->redirectRepository->create([[
                         'sourceURL' => $sourceURL,
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
-                        'enabled' => $enabled
+                        'enabled' => $enabled,
+                        'ignoreQueryParams' => $ignoreQueryParams
                     ]], $context);
                 $count++;
             }
