@@ -19,11 +19,10 @@ namespace Scop\PlatformRedirecter\Administration;
 
 use Scop\PlatformRedirecter\Redirect\Redirect;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\MultiFilter;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -33,18 +32,15 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use function is_resource;
 
-/**
- * @RouteScope(scopes={"api"})
- */
 class ImportExportRedirectsController extends AbstractController
 {
     /**
-     * @var EntityRepositoryInterface
+     * @var EntityRepository
      */
     private $redirectRepository;
 
 
-    public function __construct(EntityRepositoryInterface $redirectRepository)
+    public function __construct(EntityRepository $redirectRepository)
     {
         $this->redirectRepository = $redirectRepository;
     }
@@ -52,7 +48,7 @@ class ImportExportRedirectsController extends AbstractController
     /**
      * Route for older Shopware Versions
      *
-     * @Route("/api/v{version}/_action/scop/platform/redirecter/prepare-export", name="api.action.scop.platform.redirecter.prepare-export-old", methods={"POST"})
+     * @Route("/api/v{version}/_action/scop/platform/redirecter/prepare-export", name="api.action.scop.platform.redirecter.prepare-export-old", methods={"POST"}, defaults={"_routeScope"={"api"}})
      * @throws \Exception
      */
     public function prepareExportOLD(Context $context): Response
@@ -64,7 +60,7 @@ class ImportExportRedirectsController extends AbstractController
      * Removes old export files, that are older than 60 Seconds.
      * Then exports all redirects into a new file.
      *
-     * @Route("/api/_action/scop/platform/redirecter/prepare-export", name="api.action.scop.platform.redirecter.prepare-export", methods={"POST"})
+     * @Route("/api/_action/scop/platform/redirecter/prepare-export", name="api.action.scop.platform.redirecter.prepare-export", methods={"POST"}, defaults={"_routeScope"={"api"}})
      * @throws \Exception
      */
     public function prepareExport(Context $context): Response
@@ -123,7 +119,7 @@ class ImportExportRedirectsController extends AbstractController
     /**
      * Route for older Shopware Versions
      *
-     * @Route("/api/v{version}/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export-old", defaults={"auth_required"=false}, methods={"GET"})
+     * @Route("/api/v{version}/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export-old", defaults={"auth_required"=false, "_routeScope"={"api"}}, methods={"GET"})
      */
     public function downloadOLD(Request $request, Context $context)
     {
@@ -133,7 +129,7 @@ class ImportExportRedirectsController extends AbstractController
     /**
      * Downloads an exported file. The Filename must be in the $request.
      *
-     * @Route("/api/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export", defaults={"auth_required"=false}, methods={"GET"})
+     * @Route("/api/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export", defaults={"auth_required"=false, "_routeScope"={"api"}}, methods={"GET"})
      */
     public function download(Request $request, Context $context)
     {
@@ -176,7 +172,7 @@ class ImportExportRedirectsController extends AbstractController
     /**
      * Route for older Shopware Versions
      *
-     * @Route("/api/v{version}/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport-old", methods={"POST"})
+     * @Route("/api/v{version}/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport-old", methods={"POST"}, defaults={"_routeScope"={"api"}})
      */
     public function importOLD(Request $request, Context $context)
     {
@@ -186,7 +182,7 @@ class ImportExportRedirectsController extends AbstractController
     /**
      * Imports an uploaded File.
      *
-     * @Route("/api/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport", methods={"POST"})
+     * @Route("/api/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport", methods={"POST"}, defaults={"_routeScope"={"api"}})
      */
     public function import(Request $request, Context $context)
     {

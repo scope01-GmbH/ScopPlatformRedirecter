@@ -35,7 +35,7 @@ Shopware.Module.register('scop-platform-redirect', {
         settingsItem: [{
             to: 'scop.platform.redirect.list',
             group: 'shop',
-            icon: 'small-arrow-large-double-right'
+            icon: 'regular-double-chevron-right-s'
         }],
         snippets: {
             'de-DE': deDE,

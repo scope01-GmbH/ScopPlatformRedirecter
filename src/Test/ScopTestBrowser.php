@@ -35,7 +35,7 @@ class ScopTestBrowser extends TestBrowser
      *
      * @return DomResponse
      */
-    protected function filterResponse($response)
+    protected function filterResponse($response): DomResponse
     {
         if (!($response instanceof RedirectResponse)) {
             $event = new BeforeSendResponseEvent($this->lastRequest, $response);
@@ -46,7 +46,7 @@ class ScopTestBrowser extends TestBrowser
         return $filteredResponse;
     }
 
-    protected function doRequest($request)
+    protected function doRequest($request): Response
     {
         $container = $this->getContainer();
 
