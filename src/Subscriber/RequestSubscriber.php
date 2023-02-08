@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Scop\PlatformRedirecter\Subscriber;
 
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -30,20 +30,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class RequestSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var EntityRepositoryInterface
+     * @var EntityRepository
      */
     private $repository;
     /**
-     * @var EntityRepositoryInterface
+     * @var EntityRepository
      */
     private $seoUrlRepository;
 
     /**
-     * @param EntityRepositoryInterface $redirectRepository
+     * @param EntityRepository $redirectRepository
      */
-    public function __construct(EntityRepositoryInterface $redirectRepository, EntityRepositoryInterface $seoUrlRepository)
+    public function __construct(EntityRepository $redirectRepository, EntityRepository $seoUrlRepository)
     {
-        /** @var EntityRepositoryInterface $repository */
+        /** @var EntityRepository $repository */
         $this->repository = $redirectRepository;
         $this->seoUrlRepository = $seoUrlRepository;
     }
