@@ -51,3 +51,7 @@
 # v1.2.0
 
 - Added option "Ignore Query Parameters"
+
+# v2.0.0
+
+- Changed to Shopware v6.5
