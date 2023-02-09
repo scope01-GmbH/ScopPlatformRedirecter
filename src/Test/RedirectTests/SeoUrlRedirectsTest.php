@@ -21,17 +21,20 @@ class SeoUrlRedirectsTest extends RedirectTestCase
         parent::setUp();
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     private function createSeoUrl($seo_path, $path){
         /** @var Connection $conn */
         $conn = $this->getContainer()->get(Connection::class);
 
         $result = $conn->executeQuery("SELECT HEX(id) as id FROM sales_channel ORDER BY RAND() LIMIT 1");
         self::assertTrue($result->rowCount() > 0);
-        $salesChannelId = $result->getIterator()->fetch()['id'];
+        $salesChannelId = $result->fetchOne();
 
         $result = $conn->executeQuery("SELECT HEX(id) as id FROM product ORDER BY RAND() LIMIT 1");
         self::assertTrue($result->rowCount() > 0);
-        $productid = $result->getIterator()->fetch()['id'];
+        $productid = $result->fetchOne();
 
         $path = sprintf($path, $productid);
 
