@@ -122,9 +122,6 @@ abstract class RedirectTestCase extends TestCase
 
         $salesChannelApiBrowser = $kernel->getContainer()->get('scop.platform_redirecter.test.test_browser');
         $salesChannelApiBrowser->disableReboot();
-        if ($salesChannelApiBrowser instanceof TestBrowser) {
-            $salesChannelApiBrowser->enableCsrf();
-        }
 
         $salesChannelApiBrowser->setServerParameters([
             'HTTP_ACCEPT' => 'application/json',
