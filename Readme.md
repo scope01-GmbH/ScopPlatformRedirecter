@@ -17,7 +17,7 @@
 | 1.2.0     | Added option "Ignore Query Parameters"                               | Github         |
 | 2.0.0     | Changed to Shopware v6.5                               | Github         |
 
-> **Warning**
+> **Warning**\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!
 
 # Installation
