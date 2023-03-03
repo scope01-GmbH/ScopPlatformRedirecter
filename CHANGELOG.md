@@ -52,6 +52,10 @@
 
 - Added option "Ignore Query Parameters"
 
+# v1.2.1
+
+- Fixed error in the log on successful redirect
+
 # v2.0.0
 
 - Changed to Shopware v6.5
