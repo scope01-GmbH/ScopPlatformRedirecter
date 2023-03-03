@@ -8,8 +8,9 @@
         <service id="Scop\PlatformRedirecter\Redirect\RedirectDefinition">
             <tag name="shopware.entity.definition" entity="scop_platform_redirecter_redirect"/>
         </service>
-        <service id="Scop\PlatformRedirecter\Subscriber\RequestSubscriber">
-            <tag name="kernel.event_subscriber"/>
+        <service id="Scop\PlatformRedirecter\Decorator\CanonicalRedirectServiceDecorator" decorates="Shopware\Core\Framework\Routing\CanonicalRedirectService">
+            <argument type="service" id="Scop\PlatformRedirecter\Decorator\CanonicalRedirectServiceDecorator.inner"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
         </service>
         <service id="Scop\PlatformRedirecter\Administration\ImportExportRedirectsController" public="true">
