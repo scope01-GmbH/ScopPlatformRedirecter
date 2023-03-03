@@ -1,34 +1,26 @@
 <?php
-/**
- * Implemented by scope01 GmbH team https://scope01.com
- *
- * @copyright scope01 GmbH https://scope01.com
- * @license MIT License
- * @link https://scope01.com
- */
-declare(strict_types=1);
-/**
- * Implemented by scope01 GmbH team https://scope01.com
- *
- * @copyright scope01 GmbH https://scope01.com
- * @license MIT
- * @link https://scope01.com
- */
 
-namespace Scop\PlatformRedirecter\Subscriber;
+namespace Scop\PlatformRedirecter\Decorator;
 
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
-use Shopware\Core\Framework\Event\BeforeSendRedirectResponseEvent;
-use Shopware\Core\Framework\Event\BeforeSendResponseEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Shopware\Core\Framework\Routing\CanonicalRedirectService;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class RequestSubscriber implements EventSubscriberInterface
+class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
 {
+
+    /**
+     * @var CanonicalRedirectService
+     */
+    private $inner;
+
     /**
      * @var EntityRepositoryInterface
      */
@@ -38,26 +30,12 @@ class RequestSubscriber implements EventSubscriberInterface
      */
     private $seoUrlRepository;
 
-    /**
-     * @param EntityRepositoryInterface $redirectRepository
-     */
-    public function __construct(EntityRepositoryInterface $redirectRepository, EntityRepositoryInterface $seoUrlRepository)
+    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepositoryInterface $redirectRepository, EntityRepositoryInterface $seoUrlRepository)
     {
-        /** @var EntityRepositoryInterface $repository */
+        parent::__construct($configService);
         $this->repository = $redirectRepository;
         $this->seoUrlRepository = $seoUrlRepository;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            BeforeSendResponseEvent::class => 'redirectBeforeSendResponse',
-            BeforeSendRedirectResponseEvent::class => 'redirectBeforeSendResponse'
-        ];
+        $this->inner = $inner;
     }
 
     /**
@@ -65,38 +43,38 @@ class RequestSubscriber implements EventSubscriberInterface
      * Otherwise do nothing
      * Modules like admin, api or widgets are excluded from redirects
      *
-     * @param BeforeSendResponseEvent $event
+     * @param Request $request
+     * @return Response|null
      */
-    public function redirectBeforeSendResponse(BeforeSendResponseEvent $event): void
+    public function getRedirect(Request $request): ?Response
     {
-        $requestUri = (string)$event->getRequest()->get("sw-original-request-uri");
+        $requestUri = (string)$request->get("sw-original-request-uri");
 
         // "sw-original-request-uri" is not present in shopware versions below 6.4.0.0.
         // In this case, an older method must be used for redirecting, which doesn't redirects correctly in some edge cases.
         if ($requestUri === "") {
-            $this->oldRedirectBeforeSendResponse($event);
-            return;
+            return $this->getRedirectOld($request);
         }
 
-        $storefrontUri = $event->getRequest()->get('sw-sales-channel-absolute-base-url');
-        $requestBase = $event->getRequest()->getPathInfo();
-        $requestBaseUrl = $event->getRequest()->getBaseUrl();
+        $storefrontUri = $request->get('sw-sales-channel-absolute-base-url');
+        $requestBase = $request->getPathInfo();
+        $requestBaseUrl = $request->getBaseUrl();
 
         // Block overriding /admin and /api and widgets, so you can't lock out of the administration.
         if (\strpos($requestBase, "/admin") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/api") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/widgets") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/store-api") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/_profiler") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
 
         $context = Context::createDefaultContext();
@@ -117,7 +95,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
         if ($redirects->count() === 0) {
             // Checks if the requested URL contains Query parameters, and if so, checks if a redirect can be found with the ignoreQueryParams option
-            if(str_contains($requestUri, '?')) {
+            if (str_contains($requestUri, '?')) {
                 $searchWithoutQuery = [];
                 foreach ($search as $string)
                     $searchWithoutQuery[] = explode('?', $string)[0];
@@ -127,11 +105,11 @@ class RequestSubscriber implements EventSubscriberInterface
 
                 // No Redirect found for this URL, do nothing
                 if ($redirects->count() === 0) {
-                    return;
+                    return $this->inner->getRedirect($request);
                 }
             } else {
                 // No Redirect found for this URL, do nothing
-                return;
+                return $this->inner->getRedirect($request);
             }
         }
 
@@ -141,7 +119,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
         // Prevent endless redirecting when target url and source url have only different capitalisation
         if (in_array($targetURL, $search, true)) {
-            return;
+            return $this->inner->getRedirect($request);
         }
 
         /*
@@ -156,7 +134,7 @@ class RequestSubscriber implements EventSubscriberInterface
                 }
             }
         }
-        $event->setResponse(new RedirectResponse($targetURL, $code));
+        return new RedirectResponse($targetURL, $code);
     }
 
     /**
@@ -166,31 +144,32 @@ class RequestSubscriber implements EventSubscriberInterface
      * Otherwise do nothing
      * Modules like admin, api or widgets are excluded from redirects
      *
-     * @param BeforeSendResponseEvent $event
+     * @param Request $request
+     * @return Response|null
      */
-    private function oldRedirectBeforeSendResponse(BeforeSendResponseEvent $event): void
+    private function getRedirectOld(Request $request): ?Response
     {
-        $requestUri = (string)$event->getRequest()->get('resolved-uri');
-        $storefrontUri = $event->getRequest()->get('sw-storefront-url');
-        $requestBase = $event->getRequest()->getPathInfo();
-        $requestBaseUrl = $event->getRequest()->getBaseUrl();
-        $queryString = (string)$event->getRequest()->getQueryString();
+        $requestUri = (string)$request->get('resolved-uri');
+        $storefrontUri = $request->get('sw-storefront-url');
+        $requestBase = $request->getPathInfo();
+        $requestBaseUrl = $request->getBaseUrl();
+        $queryString = (string)$request->getQueryString();
         $search = [];
         // Block overriding /admin and /api and widgets, so you can't lock out of the administration.
         if (\strpos($requestBase, "/admin") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/api") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/widgets") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/store-api") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
         if (\strpos($requestBase, "/_profiler") === 0) {
-            return;
+            return $this->inner->getRedirect($request);
         }
 
         if ($queryString !== '') {
@@ -239,7 +218,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
         if ($redirects->count() === 0) {
             // Checks if the requested URL contains Query parameters, and if so, checks if a redirect can be found with the ignoreQueryParams option
-            if(str_contains($requestUri, '?')) {
+            if (str_contains($requestUri, '?')) {
                 $searchWithoutQuery = [];
                 foreach ($search as $string)
                     $searchWithoutQuery[] = explode('?', $string)[0];
@@ -249,11 +228,11 @@ class RequestSubscriber implements EventSubscriberInterface
 
                 // No Redirect found for this URL, do nothing
                 if ($redirects->count() === 0) {
-                    return;
+                    return $this->inner->getRedirect($request);
                 }
             } else {
                 // No Redirect found for this URL, do nothing
-                return;
+                return $this->inner->getRedirect($request);
             }
         }
 
@@ -263,7 +242,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
         // Prevent endless redirecting when target url belongs to the same seo url like the source url or when target url and source url have only different capitalisation
         if (in_array($targetURL, $search, true)) {
-            return;
+            return $this->inner->getRedirect($request);
         }
 
         /*
@@ -278,6 +257,7 @@ class RequestSubscriber implements EventSubscriberInterface
                 }
             }
         }
-        $event->setResponse(new RedirectResponse($targetURL, $code));
+        return new RedirectResponse($targetURL, $code);
     }
+
 }
