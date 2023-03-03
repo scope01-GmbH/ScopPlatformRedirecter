@@ -51,3 +51,7 @@
 # v1.2.0
 
 - Added option "Ignore Query Parameters"
+
+# v1.2.1
+
+- Fixed error in the log on successful redirect

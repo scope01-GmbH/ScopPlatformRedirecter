@@ -51,3 +51,7 @@
 # v1.2.0
 
 - Neue Option "Query Parameter ignorieren" hinzugefügt
+
+# v1.2.1
+
+- Fehlerbehebung Error im Log bei erfolgreicher Weiterleitung
