@@ -52,10 +52,7 @@
 
 - Neue Option "Query Parameter ignorieren" hinzugefügt
 
-# v1.2.1
-
-- Fehlerbehebung Error im Log bei erfolgreicher Weiterleitung
-
 # v2.0.0
 
 - Update auf Shopware v6.5
+- Fehlerbehebung Error im Log bei erfolgreicher Weiterleitung
