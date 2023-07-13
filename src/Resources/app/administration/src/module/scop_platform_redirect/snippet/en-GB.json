@@ -11,7 +11,7 @@
       "columnTargetUrl": "Target URL",
       "columnHttpCode": "HTTP Status Code",
       "columnEnabled": "Enabled",
-      "columnIgnoreQueryParams": "Ignore Query Parameters",
+      "columnQueryParamsHandling": "Query Parameter Handling",
       "createButton": "Add Redirect",
       "exportAllButton": "Export All",
       "importButton": "Import",
@@ -31,6 +31,11 @@
         "overrideHelp": "If a Source URL already exists, the Target URL and the HTTP Status Code will be overridden with this option. {moreInformation}",
         "overrideID": "Override same ID",
         "overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option. {moreInformation}"
+      },
+      "queryParamsHandlingValues": {
+        "0": "Consider",
+        "1": "Ignore",
+        "2": "Transfer"
       }
     },
     "detail": {
@@ -38,7 +43,12 @@
       "targetUrlLabel": "Target URL",
       "httpCodeLabel": "HTTP Status Code",
       "enabledLabel": "Enabled",
-      "ignoreQueryParamsLabel": "Ignore Query Parameters",
+      "queryParamsHandling": "Query Parameter Handling",
+      "queryParamsHandlingValues": {
+        "consider": "Consider Query Parameters during search",
+        "ignore": "Ignore Query Parameters during search",
+        "transfer": "Ignore Query Parameters during search and add them to the target URL"
+      },
       "cancelButton": "Cancel",
       "saveButton": "Save",
       "errorSameUrlDescription": "The source URL and target URL must not be the same",

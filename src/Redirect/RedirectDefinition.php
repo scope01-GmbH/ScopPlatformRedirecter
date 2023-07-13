@@ -66,7 +66,7 @@ class RedirectDefinition extends EntityDefinition
             new StringField("targetURL", "targetURL"),
             new IntField("httpCode", "httpCode"),
             new BoolField("enabled", "enabled"),
-            new BoolField("ignoreQueryParams", "ignoreQueryParams")
+            new IntField("queryParamsHandling", "queryParamsHandling")
         ]);
     }
 }
