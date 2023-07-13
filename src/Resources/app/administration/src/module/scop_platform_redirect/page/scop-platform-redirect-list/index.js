@@ -58,10 +58,10 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 label: this.$tc('scopplatformredirecter.list.columnEnabled'),
                 inlineEdit: 'boolean'
             }, {
-                property: 'ignoreQueryParams',
-                dataIndex: 'ignoreQueryParams',
-                label: this.$tc('scopplatformredirecter.list.columnIgnoreQueryParams'),
-                inlineEdit: 'boolean'
+                property: 'queryParamsHandling',
+                dataIndex: 'queryParamsHandling',
+                label: this.$tc('scopplatformredirecter.list.columnQueryParamsHandling'),
+                allowResize: true
             },
             ];
         }

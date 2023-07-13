@@ -56,3 +56,8 @@
 
 - Update auf Shopware v6.5
 - Fehlerbehebung Error im Log bei erfolgreicher Weiterleitung
+
+# v2.1.0
+
+- Möglichkeit der Übernahme von Query Parametern an die Ziel URL hinzugefügt
+- Logikfehler bei der Validierung von Importdateien behoben

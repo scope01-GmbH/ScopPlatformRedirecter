@@ -23,6 +23,9 @@
                         detailRoute="scop.platform.redirect.details"
                         @update-records="onUpdate"
                 >
+                    <template #column-queryParamsHandling="{ item }">
+                        {{ $tc('scopplatformredirecter.list.queryParamsHandlingValues.' + item.queryParamsHandling) }}
+                    </template>
                 </sw-entity-listing>
             {% endblock %}
             {% block scop_platform_redirect_list_view_import_modal %}

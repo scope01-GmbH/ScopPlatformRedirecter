@@ -56,3 +56,8 @@
 
 - Changed to Shopware v6.5
 - Fixed error in the log on successful redirect
+
+# v2.1.0
+
+- Added possibility to transfer query parameters to the target url
+- Fixed logical mistake in the import file validation

@@ -30,13 +30,19 @@ class Redirect extends Entity
      * @var String $targetURL
      * @var int $httpCode
      * @var boolean $enabled
-     * @var boolean $ignoreQueryParams
      */
     protected $sourceURL;
     protected $targetURL;
     protected $httpCode;
     protected $enabled;
-    protected $ignoreQueryParams;
+
+    /**
+     * @var int $queryParamsHandling
+     * 0 = Consider Query Parameters during search<br>
+     * 1 = Ignore Query Parameters during search<br>
+     * 2 = Ignore Query Parameters during search and add them to the target URL
+     */
+    protected $queryParamsHandling;
 
     /**
      * @return string
@@ -63,19 +69,19 @@ class Redirect extends Entity
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isEnabled(): bool
+    public function getQueryParamsHandling(): int
     {
-        return $this->enabled;
+        return $this->queryParamsHandling;
     }
 
     /**
      * @return bool
      */
-    public function isIgnoreQueryParams(): bool
+    public function isEnabled(): bool
     {
-        return $this->ignoreQueryParams;
+        return $this->enabled;
     }
 
     /**
@@ -111,10 +117,10 @@ class Redirect extends Entity
     }
 
     /**
-     * @param boolean $ignoreQueryParams
+     * @param int $queryParamsHandling
      */
-    public function setIgnoreQueryParams(boolean $ignoreQueryParams): void
+    public function setQueryParamsHandling(int $queryParamsHandling): void
     {
-        $this->ignoreQueryParams = $ignoreQueryParams;
+        $this->queryParamsHandling = $queryParamsHandling;
     }
 }

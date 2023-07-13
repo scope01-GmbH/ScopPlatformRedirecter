@@ -89,7 +89,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
                 foreach ($search as $string)
                     $searchWithoutQuery[] = explode('?', $string)[0];
 
-                $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $searchWithoutQuery))->addFilter(new EqualsFilter('enabled', true))->addFilter(new EqualsFilter('ignoreQueryParams', true))
+                $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $searchWithoutQuery))->addFilter(new EqualsFilter('enabled', true))->addFilter(new EqualsAnyFilter('queryParamsHandling', [1, 2]))
                     ->setLimit(1), $context);
 
                 // No Redirect found for this URL, do nothing
@@ -105,6 +105,11 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $redirect = $redirects->first();
         $targetURL = $redirect->getTargetURL();
         $code = $redirect->getHttpCode();
+
+        // If configured in the redirect, adds the query parameters from the requested URL to the target URL
+        if ($redirect->getQueryParamsHandling() === 2 && str_contains($requestUri, '?')){
+            $targetURL .= '?' . explode('?', $requestUri, 2)[1];
+        }
 
         // Prevent endless redirecting when target url and source url have only different capitalisation
         if (in_array($targetURL, $search, true)) {

@@ -22,8 +22,12 @@
                     </sw-select-number-field>
                     <sw-switch-field :label="$tc('scopplatformredirecter.detail.enabledLabel')"
                                      v-model="redirect.enabled" validation="required"></sw-switch-field>
-                    <sw-switch-field :label="$tc('scopplatformredirecter.detail.ignoreQueryParamsLabel')"
-                                     v-model="redirect.ignoreQueryParams" validation="required"></sw-switch-field>
+                    <sw-select-number-field :label="$t('scopplatformredirecter.detail.queryParamsHandling')"
+                                            v-model="redirect.queryParamsHandling" validation="required" :help-text="helptext">
+                        <option value=0>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.consider') }}</option>
+                        <option value=1>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.ignore') }}</option>
+                        <option value=2>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.transfer') }}</option>
+                    </sw-select-number-field>
                 </sw-card>
             </sw-card-view>
         </template>

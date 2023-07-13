@@ -16,6 +16,7 @@
 | 1.1.5     | Fixed redirecting from an absolute URL with virtual path             | Github         |
 | 1.2.0     | Added option "Ignore Query Parameters"                               | Github         |
 | 2.0.0     | Changed to Shopware v6.5<br>Fixed error in the log on successful redirect | Github         |
+| 2.1.0     | Added possibility to transfer query parameters to the target url<br>Fixed logical mistake in the import file validation | Github         |
 
 > **Warning**\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!
