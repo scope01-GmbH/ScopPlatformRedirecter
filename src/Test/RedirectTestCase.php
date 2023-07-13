@@ -93,7 +93,7 @@ abstract class RedirectTestCase extends TestCase
 
         $conn->executeUpdate('TRUNCATE scop_platform_redirecter_redirect', []);
         foreach ($this->getDatabaseRedirects() as $testRedirect) {
-            $conn->executeUpdate('INSERT INTO scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, enabled, ignoreQueryParams, created_at) VALUES (UNHEX(?), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())', [UUID::randomHex(), $testRedirect[0], $testRedirect[1], $testRedirect[2], $testRedirect[3] ? 1 : 0, $testRedirect[4] ?? false ? 1 : 0]);
+            $conn->executeUpdate('INSERT INTO scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, enabled, queryParamsHandling, created_at) VALUES (UNHEX(?), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())', [UUID::randomHex(), $testRedirect[0], $testRedirect[1], $testRedirect[2], $testRedirect[3] ? 1 : 0, $testRedirect[4] ?? 0]);
         }
 
     }

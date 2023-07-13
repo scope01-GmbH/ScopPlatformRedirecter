@@ -15,49 +15,49 @@ class IgnoreQueryParametersRedirectsTest extends RedirectTestCase
                 "/checkout/cart",
                 301,
                 true,
-                true
+                1
             ],
             [
                 "/test?hallo",
                 "/account/",
                 301,
                 true,
-                true
+                1
             ],
             [
                 "/googling",
                 "www.google.com",
                 302,
                 true,
-                true
+                1
             ],
             [
                 "/google?lang=de",
                 "/de/account/",
                 302,
                 false,
-                true
+                1
             ],
             [
                 "/men",
                 "/checkout/",
                 301,
                 true,
-                false
+                0
             ],
             [
                 "/women",
                 "/checkout?c=5",
                 301,
                 true,
-                true
+                1
             ],
             [
                 "/dummy",
                 "/index",
                 301,
                 false,
-                false
+                0
             ]
         ];
     }
@@ -77,6 +77,6 @@ class IgnoreQueryParametersRedirectsTest extends RedirectTestCase
     // Should redirect if the redirect is enabled and it has ignoreQueryParams enabled and the SourceURL does not contain a query parameter
     public function testRedirectsWithQueryParametersCallingWithOtherParameters(){
         foreach ($this->getDatabaseRedirects() as $redirect)
-            $this->checkRedirect(explode('?', $redirect[0])[0] . '?test=other', [$redirect[1], "http://" . $redirect[1]], $redirect[2], !$redirect[3] || !$redirect[4] || str_contains($redirect[0], '?'));
+            $this->checkRedirect(explode('?', $redirect[0])[0] . '?test=other', [$redirect[1], "http://" . $redirect[1]], $redirect[2], !$redirect[3] || $redirect[4] === 0 || str_contains($redirect[0], '?'));
     }
 }
