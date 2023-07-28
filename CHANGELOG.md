@@ -61,3 +61,7 @@
 
 - Added possibility to transfer query parameters to the target url
 - Fixed logical mistake in the import file validation
+
+# v2.2.0
+
+- Added plugin configuration for support of special chars (like umlauts) in the Source URL

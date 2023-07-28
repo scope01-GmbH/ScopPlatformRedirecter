@@ -61,3 +61,7 @@
 
 - Möglichkeit der Übernahme von Query Parametern an die Ziel URL hinzugefügt
 - Logikfehler bei der Validierung von Importdateien behoben
+
+# v2.2.0
+
+- Plugin-Konfiguration zur Unterstützung für spezielle Zeichen (wie Umlaute) in der Quell URL hinzugefügt
