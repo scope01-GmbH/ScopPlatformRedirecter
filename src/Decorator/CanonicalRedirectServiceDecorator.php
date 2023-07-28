@@ -26,9 +26,15 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
      */
     private $repository;
 
+    /**
+     * @var SystemConfigService
+     */
+    private SystemConfigService $configService;
+
     public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository)
     {
         parent::__construct($configService);
+        $this->configService = $configService;
         $this->repository = $redirectRepository;
         $this->inner = $inner;
     }
@@ -64,6 +70,12 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         }
         if (\strpos($requestBase, "/_profiler") === 0) {
             return $this->inner->getRedirect($request);
+        }
+
+        if($this->configService->getBool('ScopPlatformRedirecter.config.specialCharSupport') ?? false){
+            $requestUri = urldecode($requestUri);
+            $storefrontUri = urldecode($storefrontUri);
+            $requestBaseUrl = urldecode($requestBaseUrl);
         }
 
         $context = Context::createDefaultContext();
