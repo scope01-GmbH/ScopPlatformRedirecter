@@ -52,6 +52,8 @@
       "cancelButton": "Cancel",
       "saveButton": "Save",
       "errorSameUrlDescription": "The source URL and target URL must not be the same",
+      "errorEmptySourceURL": "The source URL mustn't be empty",
+      "errorEmptyTargetURL": "The target URL mustn't be empty",
       "helpText": "Further information and FAQ can be found {link}",
       "helpHere": "here",
       "httpCodeLabelValues": {
