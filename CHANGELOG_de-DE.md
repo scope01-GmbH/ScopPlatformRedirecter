@@ -65,3 +65,4 @@
 # v2.2.0
 
 - Plugin-Konfiguration zur Unterstützung für spezielle Zeichen (wie Umlaute) in der Quell URL hinzugefügt
+- Fehlerbehebung Error beim Erstellen/Editieren einer Weiterleitung mit leerer Quell-/Ziel-URL

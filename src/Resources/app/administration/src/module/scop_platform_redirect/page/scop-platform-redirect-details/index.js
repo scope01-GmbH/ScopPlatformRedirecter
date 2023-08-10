@@ -51,11 +51,25 @@ Component.register('scop-platform-redirect-details', {
         },
 
         onClickSave() {
-            //Checking if source and target URL are the same, otherwise proceed
+            //Checking if source and target URL are the same or one of them is empty, otherwise proceed
             if (this.redirect.sourceURL === this.redirect.targetURL) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
                     message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
+                })
+                return;
+            }
+            if (!this.redirect.sourceURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorEmptySourceURL')
+                })
+                return;
+            }
+            if (!this.redirect.targetURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorEmptyTargetURL')
                 })
                 return;
             }
