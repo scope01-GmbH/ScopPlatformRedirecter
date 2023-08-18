@@ -66,3 +66,7 @@
 
 - Added plugin configuration for support of special chars (like umlauts) in the Source URL
 - Fixed error on creating/editing a redirect with an empty Source-/Target-URL
+
+# v2.3.0
+
+- Added sales channel selection for each redirect

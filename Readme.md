@@ -18,6 +18,7 @@
 | 2.0.0     | Changed to Shopware v6.5<br>Fixed error in the log on successful redirect | Github         |
 | 2.1.0     | Added possibility to transfer query parameters to the target url<br>Fixed logical mistake in the import file validation | Github         |
 | 2.2.0 | Added plugin configuration for support of special chars (like umlauts) in the Source URL<br>Fixed error on creating/editing a redirect with an empty Source-/Target-URL | Github |
+| 2.3.0 | Added sales channel selection for each redirect | Github |
 
 > **Warning**\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!
