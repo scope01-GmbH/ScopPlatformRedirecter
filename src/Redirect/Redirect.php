@@ -20,6 +20,7 @@ namespace Scop\PlatformRedirecter\Redirect;
 use phpDocumentor\Reflection\Types\Boolean;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
+use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 
 class Redirect extends Entity
 {
@@ -43,6 +44,15 @@ class Redirect extends Entity
      * 2 = Ignore Query Parameters during search and add them to the target URL
      */
     protected $queryParamsHandling;
+
+    /**
+     * @var string|null $salesChannelId
+     */
+    protected $salesChannelId;
+    /**
+     * @var SalesChannelEntity|null $salesChannel
+     */
+    protected $salesChannel;
 
     /**
      * @return string
@@ -85,6 +95,22 @@ class Redirect extends Entity
     }
 
     /**
+     * @return string
+     */
+    public function getSalesChannelId(): ?string
+    {
+        return $this->salesChannelId;
+    }
+
+    /**
+     * @return SalesChannelEntity|null
+     */
+    public function getSalesChannel(): ?SalesChannelEntity
+    {
+        return $this->salesChannel;
+    }
+
+    /**
      * @param String $sourceURL
      */
     public function setSourceURL(string $sourceURL): void
@@ -122,5 +148,21 @@ class Redirect extends Entity
     public function setQueryParamsHandling(int $queryParamsHandling): void
     {
         $this->queryParamsHandling = $queryParamsHandling;
+    }
+
+    /**
+     * @param string $salesChannelId
+     */
+    public function setSalesChannelId(?string $salesChannelId): void
+    {
+        $this->salesChannelId = $salesChannelId;
+    }
+
+    /**
+     * @param SalesChannelEntity|null $salesChannel
+     */
+    public function setSalesChannel(?SalesChannelEntity $salesChannel): void
+    {
+        $this->salesChannel = $salesChannel;
     }
 }

@@ -36,7 +36,8 @@
         "0": "Consider",
         "1": "Ignore",
         "2": "Transfer"
-      }
+      },
+      "salesChannel": "Sales Channel"
     },
     "detail": {
       "sourceUrlLabel": "Source URL",
@@ -59,6 +60,10 @@
       "httpCodeLabelValues": {
         "301": "301 (Moved Permanently)",
         "302": "302 (Moved Temporarily)"
+      },
+      "salesChannel": {
+        "select": "Sales Channel",
+        "all": "All Sales Channels"
       }
     }
   }

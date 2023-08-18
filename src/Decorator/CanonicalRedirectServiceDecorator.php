@@ -7,6 +7,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\OrFilter;
 use Shopware\Core\Framework\Routing\CanonicalRedirectService;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -55,6 +56,8 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $requestBase = $request->getPathInfo();
         $requestBaseUrl = $request->getBaseUrl();
 
+        $salesChannelId = $request->get('sw-sales-channel-id');
+
         // Block overriding /admin and /api and widgets, so you can't lock out of the administration.
         if (\strpos($requestBase, "/admin") === 0) {
             return $this->inner->getRedirect($request);
@@ -72,7 +75,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
             return $this->inner->getRedirect($request);
         }
 
-        if($this->configService->getBool('ScopPlatformRedirecter.config.specialCharSupport') ?? false){
+        if ($this->configService->getBool('ScopPlatformRedirecter.config.specialCharSupport') ?? false) {
             $requestUri = urldecode($requestUri);
             $storefrontUri = urldecode($storefrontUri);
             $requestBaseUrl = urldecode($requestBaseUrl);
@@ -91,7 +94,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         ];
 
         // search for the redirect in the database
-        $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))
+        $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))->addFilter(new OrFilter([new EqualsFilter('salesChannelId', $salesChannelId), new EqualsFilter('salesChannelId', null)]))
             ->setLimit(1), $context);
 
         if ($redirects->count() === 0) {
@@ -119,7 +122,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $code = $redirect->getHttpCode();
 
         // If configured in the redirect, adds the query parameters from the requested URL to the target URL
-        if ($redirect->getQueryParamsHandling() === 2 && str_contains($requestUri, '?')){
+        if ($redirect->getQueryParamsHandling() === 2 && str_contains($requestUri, '?')) {
             $targetURL .= '?' . explode('?', $requestUri, 2)[1];
         }
 

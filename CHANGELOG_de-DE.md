@@ -66,3 +66,7 @@
 
 - Plugin-Konfiguration zur Unterstützung für spezielle Zeichen (wie Umlaute) in der Quell URL hinzugefügt
 - Fehlerbehebung Error beim Erstellen/Editieren einer Weiterleitung mit leerer Quell-/Ziel-URL
+
+# v2.3.0
+
+- Verkaufskanalwahl zu Weiterleitungen hinzugefügt

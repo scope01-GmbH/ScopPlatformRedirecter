@@ -62,6 +62,11 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 dataIndex: 'queryParamsHandling',
                 label: this.$tc('scopplatformredirecter.list.columnQueryParamsHandling'),
                 allowResize: true
+            }, {
+                property: 'salesChannel.name',
+                dataIndex: 'salesChannel',
+                label: this.$tc('scopplatformredirecter.list.salesChannel'),
+                allowResize: true
             },
             ];
         }
@@ -69,7 +74,11 @@ Shopware.Component.register('scop-platform-redirect-list', {
 
     created() {
         this.repository = this.repositoryFactory.create('scop_platform_redirecter_redirect');
-        this.repository.search(new Criteria(), Shopware.Context.api).then((result) => {
+
+        let criteria = new Criteria();
+        criteria.addAssociation('salesChannel');
+
+        this.repository.search(criteria, Shopware.Context.api).then((result) => {
             this.redirect = result;
         });
     },

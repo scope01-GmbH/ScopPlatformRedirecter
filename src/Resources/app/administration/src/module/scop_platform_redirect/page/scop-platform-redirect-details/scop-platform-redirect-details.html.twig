@@ -28,6 +28,8 @@
                         <option value=1>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.ignore') }}</option>
                         <option value=2>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.transfer') }}</option>
                     </sw-select-number-field>
+
+                    <sw-entity-single-select v-model="redirect.salesChannelId" entity="sales_channel" :resetOption="$t('scopplatformredirecter.detail.salesChannel.all')" :label="$t('scopplatformredirecter.detail.salesChannel.select')"></sw-entity-single-select>
                 </sw-card>
             </sw-card-view>
         </template>

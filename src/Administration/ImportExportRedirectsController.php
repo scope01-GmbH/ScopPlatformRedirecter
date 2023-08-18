@@ -23,6 +23,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\MultiFilter;
+use Shopware\Core\Framework\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -103,9 +104,9 @@ class ImportExportRedirectsController extends AbstractController
         /**
          * @var Redirect $redirect
          */
-        fputcsv($fileStream, array('id', 'source_url', "target_url", "http_code", "enabled", "query_params_handling"), ';'); // Writing the CSV Headline
+        fputcsv($fileStream, array('id', 'source_url', "target_url", "http_code", "enabled", "query_params_handling", "sales_channel_id"), ';'); // Writing the CSV Headline
         foreach ($redirects as $redirect) { // Writing each Redirect into the file
-            fputcsv($fileStream, array($redirect->getId(), $redirect->getSourceURL(), $redirect->getTargetURL(), $redirect->getHttpCode(), $redirect->isEnabled() ? 1 : 0, $redirect->getQueryParamsHandling()), ';');
+            fputcsv($fileStream, array($redirect->getId(), $redirect->getSourceURL(), $redirect->getTargetURL(), $redirect->getHttpCode(), $redirect->isEnabled() ? 1 : 0, $redirect->getQueryParamsHandling(), $redirect->getSalesChannelId() ?? ''), ';');
         }
 
         //Closing the File
@@ -228,8 +229,13 @@ class ImportExportRedirectsController extends AbstractController
                 $valid = true;
             }
         }
-        if (count($title) === 6) {
+        if (count($title) === 6) { // Backward compatibility for exports before v2.3.0
             if ($title[0] === "id" && $title[1] === "source_url" && $title[2] === "target_url" && $title[3] === "http_code" && $title[4] === "enabled" && ($title[5] === "query_params_handling" || $title[5] === "ignore_query_params")) { // ignore_query_params: Backward compatibility for exports before v2.1.0
+                $valid = true;
+            }
+        }
+        if (count($title) === 7) {
+            if ($title[0] === "id" && $title[1] === "source_url" && $title[2] === "target_url" && $title[3] === "http_code" && $title[4] === "enabled" && ($title[5] === "query_params_handling" || $title[5] === "ignore_query_params") && $title[6] === "sales_channel_id") { // ignore_query_params: Backward compatibility for exports before v2.1.0
                 $valid = true;
             }
         }
@@ -250,13 +256,17 @@ class ImportExportRedirectsController extends AbstractController
             $httpCode = intval($line[3]);
 
             //Checking if this line has invalid data
-            if ($sourceURL === "" || ($httpCode != 301 && $httpCode != 302) || ($line[4] !== "1" && $line[4] !== "0") || (count($line) === 6 && $line[5] !== "2" && $line[5] !== "1" && $line[5] !== "0")) {
+            if ($sourceURL === "" || ($httpCode != 301 && $httpCode != 302) || ($line[4] !== "1" && $line[4] !== "0") || (count($line) >= 6 && $line[5] !== "2" && $line[5] !== "1" && $line[5] !== "0") || (count($line) >= 7 && $line[6] !== '' && !Uuid::isValid($line[6]))) {
                 $error++;
                 continue;
             }
 
             $enabled = boolval($line[4]);
-            $queryParamsHandling = count($line) === 6 ? intval($line[5]) : 0;
+            $queryParamsHandling = count($line) >= 6 ? intval($line[5]) : 0;
+            $salesChannelId = count($line) >= 7 ? $line[6] : null;
+            if($salesChannelId === '') {
+                $salesChannelId = null;
+            }
 
             //Search either for the id and the sourceURL in the Database, or if the id is empty, only for the sourceURL
             $criteria = new Criteria();
@@ -285,7 +295,8 @@ class ImportExportRedirectsController extends AbstractController
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
                         'enabled' => $enabled,
-                        'queryParamsHandling' => $queryParamsHandling
+                        'queryParamsHandling' => $queryParamsHandling,
+                        'salesChannelId' => $salesChannelId
                     ]], $context);
                     $count++;
                 } else if (strcasecmp($redirect->getSourceURL(), $sourceURL) == 0 && $override) { //The SourceURLs match and should be updated, updating it
@@ -295,7 +306,8 @@ class ImportExportRedirectsController extends AbstractController
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
                         'enabled' => $enabled,
-                        'queryParamsHandling' => $queryParamsHandling
+                        'queryParamsHandling' => $queryParamsHandling,
+                        'salesChannelId' => $salesChannelId
                     ]], $context);
                     $count++;
                 } else { //The Redirect should not be overridden, skipping it
@@ -310,7 +322,8 @@ class ImportExportRedirectsController extends AbstractController
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
                         'enabled' => $enabled,
-                        'queryParamsHandling' => $queryParamsHandling
+                        'queryParamsHandling' => $queryParamsHandling,
+                        'salesChannelId' => $salesChannelId
                     ]], $context);
                 else //... with a new ID
                     $this->redirectRepository->create([[
@@ -318,7 +331,8 @@ class ImportExportRedirectsController extends AbstractController
                         'targetURL' => $targetURL,
                         'httpCode' => $httpCode,
                         'enabled' => $enabled,
-                        'queryParamsHandling' => $queryParamsHandling
+                        'queryParamsHandling' => $queryParamsHandling,
+                        'salesChannelId' => $salesChannelId
                     ]], $context);
                 $count++;
             }
