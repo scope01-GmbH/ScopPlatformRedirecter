@@ -26,6 +26,9 @@
                     <template #column-queryParamsHandling="{ item }">
                         {{ $tc('scopplatformredirecter.list.queryParamsHandlingValues.' + item.queryParamsHandling) }}
                     </template>
+                    <template #column-salesChannel="{ item }">
+                        {{ item.salesChannel ? item.salesChannel.translated.name : $tc('scopplatformredirecter.list.allSalesChannels') }}
+                    </template>
                 </sw-entity-listing>
             {% endblock %}
             {% block scop_platform_redirect_list_view_import_modal %}

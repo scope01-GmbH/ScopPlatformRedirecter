@@ -37,7 +37,8 @@
         "1": "Ignore",
         "2": "Transfer"
       },
-      "salesChannel": "Sales Channel"
+      "salesChannel": "Sales Channel",
+      "allSalesChannels": "All"
     },
     "detail": {
       "sourceUrlLabel": "Source URL",
