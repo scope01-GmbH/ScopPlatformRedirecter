@@ -37,7 +37,8 @@
         "1": "Ignorieren",
         "2": "Übernehmen"
       },
-      "salesChannel": "Verkaufskanal"
+      "salesChannel": "Verkaufskanal",
+      "allSalesChannels": "Alle"
     },
     "detail": {
       "sourceUrlLabel": "Quell URL",

@@ -63,7 +63,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 label: this.$tc('scopplatformredirecter.list.columnQueryParamsHandling'),
                 allowResize: true
             }, {
-                property: 'salesChannel.name',
+                property: 'salesChannel',
                 dataIndex: 'salesChannel',
                 label: this.$tc('scopplatformredirecter.list.salesChannel'),
                 allowResize: true
