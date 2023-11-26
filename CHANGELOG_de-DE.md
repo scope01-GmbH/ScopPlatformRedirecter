@@ -70,3 +70,7 @@
 # v2.3.0
 
 - Verkaufskanalwahl zu Weiterleitungen hinzugefügt
+
+# v2.3.1
+
+- Beheben von Paging für Redirect List 
