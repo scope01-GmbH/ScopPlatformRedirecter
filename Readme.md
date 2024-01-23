@@ -36,11 +36,6 @@
 * Checkout Plugin in `/custom/plugins/ScopPlatformRedirecter`
 * Install the Plugin with the Plugin Manager
 
-## Install with composer
-
-* Change to your root Installation of shopware
-* Run command `composer require scop/scopplatformredirecter` and install and active plugin with Plugin Manager
-
 ## Plugin Features:
 
 * manage redirects in the administration
