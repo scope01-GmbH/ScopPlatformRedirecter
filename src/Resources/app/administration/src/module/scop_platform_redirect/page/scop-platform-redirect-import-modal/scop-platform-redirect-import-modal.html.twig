@@ -11,26 +11,26 @@
 
                 <sw-card :hero="true" :isLoading="processing">
                     <sw-file-input
-                            v-model="selectedFile"
+                            v-model:value="selectedFile"
                             :maxFileSize="8*1024*1024"
-                            @change="onFileChange">
+                            @update:value="onFileChange">
                     </sw-file-input>
                 </sw-card>
             {% endblock %}
             {% block scop_platform_redirect_import_modal_options %}
                 <sw-switch-field
                         :label="$tc('scopplatformredirecter.list.importModal.overrideID')"
-                        v-model="overrideID"
+                        v-model:value="overrideID"
                         :help-text="overrideIDHelp"
                 ></sw-switch-field>
                 <sw-switch-field
                         :label="$tc('scopplatformredirecter.list.importModal.override')"
-                        v-model="override"
+                        v-model:value="override"
                         :help-text="overrideHelp"
                 ></sw-switch-field>
             {% endblock %}
             {% block scop_platform_redirect_import_modal_footer %}
-                <template slot="modal-footer">
+                <template #modal-footer>
                     <sw-button @click="onClose" :disabled="processing">
                         {{ $t('scopplatformredirecter.list.importModal.cancel') }}
                     </sw-button>
