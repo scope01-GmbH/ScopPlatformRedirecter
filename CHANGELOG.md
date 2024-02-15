@@ -74,3 +74,7 @@
 # v2.3.1
 
 - Fix paging for redirect list
+
+# v3.0.0
+
+- Changed to Shopware v6.6

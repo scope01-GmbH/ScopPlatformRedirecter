@@ -73,4 +73,8 @@
 
 # v2.3.1
 
-- Beheben von Paging für Redirect List 
+- Beheben von Paging für Redirect List
+
+# v3.0.0
+
+- Update auf Shopware v6.6
