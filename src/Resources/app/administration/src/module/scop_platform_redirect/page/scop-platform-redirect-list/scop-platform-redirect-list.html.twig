@@ -11,6 +11,9 @@
                 <sw-button @click="onClickImport">
                     {{ $t('scopplatformredirecter.list.importButton') }}
                 </sw-button>
+                <sw-button variant="contrast" :link="$tc('scopplatformredirecter.list.faqButton.link')">
+                    {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
+                </sw-button>
             {% endblock %}
         </template>
         <template #content>

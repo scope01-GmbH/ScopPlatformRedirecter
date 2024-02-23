@@ -34,15 +34,6 @@ Component.register('scop-platform-redirect-details', {
         this.getRedirect();
     },
 
-    computed: {
-        helptext() {
-            if (hasExternalLink())
-                return this.$tc('scopplatformredirecter.detail.helpText', 0, {link: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.detail.helpHere') + '</sw-external-link>'});
-            else
-                return this.$tc('scopplatformredirecter.detail.helpText', 0, {link: '<a style="color: #1596ff" href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.detail.helpHere') + '</a>'});
-        }
-    },
-
     methods: {
         getRedirect() {
             this.repository.get(this.$route.params.id, Shopware.Context.api).then((entity) => {
