@@ -21,12 +21,12 @@
                 <sw-switch-field
                         :label="$tc('scopplatformredirecter.list.importModal.overrideID')"
                         v-model:value="overrideID"
-                        :help-text="overrideIDHelp"
+                        :help-text="$tc('scopplatformredirecter.list.importModal.overrideIDHelp')"
                 ></sw-switch-field>
                 <sw-switch-field
                         :label="$tc('scopplatformredirecter.list.importModal.override')"
                         v-model:value="override"
-                        :help-text="overrideHelp"
+                        :help-text="$tc('scopplatformredirecter.list.importModal.overrideHelp')"
                 ></sw-switch-field>
             {% endblock %}
             {% block scop_platform_redirect_import_modal_footer %}
