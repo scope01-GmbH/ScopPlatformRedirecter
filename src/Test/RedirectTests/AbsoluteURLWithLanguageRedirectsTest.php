@@ -4,7 +4,7 @@ namespace Scop\PlatformRedirecter\Test\RedirectTests;
 
 use Scop\PlatformRedirecter\Test\RedirectTestCase;
 
-class AbsoluteURLRedirectsWithLanguageTest extends RedirectTestCase
+class AbsoluteURLWithLanguageRedirectsTest extends RedirectTestCase
 {
 
     protected function getDatabaseRedirects(): array
