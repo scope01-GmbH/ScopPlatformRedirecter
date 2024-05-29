@@ -73,4 +73,8 @@
 
 # v2.3.1
 
-- Beheben von Paging für Redirect List 
+- Beheben von Paging für Redirect List
+
+# v2.3.2
+
+- Beheben von PSR-4 Standard 

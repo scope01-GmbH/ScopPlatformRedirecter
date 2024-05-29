@@ -74,3 +74,7 @@
 # v2.3.1
 
 - Fix paging for redirect list
+
+# v2.3.2
+
+- Fix PSR-4 standard
