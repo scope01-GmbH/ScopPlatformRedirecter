@@ -47,23 +47,12 @@ class ImportExportRedirectsController extends AbstractController
     }
 
     /**
-     * Route for older Shopware Versions
-     *
-     * @Route("/api/v{version}/_action/scop/platform/redirecter/prepare-export", name="api.action.scop.platform.redirecter.prepare-export-old", methods={"POST"}, defaults={"_routeScope"={"api"}})
-     * @throws \Exception
-     */
-    public function prepareExportOLD(Context $context): Response
-    {
-        return $this->prepareExport($context);
-    }
-
-    /**
      * Removes old export files, that are older than 60 Seconds.
      * Then exports all redirects into a new file.
      *
-     * @Route("/api/_action/scop/platform/redirecter/prepare-export", name="api.action.scop.platform.redirecter.prepare-export", methods={"POST"}, defaults={"_routeScope"={"api"}})
      * @throws \Exception
      */
+    #[Route(path: '/api/_action/scop/platform/redirecter/prepare-export', name: 'api.action.scop.platform.redirecter.prepare-export', defaults: ['_routeScope' => ['api']], methods: ['POST'])]
     public function prepareExport(Context $context): Response
     {
         $filename = 'redirects_' . time() . '.csv';
@@ -118,20 +107,9 @@ class ImportExportRedirectsController extends AbstractController
     }
 
     /**
-     * Route for older Shopware Versions
-     *
-     * @Route("/api/v{version}/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export-old", defaults={"auth_required"=false, "_routeScope"={"api"}}, methods={"GET"})
-     */
-    public function downloadOLD(Request $request, Context $context)
-    {
-        return $this->download($request, $context);
-    }
-
-    /**
      * Downloads an exported file. The Filename must be in the $request.
-     *
-     * @Route("/api/_action/scop/platform/redirecter/download-export", name="api.action.scop.platform.redirecter.download-export", defaults={"auth_required"=false, "_routeScope"={"api"}}, methods={"GET"})
      */
+    #[Route(path: '/api/_action/scop/platform/redirecter/download-export', name: 'api.action.scop.platform.redirecter.download-export', defaults: ['_routeScope' => ['api'], 'auth_required' => false], methods: ['GET'])]
     public function download(Request $request, Context $context)
     {
         $params = $request->query->all();
@@ -171,20 +149,9 @@ class ImportExportRedirectsController extends AbstractController
     }
 
     /**
-     * Route for older Shopware Versions
-     *
-     * @Route("/api/v{version}/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport-old", methods={"POST"}, defaults={"_routeScope"={"api"}})
-     */
-    public function importOLD(Request $request, Context $context)
-    {
-        return $this->import($request, $context);
-    }
-
-    /**
      * Imports an uploaded File.
-     *
-     * @Route("/api/_action/scop/platform/redirecter/import", name="api.action.scop.platform.redirecter.iport", methods={"POST"}, defaults={"_routeScope"={"api"}})
      */
+    #[Route(path: '/api/_action/scop/platform/redirecter/import', name: 'api.action.scop.platform.redirecter.iport', defaults: ['_routeScope' => ['api']], methods: ['POST'])]
     public function import(Request $request, Context $context)
     {
         $answer = array();

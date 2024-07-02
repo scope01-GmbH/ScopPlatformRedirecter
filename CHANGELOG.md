@@ -70,3 +70,11 @@
 # v2.3.0
 
 - Added sales channel selection for each redirect
+
+# v2.3.1
+
+- Fix paging for redirect list
+
+# v3.0.0
+
+- Changed to Shopware v6.6

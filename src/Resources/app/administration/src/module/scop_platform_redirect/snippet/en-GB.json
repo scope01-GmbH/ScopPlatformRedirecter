@@ -2,9 +2,7 @@
   "scopplatformredirecter": {
     "general": {
       "title": "Redirects",
-      "errorTitle": "Error",
-      "moreInformation": "Further information",
-      "moreInformationLink": "https://scope01.com/en/shopware-redirect-plugin/"
+      "errorTitle": "Error"
     },
     "list": {
       "columnSourceUrl": "Source URL",
@@ -15,6 +13,10 @@
       "createButton": "Add Redirect",
       "exportAllButton": "Export All",
       "importButton": "Import",
+      "faqButton": {
+        "text": "FAQ",
+        "link": "https://scope01.com/en/shopware-redirect-plugin/"
+      },
       "fileNotCreated": "The file could not be created",
       "fileNotImported": "The file could not be imported",
       "invalidFile": "Invalid File (It must be a .csv file)",
@@ -28,9 +30,9 @@
         "cancel": "Cancel",
         "import": "Import",
         "override": "Override same Source URL",
-        "overrideHelp": "If a Source URL already exists, the Target URL and the HTTP Status Code will be overridden with this option. {moreInformation}",
+        "overrideHelp": "If a Source URL already exists, the Target URL and the HTTP Status Code will be overridden with this option.",
         "overrideID": "Override same ID",
-        "overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option. {moreInformation}"
+        "overrideIDHelp": "If the ID already exists, the existing entry will be overridden with this option."
       },
       "queryParamsHandlingValues": {
         "0": "Consider",
@@ -56,7 +58,6 @@
       "errorSameUrlDescription": "The source URL and target URL must not be the same",
       "errorEmptySourceURL": "The source URL mustn't be empty",
       "errorEmptyTargetURL": "The target URL mustn't be empty",
-      "helpText": "Further information and FAQ can be found {link}",
       "helpHere": "here",
       "httpCodeLabelValues": {
         "301": "301 (Moved Permanently)",

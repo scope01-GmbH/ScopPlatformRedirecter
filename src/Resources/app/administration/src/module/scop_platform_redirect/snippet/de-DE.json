@@ -2,9 +2,7 @@
   "scopplatformredirecter": {
     "general": {
       "title": "Weiterleitungen",
-      "errorTitle": "Fehler",
-      "moreInformation": "Weitere Informationen",
-      "moreInformationLink": "https://scope01.com/shopware-redirect-plugin/"
+      "errorTitle": "Fehler"
     },
     "list": {
       "columnSourceUrl": "Quell URL",
@@ -15,6 +13,10 @@
       "createButton": "Weiterleitung anlegen",
       "exportAllButton": "Alle Exportieren",
       "importButton": "Importieren",
+      "faqButton": {
+        "text": "FAQ",
+        "link": "https://scope01.com/shopware-redirect-plugin/"
+      },
       "fileNotCreated": "Die Datei konnte nicht erstellt werden",
       "fileNotImported": "Die Datei konnte nicht importiert werden",
       "invalidFile": "Ungültige Datei (Es muss sich um eine .csv Datei handeln)",
@@ -28,9 +30,9 @@
         "cancel": "Abbrechen",
         "import": "Importieren",
         "override": "Bei gleicher Quell URL überschreiben",
-        "overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene HTTP Status Code überschrieben. {moreInformation}",
+        "overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene HTTP Status Code überschrieben.",
         "overrideID": "Bei gleicher ID überschreiben",
-        "overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschrieben. {moreInformation}"
+        "overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschrieben."
       },
       "queryParamsHandlingValues": {
         "0": "Berücksichtigen",
@@ -56,7 +58,6 @@
       "errorSameUrlDescription": "Die Quell URL und Ziel URL dürfen nicht gleich sein",
       "errorEmptySourceURL": "Die Quell URL darf nicht leer sein",
       "errorEmptyTargetURL": "Die Ziel URL darf nicht leer sein",
-      "helpText": "Weitere Informationen und FAQ finden Sie {link}",
       "helpHere": "hier",
       "httpCodeLabelValues": {
         "301": "301 (Permanent verschoben)",

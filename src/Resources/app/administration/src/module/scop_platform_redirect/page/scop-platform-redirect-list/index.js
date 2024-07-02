@@ -21,7 +21,9 @@ Shopware.Component.register('scop-platform-redirect-list', {
             redirect: null,
             exportLoading: false,
             noRedirect: true,
-            showImport: false
+            showImport: false,
+            page: 1,
+            limit: 25
         };
     },
 
@@ -75,7 +77,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
     created() {
         this.repository = this.repositoryFactory.create('scop_platform_redirecter_redirect');
 
-        let criteria = new Criteria();
+        let criteria = new Criteria(this.page, this.limit);
         criteria.addAssociation('salesChannel');
 
         this.repository.search(criteria, Shopware.Context.api).then((result) => {
