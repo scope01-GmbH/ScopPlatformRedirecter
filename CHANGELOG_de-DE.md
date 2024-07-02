@@ -78,3 +78,7 @@
 # v3.0.0
 
 - Update auf Shopware v6.6
+- 
+# v3.0.1
+
+- Redirect Erstellung behoben
