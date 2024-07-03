@@ -78,3 +78,7 @@
 # v3.0.0
 
 - Changed to Shopware v6.6
+
+# v3.0.1
+
+- Fixed redirect creation
