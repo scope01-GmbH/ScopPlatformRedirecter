@@ -19,7 +19,7 @@ Shopware.Module.register('scop-platform-redirect', {
             },
             details: {
                 component: 'scop-platform-redirect-details',
-                path: 'details',
+                path: 'details/:id',
                 meta: {
                     parentPath: 'scop.platform.redirect.list'
                 }
