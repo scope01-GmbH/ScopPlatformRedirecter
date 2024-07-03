@@ -81,7 +81,15 @@ Component.register('scop-platform-redirect-details', {
         saveFinish() {
             this.processSuccess = false;
             this.$router.push({name: 'scop.platform.redirect.list'});
-        }
+        },
+
+        transformQueryFieldValueToNumber() {
+          this.redirect.queryParamsHandling = Number(this.redirect.queryParamsHandling);
+        },
+
+        transformHttpCodeValueToNumber() {
+            this.redirect.httpCode = Number(this.redirect.httpCode);
+        },
     }
 
 });

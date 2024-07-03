@@ -16,14 +16,14 @@
                     <sw-text-field :label="$t('scopplatformredirecter.detail.targetUrlLabel')" v-model:value="redirect.targetURL"
                               validation="required"></sw-text-field>
                     <sw-select-number-field :label="$t('scopplatformredirecter.detail.httpCodeLabel')"
-                                            v-model:value="redirect.httpCode" validation="required">
+                                            v-model:value="redirect.httpCode" validation="required" @update:value="transformHttpCodeValueToNumber">
                         <option value=301>{{ $t('scopplatformredirecter.detail.httpCodeLabelValues.301') }}</option>
                         <option value=302>{{ $t('scopplatformredirecter.detail.httpCodeLabelValues.302') }}</option>
                     </sw-select-number-field>
                     <sw-switch-field :label="$tc('scopplatformredirecter.detail.enabledLabel')"
-                                     v-model:value="redirect.enabled" validation="required"></sw-switch-field>
+                                     v-model:value="redirect.enabled" validation="required"></sw-switch-field >
                     <sw-select-number-field :label="$t('scopplatformredirecter.detail.queryParamsHandling')"
-                                            v-model:value="redirect.queryParamsHandling" validation="required">
+                                            v-model:value="redirect.queryParamsHandling" validation="required" @update:value="transformQueryFieldValueToNumber">
                         <option value=0>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.consider') }}</option>
                         <option value=1>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.ignore') }}</option>
                         <option value=2>{{ $t('scopplatformredirecter.detail.queryParamsHandlingValues.transfer') }}</option>
