@@ -78,3 +78,11 @@
 # v2.3.2
 
 - Beheben von PSR-4 Standard 
+
+# v3.0.0
+
+- Update auf Shopware v6.6
+- 
+# v3.0.1
+
+- Redirect Erstellung behoben

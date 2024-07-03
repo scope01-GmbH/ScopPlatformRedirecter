@@ -38,29 +38,6 @@ Component.register('scop-platform-redirect-import-modal', {
         };
     },
 
-    computed: {
-        overrideIDHelp() {
-            if (hasExternalLink())
-                return this.$tc('scopplatformredirecter.list.importModal.overrideIDHelp', 0, {
-                    moreInformation: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>'
-                });
-            else
-                return this.$tc('scopplatformredirecter.list.importModal.overrideIDHelp', 0, {
-                    moreInformation: '<a style="color: #1596ff" href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</a>'
-                });
-        },
-        overrideHelp() {
-            if (hasExternalLink())
-                return this.$tc('scopplatformredirecter.list.importModal.overrideHelp', 0, {
-                    moreInformation: '<sw-external-link href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</sw-external-link>'
-                });
-            else
-                return this.$tc('scopplatformredirecter.list.importModal.overrideHelp', 0, {
-                    moreInformation: '<a style="color: #1596ff" href="' + this.$tc('scopplatformredirecter.general.moreInformationLink') + '">' + this.$tc('scopplatformredirecter.general.moreInformation') + '</a>'
-                });
-        }
-    },
-
     methods: {
         onClose() {
             if (!this.processing)

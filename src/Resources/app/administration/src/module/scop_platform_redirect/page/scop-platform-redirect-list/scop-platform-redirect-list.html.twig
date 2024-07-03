@@ -1,6 +1,6 @@
 {% block scop_platform_redirect_list %}
     <sw-page class="scop-platform-redirect-list">
-        <template slot="smart-bar-actions">
+        <template #smart-bar-actions>
             {% block scop_platform_redirect_list_smarbar %}
                 <sw-button variant="primary" :routerLink="{name: 'scop.platform.redirect.create'}">
                     {{ $t('scopplatformredirecter.list.createButton') }}
@@ -11,9 +11,12 @@
                 <sw-button @click="onClickImport">
                     {{ $t('scopplatformredirecter.list.importButton') }}
                 </sw-button>
+                <sw-button class="mt-external-link" variant="contrast" :link="$tc('scopplatformredirecter.list.faqButton.link')">
+                    {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
+                </sw-button>
             {% endblock %}
         </template>
-        <template slot="content">
+        <template #content>
             {% block scop_platform_redirect_list_content %}
                 <sw-entity-listing
                         v-if="redirect"

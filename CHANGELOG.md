@@ -78,3 +78,11 @@
 # v2.3.2
 
 - Fix PSR-4 standard
+
+# v3.0.0
+
+- Changed to Shopware v6.6
+
+# v3.0.1
+
+- Fixed redirect creation

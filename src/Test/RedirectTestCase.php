@@ -121,7 +121,7 @@ abstract class RedirectTestCase extends TestCase
     {
         $kernel = $this->getKernel();
 
-        $salesChannelApiBrowser = $kernel->getContainer()->get('scop.platform_redirecter.test.test_browser');
+        $salesChannelApiBrowser = $kernel->getContainer()->get('test.browser');
         $salesChannelApiBrowser->disableReboot();
 
         $salesChannelApiBrowser->setServerParameters([
