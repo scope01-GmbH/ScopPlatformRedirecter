@@ -34,6 +34,37 @@ Component.register('scop-platform-redirect-details', {
         this.getRedirect();
     },
 
+    computed: {
+        httpCodeOptions() {
+            return [
+                {
+                    value: 301,
+                    label: this.$tc('scopplatformredirecter.detail.httpCodeLabelValues.301'),
+                },
+                {
+                    value: 302,
+                    label: this.$tc('scopplatformredirecter.detail.httpCodeLabelValues.302'),
+                },
+            ];
+        },
+        queryParamsHandlingOptions() {
+            return [
+                {
+                    value: 0,
+                    label: this.$tc('scopplatformredirecter.detail.queryParamsHandlingValues.consider'),
+                },
+                {
+                    value: 1,
+                    label: this.$tc('scopplatformredirecter.detail.queryParamsHandlingValues.ignore'),
+                },
+                {
+                    value: 2,
+                    label: this.$tc('scopplatformredirecter.detail.queryParamsHandlingValues.transfer'),
+                },
+            ];
+        }
+    },
+
     methods: {
         getRedirect() {
             this.repository.get(this.$route.params.id, Shopware.Context.api).then((entity) => {
