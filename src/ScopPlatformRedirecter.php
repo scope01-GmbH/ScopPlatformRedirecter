@@ -26,6 +26,12 @@ use Shopware\Core\Framework\Plugin\Context\UninstallContext;
  */
 class ScopPlatformRedirecter extends Plugin
 {
+    public const ERROR_INCORRECT_COLUMNS = 'incorrect_columns';
+    public const ERROR_WRONG_ENCODING = 'wrong_encoding';
+    public const ERROR_INVALID_FILE_TYPE = 'invalid_file_type';
+    public const ERROR_FILE_OPEN = 'file_open_error';
+    public const ERROR_FILE_READ = 'file_read_error';
+    public const ERROR_EMPTY_FILE = 'empty_file';
 
     /**
      *

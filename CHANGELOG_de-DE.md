@@ -86,3 +86,7 @@
 # v3.0.1
 
 - Redirect Erstellung behoben
+
+# v3.0.2
+
+- Expanded import error messages

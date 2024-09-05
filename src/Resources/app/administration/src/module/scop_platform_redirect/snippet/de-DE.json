@@ -17,6 +17,14 @@
         "text": "FAQ",
         "link": "https://scope01.com/shopware-redirect-plugin/"
       },
+      "error": {
+        "incorrect_columns": "Die Datei hat falsche Spalten oder Trennzeichen ist not Semicolon",
+        "wrong_encoding": "Die Datei ist nicht UTF-8-kodiert",
+        "invalid_file_type": "Ungültiger Dateityp (nicht csv)",
+        "file_open_error": "Fehler beim Öffnen der Datei",
+        "file_read_error": "Fehler beim Lesen der Datei",
+        "empty_file": "Datei ist leer oder beschädigt"
+      },
       "fileNotCreated": "Die Datei konnte nicht erstellt werden",
       "fileNotImported": "Die Datei konnte nicht importiert werden",
       "invalidFile": "Ungültige Datei (Es muss sich um eine .csv Datei handeln)",

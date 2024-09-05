@@ -86,3 +86,7 @@
 # v3.0.1
 
 - Fixed redirect creation
+
+# v3.0.2
+
+- Erweiterte Importfehlermeldungen

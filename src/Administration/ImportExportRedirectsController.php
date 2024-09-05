@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Scop\PlatformRedirecter\Administration;
 
 use Scop\PlatformRedirecter\Redirect\Redirect;
+use Scop\PlatformRedirecter\ScopPlatformRedirecter;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -150,11 +151,15 @@ class ImportExportRedirectsController extends AbstractController
 
     /**
      * Imports an uploaded File.
+     *
+     * @param Request $request
+     * @param Context $context
+     * @return Response
      */
     #[Route(path: '/api/_action/scop/platform/redirecter/import', name: 'api.action.scop.platform.redirecter.iport', defaults: ['_routeScope' => ['api']], methods: ['POST'])]
-    public function import(Request $request, Context $context)
+    public function import(Request $request, Context $context): Response
     {
-        $answer = array();
+        $answer = [];
 
         /**
          * @var UploadedFile $file
@@ -172,44 +177,56 @@ class ImportExportRedirectsController extends AbstractController
         }
 
         if($type !== 'text/csv'){
-            $response['detail'] = "Invalid File";
-            return new Response(json_encode($response), Response::HTTP_OK);
+            return new Response(json_encode(['detail' => ScopPlatformRedirecter::ERROR_INVALID_FILE_TYPE]), Response::HTTP_OK);
+        }
+
+        $isUtf8 = mb_check_encoding(file_get_contents($file->getPathname()), 'UTF-8');
+        if ($isUtf8 !== true) {
+            return new Response(json_encode(['detail' => ScopPlatformRedirecter::ERROR_WRONG_ENCODING]), Response::HTTP_OK);
         }
 
         //Opening the uploaded File
-        $fileStream = fopen($file->getPathname(), 'r');
+        $fileStream = fopen($file->getPathname(), 'rb');
+        if (!$fileStream) {
+            return new Response(json_encode(['detail' => ScopPlatformRedirecter::ERROR_FILE_OPEN]), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         //Get CSV headline, then checking if it matches with the original headline
-        $title = fgetcsv($fileStream, 0, ';');
-        if ($title === null) {
-            $response['detail'] = "File not found";
-            return new Response(json_encode($response), Response::HTTP_INTERNAL_SERVER_ERROR);
+        /** @var array|false|null $headline */
+        $headline = fgetcsv($fileStream, 0, ';');
+        if ($headline === null) {
+            return new Response(json_encode(['detail' => ScopPlatformRedirecter::ERROR_FILE_READ]), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        if ($title === false) {
-            $response['detail'] = "Invalid File";
-            return new Response(json_encode($response), Response::HTTP_OK);
-        }
-
-        $valid = false;
-        if (count($title) === 5) { // Backward compatibility for exports before v1.2.0
-            if ($title[0] === "id" && $title[1] === "source_url" && $title[2] === "target_url" && $title[3] === "http_code" && $title[4] === "enabled") {
-                $valid = true;
-            }
-        }
-        if (count($title) === 6) { // Backward compatibility for exports before v2.3.0
-            if ($title[0] === "id" && $title[1] === "source_url" && $title[2] === "target_url" && $title[3] === "http_code" && $title[4] === "enabled" && ($title[5] === "query_params_handling" || $title[5] === "ignore_query_params")) { // ignore_query_params: Backward compatibility for exports before v2.1.0
-                $valid = true;
-            }
-        }
-        if (count($title) === 7) {
-            if ($title[0] === "id" && $title[1] === "source_url" && $title[2] === "target_url" && $title[3] === "http_code" && $title[4] === "enabled" && ($title[5] === "query_params_handling" || $title[5] === "ignore_query_params") && $title[6] === "sales_channel_id") { // ignore_query_params: Backward compatibility for exports before v2.1.0
-                $valid = true;
-            }
+        if ($headline === false) {
+            return new Response(json_encode(['detail' => ScopPlatformRedirecter::ERROR_FILE_READ]), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        if(!$valid){
-            $response['detail'] = "File is not a Redirects Export";
-            return new Response(json_encode($response), Response::HTTP_OK);
+        if (empty($headline)) {
+            return new Response(json_encode(['detail' => ScopPlatformRedirecter::ERROR_EMPTY_FILE]), Response::HTTP_OK);
+        }
+
+        $validHeadline = false;
+        switch (count($headline)) {
+            case 5: // Backward compatibility for exports before v1.2.0
+                if ($headline[0] === "id" && $headline[1] === "source_url" && $headline[2] === "target_url" && $headline[3] === "http_code" && $headline[4] === "enabled") {
+                    $validHeadline = true;
+                }
+                break;
+            case 6: // Backward compatibility for exports before v2.3.0
+                if ($headline[0] === "id" && $headline[1] === "source_url" && $headline[2] === "target_url" && $headline[3] === "http_code" && $headline[4] === "enabled" && ($headline[5] === "query_params_handling" || $headline[5] === "ignore_query_params")) { // ignore_query_params: Backward compatibility for exports before v2.1.0
+                    $validHeadline = true;
+                }
+                break;
+            case 7:
+                if ($headline[0] === "id" && $headline[1] === "source_url" && $headline[2] === "target_url" && $headline[3] === "http_code" && $headline[4] === "enabled" && ($headline[5] === "query_params_handling" || $headline[5] === "ignore_query_params") && $headline[6] === "sales_channel_id") { // ignore_query_params: Backward compatibility for exports before v2.1.0
+                    $validHeadline = true;
+                }
+                break;
+            default:
+                break;
+        }
+        if (!$validHeadline) {
+            return new Response(json_encode(['detail' => ScopPlatformRedirecter::ERROR_INCORRECT_COLUMNS]), Response::HTTP_OK);
         }
 
         $count = 0; //Amount of Redirects that where imported successfully
@@ -220,15 +237,15 @@ class ImportExportRedirectsController extends AbstractController
             $id = $line[0];
             $sourceURL = $line[1];
             $targetURL = $line[2];
-            $httpCode = intval($line[3]);
+            $httpCode = (int)$line[3];
 
             //Checking if this line has invalid data
-            if ($sourceURL === "" || ($httpCode != 301 && $httpCode != 302) || ($line[4] !== "1" && $line[4] !== "0") || (count($line) >= 6 && $line[5] !== "2" && $line[5] !== "1" && $line[5] !== "0") || (count($line) >= 7 && $line[6] !== '' && !Uuid::isValid($line[6]))) {
+            if ($sourceURL === "" || ($httpCode !== 301 && $httpCode !== 302) || ($line[4] !== "1" && $line[4] !== "0") || (count($line) >= 6 && $line[5] !== "2" && $line[5] !== "1" && $line[5] !== "0") || (count($line) >= 7 && $line[6] !== '' && !Uuid::isValid($line[6]))) {
                 $error++;
                 continue;
             }
 
-            $enabled = boolval($line[4]);
+            $enabled = (bool)$line[4];
             $queryParamsHandling = count($line) >= 6 ? intval($line[5]) : 0;
             $salesChannelId = count($line) >= 7 ? $line[6] : null;
             if($salesChannelId === '') {
@@ -237,15 +254,16 @@ class ImportExportRedirectsController extends AbstractController
 
             //Search either for the id and the sourceURL in the Database, or if the id is empty, only for the sourceURL
             $criteria = new Criteria();
-            if ($id !== "")
+            if ($id !== "") {
                 $criteria->addFilter(new MultiFilter(MultiFilter::CONNECTION_OR, [
                     new EqualsFilter('id', $id),
                     new EqualsFilter('sourceURL', $sourceURL)
                 ]));
-            else
+            } else {
                 $criteria->addFilter(
                     new EqualsFilter('sourceURL', $sourceURL)
                 );
+            }
             $contained = $this->redirectRepository->search($criteria, $context);
 
             if (count($contained) > 0) { //A Redirect matches at least one requirement, updating or skipping it
@@ -266,7 +284,7 @@ class ImportExportRedirectsController extends AbstractController
                         'salesChannelId' => $salesChannelId
                     ]], $context);
                     $count++;
-                } else if (strcasecmp($redirect->getSourceURL(), $sourceURL) == 0 && $override) { //The SourceURLs match and should be updated, updating it
+                } elseif (strcasecmp($redirect->getSourceURL(), $sourceURL) == 0 && $override) { //The SourceURLs match and should be updated, updating it
                     $this->redirectRepository->update([[
                         'id' => $redirect->getId(),
                         'sourceURL' => $sourceURL,
@@ -282,25 +300,30 @@ class ImportExportRedirectsController extends AbstractController
                 }
 
             } else { //No Redirect matches a requirement, creating a new Redirect...
-                if ($id !== "") //... with the given ID
-                    $this->redirectRepository->create([[
-                        'id' => $id,
-                        'sourceURL' => $sourceURL,
-                        'targetURL' => $targetURL,
-                        'httpCode' => $httpCode,
-                        'enabled' => $enabled,
-                        'queryParamsHandling' => $queryParamsHandling,
-                        'salesChannelId' => $salesChannelId
-                    ]], $context);
-                else //... with a new ID
-                    $this->redirectRepository->create([[
-                        'sourceURL' => $sourceURL,
-                        'targetURL' => $targetURL,
-                        'httpCode' => $httpCode,
-                        'enabled' => $enabled,
-                        'queryParamsHandling' => $queryParamsHandling,
-                        'salesChannelId' => $salesChannelId
-                    ]], $context);
+                if ($id !== "") { //... with the given ID
+                    $this->redirectRepository->create([
+                        [
+                            'id'                  => $id,
+                            'sourceURL'           => $sourceURL,
+                            'targetURL'           => $targetURL,
+                            'httpCode'            => $httpCode,
+                            'enabled'             => $enabled,
+                            'queryParamsHandling' => $queryParamsHandling,
+                            'salesChannelId'      => $salesChannelId
+                        ]
+                    ], $context);
+                } else { //... with a new ID
+                    $this->redirectRepository->create([
+                        [
+                            'sourceURL'           => $sourceURL,
+                            'targetURL'           => $targetURL,
+                            'httpCode'            => $httpCode,
+                            'enabled'             => $enabled,
+                            'queryParamsHandling' => $queryParamsHandling,
+                            'salesChannelId'      => $salesChannelId
+                        ]
+                    ], $context);
+                }
                 $count++;
             }
 
