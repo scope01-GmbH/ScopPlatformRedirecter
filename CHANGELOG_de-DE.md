@@ -90,3 +90,8 @@
 # v3.0.2
 
 - Expanded import error messages
+
+# v3.0.3
+
+- Möglichkeit zum Herunterladen von Importfehlern hinzugefügt
+- Optionaler CSV-Trennzeichen hinzugefügt

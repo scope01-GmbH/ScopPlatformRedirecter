@@ -8,9 +8,25 @@
                 <sw-button @click="onClickExport" :isLoading="exportLoading" :disabled="noRedirect">
                     {{ $t('scopplatformredirecter.list.exportAllButton') }}
                 </sw-button>
-                <sw-button @click="onClickImport">
-                    {{ $t('scopplatformredirecter.list.importButton') }}
-                </sw-button>
+                <sw-button-group>
+                    <sw-button @click="onClickImport">
+                        {{ $t('scopplatformredirecter.list.importButton') }}
+                    </sw-button>
+                    <sw-context-button v-show='failedCsv' :disabled="!failedCsv">
+                        <template #button>
+                            <sw-button square class="square" variant="danger">
+                                <sw-icon name="solid-ellipsis-h-s"></sw-icon>
+                            </sw-button>
+                        </template>
+                        <sw-context-menu-item  @click="downloadFailed">
+                            <span>{{ $t('scopplatformredirecter.list.downloadFailed') }}</span>
+                        </sw-context-menu-item>
+                        <sw-context-menu-item  @click="clearFailed">
+                            <span>{{ $t('scopplatformredirecter.list.clearFailed') }}</span>
+                        </sw-context-menu-item>
+                    </sw-context-button>
+                </sw-button-group>
+
                 <sw-button class="mt-external-link" variant="contrast" :link="$tc('scopplatformredirecter.list.faqButton.link')">
                     {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
                 </sw-button>

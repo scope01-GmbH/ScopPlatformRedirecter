@@ -90,3 +90,8 @@
 # v3.0.2
 
 - Erweiterte Importfehlermeldungen
+
+# v3.0.3
+
+- Added ability to download import errors
+- Added optional CSV separator

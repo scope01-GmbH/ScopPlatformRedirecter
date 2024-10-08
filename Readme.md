@@ -22,6 +22,8 @@
 | 3.0.0   | Changed to Shopware 6.6                                                                                                                                                 | **6.6**            |
 | 3.0.1   | Fixed redirect creation                                                                                                                                                 | **6.6**            |
 | 3.0.2   | Expanded import error messages                                                                                                                                          | **6.6**            |
+| 3.0.3   | Added ability to download import errors and optional CSV separator                                                                                                                            | **6.6**            |
+
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
 > Version 3.0.0 is no longer compatible with Shopware 6.5 or below!

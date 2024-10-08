@@ -112,7 +112,7 @@ Component.register('scop-platform-redirect-import-modal', {
             }
 
             this.processing = false;
-            this.$emit('updateList'); //Updating the List
+            this.$emit('updateList', response['data']['failedCsv']); //Updating the List
             this.$emit('close'); //Closing the modal
         }
     }

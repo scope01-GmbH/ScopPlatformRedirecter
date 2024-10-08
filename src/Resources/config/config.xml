@@ -12,6 +12,13 @@
             <defaultValue>false</defaultValue>
         </input-field>
 
+        <input-field type="text">
+            <name>csvSeparator</name>
+            <label>The optional parameter sets the field separator (one single-byte character only).</label>
+            <label lang="de-DE">Der optionale Parameter setzt das Feld-Trennzeichen (nur ein Single-Byte-Zeichen).</label>
+            <defaultValue>;</defaultValue>
+        </input-field>
+
     </card>
 
 </config>

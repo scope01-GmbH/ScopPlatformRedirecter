@@ -48,7 +48,9 @@
         "2": "Übernehmen"
       },
       "salesChannel": "Verkaufskanal",
-      "allSalesChannels": "Alle"
+      "allSalesChannels": "Alle",
+      "downloadFailed": "Fehlgeschlagene Zeilen Herunterladen",
+      "clearFailed": "Fehlgeschlagene Zeilen löschen"
     },
     "detail": {
       "sourceUrlLabel": "Quell URL",

@@ -17,6 +17,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
 
     data() {
         return {
+            failedCsv: null,
             repository: null,
             redirect: null,
             exportLoading: false,
@@ -83,9 +84,36 @@ Shopware.Component.register('scop-platform-redirect-list', {
         this.repository.search(criteria, Shopware.Context.api).then((result) => {
             this.redirect = result;
         });
+        const headers = {
+            Authorization: `Bearer ${this.loginService.getToken()}`
+        };
+        this.syncService.httpClient.post("/_action/scop/platform/redirecter/failed", null, {headers: headers}).then(response => {
+            if (response.data.failedCsv) {
+                this.failedCsv = response.data.failedCsv;
+            } else {
+                this.failedCsv = null;
+            }
+        });
     },
 
     methods: {
+        clearFailed() {
+            const headers = {
+                Authorization: `Bearer ${this.loginService.getToken()}`
+            };
+            this.syncService.httpClient.post("/_action/scop/platform/redirecter/clearfailed", null, {headers: headers}).then(response => {
+                if (response.data.failedCsv) {
+                    this.failedCsv = response.data.failedCsv;
+                } else {
+                    this.failedCsv = null;
+                }
+            });
+        },
+
+        async downloadFailed() {
+            await window.open(this.syncService.httpClient.defaults.baseURL + '/_action/scop/platform/redirecter/download-export?filename=failed_import.csv', '_blank');
+        },
+
         async onClickExport() {
 
             this.exportLoading = true;
@@ -120,7 +148,6 @@ Shopware.Component.register('scop-platform-redirect-list', {
             }
 
             await window.open(httpClient.defaults.baseURL + '/_action/scop/platform/redirecter/download-export?filename=' + response['data']['file'], '_blank');
-
         },
         onUpdate(records) {
             this.noRedirect = records.length === 0;
@@ -131,9 +158,9 @@ Shopware.Component.register('scop-platform-redirect-list', {
         closeImport() {
             this.showImport = false;
         },
-        updateList() {
+        updateList(failedCsv) {
             const criteria = this.redirect.criteria;
-
+            this.failedCsv = failedCsv;
             this.repository.search(criteria, Shopware.Context.api).then((result) => {
                 this.redirect = result;
             });

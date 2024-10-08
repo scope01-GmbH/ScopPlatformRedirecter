@@ -48,7 +48,9 @@
         "2": "Transfer"
       },
       "salesChannel": "Sales Channel",
-      "allSalesChannels": "All"
+      "allSalesChannels": "All",
+      "downloadFailed": "Download failed lines",
+      "clearFailed": "Clear failed lines"
     },
     "detail": {
       "sourceUrlLabel": "Source URL",
