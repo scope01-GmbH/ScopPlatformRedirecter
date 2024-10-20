@@ -3,13 +3,13 @@
         <sw-modal
                 v-if="show"
                 class="scop-platform-redirect-import-modal"
-                :title="$tc('scopplatformredirecter.list.importModal.title')"
+                :title="$tc('scopplatformredirecter.list.' + type + 'Modal.title')"
                 variant="small"
                 @modal-close="onClose"
         >
             {% block scop_platform_redirect_import_modal_content %}
 
-                <sw-card :hero="true" :isLoading="processing">
+                <sw-card :hero="true" :isLoading="processing" v-if="type === 'import'">
                     <sw-file-input
                             v-model:value="selectedFile"
                             :maxFileSize="8*1024*1024"
@@ -18,24 +18,23 @@
                 </sw-card>
             {% endblock %}
             {% block scop_platform_redirect_import_modal_options %}
-                <sw-switch-field
-                        :label="$tc('scopplatformredirecter.list.importModal.overrideID')"
-                        v-model:value="overrideID"
-                        :help-text="$tc('scopplatformredirecter.list.importModal.overrideIDHelp')"
-                ></sw-switch-field>
-                <sw-switch-field
-                        :label="$tc('scopplatformredirecter.list.importModal.override')"
-                        v-model:value="override"
-                        :help-text="$tc('scopplatformredirecter.list.importModal.overrideHelp')"
-                ></sw-switch-field>
+                <sw-entity-single-select
+                        :label="$tc('sw-import-export.importer.profileLabel')"
+                        :criteria="profileCriteria"
+                        entity="import_export_profile"
+                        label-property="label"
+                        :value="selectedProfileId"
+                        required
+                        show-clearable-button
+                        @update:value="onProfileSelect"></sw-entity-single-select>
             {% endblock %}
             {% block scop_platform_redirect_import_modal_footer %}
                 <template #modal-footer>
                     <sw-button @click="onClose" :disabled="processing">
-                        {{ $t('scopplatformredirecter.list.importModal.cancel') }}
+                        {{ $t('scopplatformredirecter.list.' + type + 'Modal.cancel') }}
                     </sw-button>
-                    <sw-button variant="primary" :disabled="noFile" :isLoading="processing" @click="startImport">
-                        {{ $t('scopplatformredirecter.list.importModal.import') }}
+                    <sw-button variant="primary" :disabled="noFile && type !== 'export'" :isLoading="processing" @click="startProcess">
+                        {{ $t('scopplatformredirecter.list.' + type + 'Modal.start') }}
                     </sw-button>
                 </template>
             {% endblock %}

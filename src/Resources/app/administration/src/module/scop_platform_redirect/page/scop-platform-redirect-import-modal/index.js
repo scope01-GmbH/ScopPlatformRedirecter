@@ -1,12 +1,13 @@
 import template from './scop-platform-redirect-import-modal.html.twig';
 
 const {Component, Mixin} = Shopware;
+const Criteria = Shopware.Data.Criteria;
 
 Component.register('scop-platform-redirect-import-modal', {
     template,
 
     inject: [
-        'syncService', 'loginService'
+        'importExport', 'repositoryFactory'
     ],
 
     mixins: [
@@ -18,8 +19,7 @@ Component.register('scop-platform-redirect-import-modal', {
             selectedFile: null,
             noFile: true,
             processing: false,
-            override: false,
-            overrideID: true
+            selectedProfileId: null,
         };
     },
 
@@ -28,14 +28,49 @@ Component.register('scop-platform-redirect-import-modal', {
             type: Boolean,
             required: true,
             default: false,
+        },
+        type: {
+            type: String,
+            required: true,
+            default: 'import',
         }
     },
 
+    emits: ['import-started', 'export-started'],
 
     metaInfo() {
         return {
             title: this.$createTitle()
         };
+    },
+
+    computed: {
+        importExportProfileRepository() {
+            return this.repositoryFactory.create('import_export_profile');
+        },
+        profileCriteria() {
+            const criteria = new Criteria(1, 25);
+            criteria.addSorting(Criteria.sort('label'));
+
+            criteria.addFilter(
+                Criteria.equals('sourceEntity', 'scop_platform_redirecter_redirect'),
+            );
+            criteria.addQuery(Criteria.contains('type', 'import'));
+
+            return criteria;
+        },
+    },
+
+    created() {
+        const criteria = new Criteria(1, 25);
+        criteria.addFilter(
+            Criteria.equals('technicalName', 'default_scop_redirect')
+        );
+        this.importExportProfileRepository.search(criteria).then((result) => {
+            if (result[0]) {
+                this.selectedProfileId = result[0].id;
+            }
+        })
     },
 
     methods: {
@@ -47,103 +82,77 @@ Component.register('scop-platform-redirect-import-modal', {
             this.file = file;
             this.noFile = file == null;
         },
+        onProfileSelect(profileId) {
+            this.selectedProfileId = profileId;
+        },
+        async startProcess() {
+            if (this.type == 'import') {
+                this.startImport();
+            } else if (this.type == 'export') {
+                this.startExport();
+            }
+        },
         async startImport() { //Importing the file
-
             this.processing = true;
+            const profile = this.selectedProfileId;
 
-            const formData = new FormData();
-            formData.set("file", this.file);
-            formData.set("overrideID", this.overrideID);
-            formData.set("override", this.override);
-
-            const headers = {
-                Authorization: `Bearer ${this.loginService.getToken()}`
-            };
-
-
-            //Sending the Request to the Backend, catching an Error
-            const httpClient = this.syncService.httpClient;
-            const response = await httpClient.post("/_action/scop/platform/redirecter/import", formData, {headers: headers}).catch((err) => {
-
-                this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                    message: this.$tc('scopplatformredirecter.list.fileNotImported')
-                });
+            this.importExport.import(profile, this.selectedFile, this.handleProgress).then(() => {
+                this.selectedFile = null;
+            }).catch((error) => {
+                if (!error.response || !error.response.data || !error.response.data.errors) {
+                    this.createNotificationError({
+                        message: error.message,
+                    });
+                } else {
+                    error.response.data.errors.forEach((singleError) => {
+                        this.createNotificationError({
+                            message: `${singleError.code}: ${singleError.detail}`,
+                        });
+                    });
+                }
 
                 this.processing = false;
             });
-            if (!this.processing) //Returns if an error was caught
-                return;
+        },
+        async startExport() {
+            this.processing = true;
 
-            if (response['status'] !== 200 || response['data']['detail'] !== 'File Imported!') { //An Error occurred whilst importing, notify the User
-                if (response['data']['detail'] === 'Invalid File') { //It is not a valid csv file
+            this.importExport.export(this.selectedProfileId, this.handleProgress, this.config).catch((error) => {
+                if (!error.response || !error.response.data || !error.response.data.errors) {
                     this.createNotificationError({
-                        title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                        message: this.$tc('scopplatformredirecter.list.invalidFile')
+                        message: error.message,
                     });
-                } else if (response['data']['detail'] === 'File is not a Redirects Export') { //It is an invalid csv file
-                    this.createNotificationError({
-                        title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                        message: this.$tc('scopplatformredirecter.list.invalidCsvFile')
-                    });
-                } else { //Something else went wrong
-                    this.createNotificationError({
-                        title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                        message: this.$tc('scopplatformredirecter.list.fileNotImported')
+                } else {
+                    error.response.data.errors.forEach((singleError) => {
+                        this.createNotificationError({
+                            message: `${singleError.code}: ${singleError.detail}`,
+                        });
                     });
                 }
+
                 this.processing = false;
-                this.$emit('updateList');
-                return;
-            } else { //Imported successfully
-                if (response['data']['error'] > 0) { //There where invalid lines in the file
-                    this.createNotification({
-                        title: this.$tc('scopplatformredirecter.list.importDone'),
-                        message: this.$tc('scopplatformredirecter.list.fileImportedError', 0, {
-                            amount: response['data']['amount'],
-                            skipped: response['data']['skipped'],
-                            error: response['data']['error']
-                        })
-                    });
-                } else if (response['data']['skipped'] > 0) { //Some Redirects where skipped
-                    this.createNotification({
-                        title: this.$tc('scopplatformredirecter.list.importDone'),
-                        message: this.$tc('scopplatformredirecter.list.fileImported', 0, {
-                            amount: response['data']['amount'],
-                            skipped: response['data']['skipped']
-                        })
-                    });
-                } else { //Every Redirect was imported
-                    this.createNotification({
-                        title: this.$tc('scopplatformredirecter.list.importDone'),
-                        message: this.$tc('scopplatformredirecter.list.fileImportedNoSkip', 0, {
-                            amount: response['data']['amount']
-                        })
-                    });
-                }
+            });
+        },
+        handleProgress(log) {
+            if (log.activity === 'export') {
+                this.createNotificationInfo({
+                    message: this.$tc('sw-import-export.exporter.messageExportStarted'),
+                });
+
+                this.$emit('export-started', log);
+                this.$router.push({name: 'sw.import.export.index.export'});
+            } else if (log.activity === 'import') {
+                this.createNotificationInfo({
+                    message: this.$tc('sw-import-export.importer.messageImportStarted'),
+                });
+
+                this.$emit('import-started', log);
             }
 
             this.processing = false;
             this.$emit('updateList'); //Updating the List
             this.$emit('close'); //Closing the modal
-        }
+        },
     }
 
 });
-
-function hasExternalLink() {
-    var version = Shopware.Context.app.config.version.split(".");
-    if (parseInt(version[0]) < 6)
-        return false;
-    if (parseInt(version[0]) > 6)
-        return true;
-
-    if (parseInt(version[1]) < 4)
-        return false;
-    if (parseInt(version[1]) > 4)
-        return true;
-
-    if (parseInt(version[2]) < 3)
-        return false;
-    return true;
-}

@@ -28,11 +28,12 @@
       "importModal": {
         "title": "Importieren",
         "cancel": "Abbrechen",
-        "import": "Importieren",
-        "override": "Bei gleicher Quell URL überschreiben",
-        "overrideHelp": "Ist die Quell URL bereits vorhanden, wird mit dieser Option das vorhandene Ziel sowie der vorhandene HTTP Status Code überschrieben.",
-        "overrideID": "Bei gleicher ID überschreiben",
-        "overrideIDHelp": "Ist die ID bereits vorhanden, wird mit dieser Option der vorhandene Eintrag überschrieben."
+        "start": "Importieren"
+      },
+      "exportModal": {
+        "title": "Exportieren",
+        "cancel": "Abbrechen",
+        "start": "Exportieren"
       },
       "queryParamsHandlingValues": {
         "0": "Berücksichtigen",
