@@ -36,8 +36,9 @@
             {% endblock %}
             {% block scop_platform_redirect_list_view_import_modal %}
                 <scop-platform-redirect-import-modal
-                        :show="showImport"
-                        @close="closeImport"
+                        :show="showImportExportModal"
+                        :type="modalType"
+                        @close="closeImportExport"
                         @updateList="updateList"
                 >
                 </scop-platform-redirect-import-modal>

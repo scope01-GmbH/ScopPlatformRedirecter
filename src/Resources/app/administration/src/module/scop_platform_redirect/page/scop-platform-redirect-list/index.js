@@ -8,7 +8,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
     template,
 
     inject: [
-        'repositoryFactory', 'syncService', 'loginService'
+        'repositoryFactory', 'syncService', 'loginService', 'importExport'
     ],
 
     mixins: [
@@ -21,7 +21,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
             redirect: null,
             exportLoading: false,
             noRedirect: true,
-            showImport: false,
+            showImportExportModal: false,
+            modalType: 'export',
             page: 1,
             limit: 25
         };
@@ -86,50 +87,19 @@ Shopware.Component.register('scop-platform-redirect-list', {
     },
 
     methods: {
-        async onClickExport() {
-
-            this.exportLoading = true;
-
-            //Get Authorization
-            const headers = {
-                Authorization: `Bearer ${this.loginService.getToken()}`
-            };
-            const httpClient = this.syncService.httpClient;
-
-            //Requesting to create the export file, catching an error
-            const response = await httpClient.post('/_action/scop/platform/redirecter/prepare-export', {}, {headers: headers}).catch((err) => {
-                this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                    message: this.$tc('scopplatformredirecter.list.fileNotCreated')
-                });
-                this.exportLoading = false;
-            });
-
-            if (!this.exportLoading) //Returning if an error was caught
-                return;
-
-            this.exportLoading = false;
-
-            //Checking if the creation of the file was successfully, otherwise returning
-            if (response['status'] !== 200) {
-                this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                    message: this.$tc('scopplatformredirecter.list.fileNotCreated')
-                });
-                return;
-            }
-
-            await window.open(httpClient.defaults.baseURL + '/_action/scop/platform/redirecter/download-export?filename=' + response['data']['file'], '_blank');
-
+        onClickExport() {
+            this.modalType = 'export';
+            this.showImportExportModal = true;
         },
         onUpdate(records) {
             this.noRedirect = records.length === 0;
         },
         onClickImport() {
-            this.showImport = true;
+            this.modalType = 'import';
+            this.showImportExportModal = true;
         },
-        closeImport() {
-            this.showImport = false;
+        closeImportExport() {
+            this.showImportExportModal = false;
         },
         updateList() {
             const criteria = this.redirect.criteria;
