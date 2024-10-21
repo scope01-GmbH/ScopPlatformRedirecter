@@ -1,14 +1,17 @@
-import template from './scop-platform-redirect-import-modal.html.twig';
+import template from './scop-platform-redirect-import-export-modal.html.twig';
+import './scop-platform-redirect-import-export-modal.scss';
 
 const {Component, Mixin} = Shopware;
 const Criteria = Shopware.Data.Criteria;
 
-Component.register('scop-platform-redirect-import-modal', {
+Component.register('scop-platform-redirect-import-export-modal', {
     template,
 
     inject: [
         'importExport', 'repositoryFactory'
     ],
+
+    compatConfig: Shopware.compatConfig,
 
     mixins: [
         Mixin.getByName('notification')
@@ -73,7 +76,24 @@ Component.register('scop-platform-redirect-import-modal', {
         })
     },
 
+    watch: {
+
+    },
+
     methods: {
+        async activityLoaded() {
+            const activityGrid = this.$refs.activityGrid;
+            if (activityGrid) {
+                const criteria = activityGrid.activityCriteria;
+                // Check if 'activityCriteria.filters' contains an filter with name 'profile.sourceEntity'
+                const hasFilter = criteria.filters.some(filter => filter.field === 'profile.sourceEntity');
+
+                if (!hasFilter) {
+                    criteria.addFilter(Criteria.equals('profile.sourceEntity', 'scop_platform_redirecter_redirect'));
+                    await activityGrid.fetchActivities();
+                }
+            }
+        },
         onClose() {
             if (!this.processing)
                 this.$emit('close');
@@ -140,7 +160,6 @@ Component.register('scop-platform-redirect-import-modal', {
                 });
 
                 this.$emit('export-started', log);
-                this.$router.push({name: 'sw.import.export.index.export'});
             } else if (log.activity === 'import') {
                 this.createNotificationInfo({
                     message: this.$tc('sw-import-export.importer.messageImportStarted'),
@@ -149,9 +168,10 @@ Component.register('scop-platform-redirect-import-modal', {
                 this.$emit('import-started', log);
             }
 
-            this.processing = false;
+            this.$refs.activityGrid.addActivity(log);
+            this.$refs.activityGrid.fetchActivities();
             this.$emit('updateList'); //Updating the List
-            this.$emit('close'); //Closing the modal
+            this.processing = false;
         },
     }
 
