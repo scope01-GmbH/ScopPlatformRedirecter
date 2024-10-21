@@ -1,7 +1,8 @@
 import './page/scop-platform-redirect-list';
 import './page/scop-platform-redirect-details';
 import './page/scop-platform-redirect-create';
-import './page/scop-platform-redirect-import-modal';
+import './page/scop-platform-redirect-import-export-modal';
+import './page/scop-platform-redirect-import-export-activity';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
 

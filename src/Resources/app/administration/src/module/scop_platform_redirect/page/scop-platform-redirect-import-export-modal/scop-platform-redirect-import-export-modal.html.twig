@@ -1,10 +1,10 @@
 {% block scop_platform_redirect_import_modal %}
-    <div class="scop-platform-redirect-import-modal">
+    <div class="scop-platform-redirect-import-export-modal">
         <sw-modal
                 v-if="show"
-                class="scop-platform-redirect-import-modal"
+                class="scop-platform-redirect-import-export-modal"
                 :title="$tc('scopplatformredirecter.list.' + type + 'Modal.title')"
-                variant="small"
+                variant="large"
                 @modal-close="onClose"
         >
             {% block scop_platform_redirect_import_modal_content %}
@@ -27,6 +27,11 @@
                         required
                         show-clearable-button
                         @update:value="onProfileSelect"></sw-entity-single-select>
+                <div class="scop-platform-redirect-import-export-modal-activity">
+                    <scop-platform-redirect-import-export-activity
+                            ref="activityGrid"
+                            :type="type"></scop-platform-redirect-import-export-activity>
+                </div>
             {% endblock %}
             {% block scop_platform_redirect_import_modal_footer %}
                 <template #modal-footer>
