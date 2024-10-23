@@ -86,3 +86,7 @@
 # v3.0.1
 
 - Redirect Erstellung behoben
+
+# v3.1.0
+
+- Import / Export Funktion benutzt nun den standard Shopware Import/Export
