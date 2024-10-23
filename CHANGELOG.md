@@ -86,3 +86,7 @@
 # v3.0.1
 
 - Fixed redirect creation
+
+# v3.1.0
+
+- Import / Export now uses default shopware import/export
