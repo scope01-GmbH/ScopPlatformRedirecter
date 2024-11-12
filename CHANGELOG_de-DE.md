@@ -91,6 +91,6 @@
 
 - Import / Export Funktion benutzt nun den standard Shopware Import/Export
 
-# v3.1.0
+# v3.1.1
 
 - Migration fixen
