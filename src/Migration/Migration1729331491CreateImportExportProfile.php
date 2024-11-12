@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Shopware\Core\Defaults;
+use Shopware\Core\Framework\Feature;
 use Shopware\Core\Framework\Log\Package;
 use Shopware\Core\Framework\Migration\MigrationStep;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -27,6 +28,11 @@ class Migration1729331491CreateImportExportProfile extends MigrationStep
      */
     public function update(Connection $connection): void
     {
+        // For V6_7_0_0 create Migration with technical_name
+        if (Feature::isActive('V6_7_0_0')) {
+            return;
+        }
+
         $importExportId = Uuid::randomHex();
 
         $enGbLangId = $this->getLanguageIdByLocale($connection, 'en-GB');
@@ -34,8 +40,8 @@ class Migration1729331491CreateImportExportProfile extends MigrationStep
         $defaultLangId = Uuid::fromHexToBytes(Defaults::LANGUAGE_SYSTEM);
 
         $sql = <<<SQL
-INSERT INTO `import_export_profile` (`id`, `name`, `system_default`, `source_entity`, `file_type`, `delimiter`, `enclosure`, `type`, `mapping`, `created_at`, `technical_name`)
-VALUES (:id, 'Default redirect', '1', 'scop_platform_redirecter_redirect', 'text/csv', ';', '\"', 'import-export', '[{\"key\":\"id\",\"mappedKey\":\"id\",\"position\":0},{\"key\":\"sourceURL\",\"mappedKey\":\"source_url\",\"position\":1},{\"key\":\"targetURL\",\"mappedKey\":\"target_url\",\"position\":2},{\"key\":\"httpCode\",\"mappedKey\":\"http_code\",\"position\":3},{\"key\":\"enabled\",\"mappedKey\":\"enabled\",\"position\":4},{\"key\":\"queryParamsHandling\",\"mappedKey\":\"query_params_handling\",\"position\":5},{\"key\":\"salesChannelId\",\"mappedKey\":\"sales_channel_id\",\"position\":6}]',:createdAt,'default_scop_redirect');
+INSERT INTO `import_export_profile` (`id`, `name`, `system_default`, `source_entity`, `file_type`, `delimiter`, `enclosure`, `type`, `mapping`, `created_at`)
+VALUES (:id, 'Default redirect', '1', 'scop_platform_redirecter_redirect', 'text/csv', ';', '\"', 'import-export', '[{\"key\":\"id\",\"mappedKey\":\"id\",\"position\":0},{\"key\":\"sourceURL\",\"mappedKey\":\"source_url\",\"position\":1},{\"key\":\"targetURL\",\"mappedKey\":\"target_url\",\"position\":2},{\"key\":\"httpCode\",\"mappedKey\":\"http_code\",\"position\":3},{\"key\":\"enabled\",\"mappedKey\":\"enabled\",\"position\":4},{\"key\":\"queryParamsHandling\",\"mappedKey\":\"query_params_handling\",\"position\":5},{\"key\":\"salesChannelId\",\"mappedKey\":\"sales_channel_id\",\"position\":6}]',:createdAt);
 SQL;
 
         $connection->executeStatement($sql, [
