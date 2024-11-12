@@ -90,3 +90,7 @@
 # v3.1.0
 
 - Import / Export now uses default shopware import/export
+
+# v3.1.1
+
+- Fix migration
