@@ -107,6 +107,41 @@ Shopware.Component.register('scop-platform-redirect-list', {
             this.repository.search(criteria, Shopware.Context.api).then((result) => {
                 this.redirect = result;
             });
+        },
+        onInlineEditSave(promise, redirect) {
+            //Checking if source and target URL are the same or one of them is empty, otherwise proceed
+            if (redirect.sourceURL === redirect.targetURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
+                });
+                this.updateList();
+                return;
+            }
+            if (!redirect.sourceURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorEmptySourceURL')
+                });
+                this.updateList();
+                return;
+            }
+            if (!redirect.targetURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorEmptyTargetURL')
+                });
+                this.updateList();
+                return;
+            }
+
+            return promise
+                .catch(() => {
+                    this.updateList();
+                    this.createNotificationError({
+                        message: this.$tc('global.notification.notificationSaveErrorMessageRequiredFieldsInvalid'),
+                    });
+                });
         }
     },
 
