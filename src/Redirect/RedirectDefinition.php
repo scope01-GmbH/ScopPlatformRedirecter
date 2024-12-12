@@ -66,8 +66,8 @@ class RedirectDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new PrimaryKey(), new Required()),
-            new StringField("sourceURL", "sourceURL"),
-            new StringField("targetURL", "targetURL"),
+            (new StringField("sourceURL", "sourceURL"))->addFlags(new Required()),
+            (new StringField("targetURL", "targetURL"))->addFlags(new Required()),
             new IntField("httpCode", "httpCode"),
             new BoolField("enabled", "enabled"),
             new IntField("queryParamsHandling", "queryParamsHandling"),
