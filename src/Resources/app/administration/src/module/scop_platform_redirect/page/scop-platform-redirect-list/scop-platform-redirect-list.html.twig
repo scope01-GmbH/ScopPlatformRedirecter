@@ -19,6 +19,7 @@
         <template #content>
             {% block scop_platform_redirect_list_content %}
                 <sw-entity-listing
+                        ref="listing"
                         v-if="redirect"
                         :items="redirect"
                         :repository="repository"

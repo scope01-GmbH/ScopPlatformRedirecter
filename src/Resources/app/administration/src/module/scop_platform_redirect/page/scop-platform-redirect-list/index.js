@@ -84,6 +84,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
         this.repository.search(criteria, Shopware.Context.api).then((result) => {
             this.redirect = result;
         });
+        this.$on('inline-edit-assign', this.onInlineEditAssign);
     },
 
     methods: {
@@ -109,15 +110,23 @@ Shopware.Component.register('scop-platform-redirect-list', {
             });
         },
         onInlineEditSave(promise, redirect) {
-            //Checking if source and target URL are the same or one of them is empty, otherwise proceed
-            if (redirect.sourceURL === redirect.targetURL) {
+            if (redirect.sourceURL.trim() === redirect.targetURL.trim() && redirect.enabled) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
                     message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
                 });
-                this.updateList();
+
+                redirect.enabled = false;
+                redirect._origin.enabled = true;
+
+                promise.then(() => {
+                    this.repository.save(redirect, Shopware.Context.api).then(() => {
+                        return this.updateList();
+                    });
+                });
                 return;
             }
+
             if (!redirect.sourceURL) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
