@@ -127,7 +127,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         }
 
         // Prevent endless redirecting when target url and source url have only different capitalisation
-        if (in_array($targetURL, $search, true)) {
+        if (in_array(trim($targetURL), $search, true)) {
             return $this->inner->getRedirect($request);
         }
 
