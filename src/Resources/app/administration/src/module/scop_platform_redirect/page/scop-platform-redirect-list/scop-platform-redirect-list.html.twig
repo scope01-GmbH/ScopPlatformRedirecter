@@ -19,12 +19,14 @@
         <template #content>
             {% block scop_platform_redirect_list_content %}
                 <sw-entity-listing
+                        ref="listing"
                         v-if="redirect"
                         :items="redirect"
                         :repository="repository"
                         :columns="columns"
                         detailRoute="scop.platform.redirect.details"
                         @update-records="onUpdate"
+                        @inline-edit-save="onInlineEditSave"
                 >
                     <template #column-queryParamsHandling="{ item }">
                         {{ $tc('scopplatformredirecter.list.queryParamsHandlingValues.' + item.queryParamsHandling) }}

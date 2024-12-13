@@ -84,6 +84,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
         this.repository.search(criteria, Shopware.Context.api).then((result) => {
             this.redirect = result;
         });
+        this.$on('inline-edit-assign', this.onInlineEditAssign);
     },
 
     methods: {
@@ -107,6 +108,49 @@ Shopware.Component.register('scop-platform-redirect-list', {
             this.repository.search(criteria, Shopware.Context.api).then((result) => {
                 this.redirect = result;
             });
+        },
+        onInlineEditSave(promise, redirect) {
+            if (redirect.sourceURL.trim() === redirect.targetURL.trim() && redirect.enabled) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
+                });
+
+                redirect.enabled = false;
+                redirect._origin.enabled = true;
+
+                promise.then(() => {
+                    this.repository.save(redirect, Shopware.Context.api).then(() => {
+                        return this.updateList();
+                    });
+                });
+                return;
+            }
+
+            if (!redirect.sourceURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorEmptySourceURL')
+                });
+                this.updateList();
+                return;
+            }
+            if (!redirect.targetURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.detail.errorEmptyTargetURL')
+                });
+                this.updateList();
+                return;
+            }
+
+            return promise
+                .catch(() => {
+                    this.updateList();
+                    this.createNotificationError({
+                        message: this.$tc('global.notification.notificationSaveErrorMessageRequiredFieldsInvalid'),
+                    });
+                });
         }
     },
 
