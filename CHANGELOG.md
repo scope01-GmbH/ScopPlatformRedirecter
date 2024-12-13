@@ -94,3 +94,7 @@
 # v3.1.1
 
 - Fix migration
+
+# v3.1.2
+
+- Add inline edit validation to prevent empty source/target Url

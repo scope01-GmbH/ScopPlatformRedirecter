@@ -43,7 +43,7 @@ Component.register('scop-platform-redirect-details', {
 
         onClickSave() {
             //Checking if source and target URL are the same or one of them is empty, otherwise proceed
-            if (this.redirect.sourceURL === this.redirect.targetURL) {
+            if (this.redirect.sourceURL.trim() === this.redirect.targetURL.trim()) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
                     message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
