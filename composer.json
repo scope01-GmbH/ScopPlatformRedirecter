@@ -1,7 +1,7 @@
 {
   "name": "scop/scopplatformredirecter",
   "description": "With the redirect plugin of the agency scope01 from frankfurt(m) (https://scope01.com/) you are able to create and manage redirects from the admin area of shopware 6",
-  "version": "v3.1.2",
+  "version": "v3.1.3",
   "type": "shopware-platform-plugin",
   "license": "MIT",
   "authors": [

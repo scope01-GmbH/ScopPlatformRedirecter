@@ -98,3 +98,7 @@
 # v3.1.2
 
 - Add inline edit validation to prevent empty source/target Url
+
+# v3.1.3
+
+- Fixed sales channel specific lookup for url with query parameters

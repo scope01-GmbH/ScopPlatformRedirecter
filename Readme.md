@@ -24,6 +24,8 @@
 | 3.1.0   | Import / Export now uses default shopware import/export                                                                                                                 | 6.6          |
 | 3.1.1   | Fix migration                                                                                                                                                           | 6.6          |
 | 3.1.2   | Add inline edit validation to prevent empty source/target URL                                                                                                           | 6.6          |
+| 3.1.3   | Fixed sales channel specific lookup for url with query parameters                                                                                                       | 6.6          |
+
 
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\

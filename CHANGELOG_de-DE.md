@@ -98,3 +98,7 @@
 # v3.1.2
 
 - Inline Edit Validation wurde eingebaut um leere source/target URL zu vermeiden
+
+# v3.1.3
+
+- Fehlerbehebung Sales Channel Auflösung mit Parametern
