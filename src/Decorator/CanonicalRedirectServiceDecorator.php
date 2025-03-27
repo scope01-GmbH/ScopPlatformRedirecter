@@ -104,9 +104,15 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
                 foreach ($search as $string)
                     $searchWithoutQuery[] = explode('?', $string)[0];
 
-                $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $searchWithoutQuery))->addFilter(new EqualsFilter('enabled', true))->addFilter(new EqualsAnyFilter('queryParamsHandling', [1, 2]))
-                    ->setLimit(1), $context);
+                $criteria = new Criteria();
+                $criteria->addFilter(new EqualsAnyFilter('sourceURL', $searchWithoutQuery));
+                $criteria->addFilter(new EqualsFilter('enabled', true));
+                $criteria->addFilter(new EqualsAnyFilter('queryParamsHandling', [1, 2]));
+                $criteria->addFilter(new OrFilter([new EqualsFilter('salesChannelId', $salesChannelId), new EqualsFilter('salesChannelId', null)]));
+                $criteria->setLimit(1);
 
+                $redirects = $this->repository->search($criteria, $context);
+                
                 // No Redirect found for this URL, do nothing
                 if ($redirects->count() === 0) {
                     return $this->inner->getRedirect($request);
