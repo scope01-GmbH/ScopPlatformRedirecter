@@ -32,7 +32,7 @@ class Migration1634025013RedirectDisabeling extends MigrationStep
         $sql = <<<SQL
         ALTER TABLE `scop_platform_redirecter_redirect` ADD COLUMN `enabled` BOOLEAN DEFAULT true AFTER `httpCode`;
 SQL;
-        $connection->executeUpdate($sql);
+        $connection->executeStatement($sql);
     }
 
     public function updateDestructive(Connection $connection): void

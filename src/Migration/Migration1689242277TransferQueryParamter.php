@@ -17,7 +17,7 @@ class Migration1689242277TransferQueryParamter extends MigrationStep
         $sql = <<<SQL
         ALTER TABLE `scop_platform_redirecter_redirect` CHANGE `ignoreQueryParams` `queryParamsHandling` TINYINT DEFAULT 0;
 SQL;
-        $connection->executeUpdate($sql);
+        $connection->executeStatement($sql);
     }
 
     public function updateDestructive(Connection $connection): void

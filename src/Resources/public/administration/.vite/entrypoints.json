@@ -1,0 +1,25 @@
+{
+  "base": "/bundles/scopplatformredirecter/administration/",
+  "entryPoints": {
+    "scop-platform-redirecter": {
+      "css": [
+        "/bundles/scopplatformredirecter/administration/assets/scop-platform-redirecter-Zq_N7TFv.css"
+      ],
+      "dynamic": [],
+      "js": [
+        "/bundles/scopplatformredirecter/administration/assets/scop-platform-redirecter-xTMLI4RF.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

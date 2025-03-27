@@ -17,7 +17,7 @@ class Migration1663601206IgnoreQueryParameter extends MigrationStep
         $sql = <<<SQL
         ALTER TABLE `scop_platform_redirecter_redirect` ADD COLUMN `ignoreQueryParams` BOOLEAN DEFAULT false AFTER `enabled`;
 SQL;
-        $connection->executeUpdate($sql);
+        $connection->executeStatement($sql);
     }
 
     public function updateDestructive(Connection $connection): void

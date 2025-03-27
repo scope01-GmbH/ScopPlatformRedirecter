@@ -4,6 +4,9 @@ namespace Scop\PlatformRedirecter\Test\RedirectTests;
 
 use Doctrine\DBAL\Connection;
 use Scop\PlatformRedirecter\Test\RedirectTestCase;
+use Shopware\Core\Defaults;
+use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Uuid\Uuid;
 
 class SeoUrlRedirectsWithQueryParametersTest extends RedirectTestCase
@@ -25,6 +28,28 @@ class SeoUrlRedirectsWithQueryParametersTest extends RedirectTestCase
      * @throws \Doctrine\DBAL\Exception
      */
     private function createSeoUrl($seo_path, $path){
+
+        /** @var EntityRepository $productRepo */
+        $productRepo = $this->getContainer()->get('product.repository');
+
+        $data = [
+            'id' => Uuid::randomHex(),
+            'name' => 'Test Product',
+            'productNumber' => 'P_' . rand(0, 10000000),
+            'price' => [
+                [
+                    'currencyId' => Defaults::CURRENCY,
+                    'net' => 4,
+                    'gross' => 10,
+                    'linked' => true
+                ]
+            ],
+            'taxId' => $this->getContainer()->get(Connection::class)->fetchOne('SELECT LOWER(HEX(id)) FROM tax WHERE tax_rate = "19.000"'),
+            'stock' => 10
+        ];
+
+        $productRepo->upsert([$data], Context::createDefaultContext());
+
         /** @var Connection $conn */
         $conn = $this->getContainer()->get(Connection::class);
 
@@ -39,7 +64,7 @@ class SeoUrlRedirectsWithQueryParametersTest extends RedirectTestCase
         $path = sprintf($path, $productid);
 
         $id = Uuid::randomHex();
-        $conn->executeUpdate("INSERT INTO seo_url (id, language_id, sales_channel_id, foreign_key, route_name, path_info, seo_path_info, is_canonical, is_modified, is_deleted, custom_fields, created_at) VALUES (UNHEX(?), UNHEX(?), UNHEX(?), UNHEX(?), 'frontend.detail.page', ?, ?, true, false, false, NULL, CURRENT_TIMESTAMP())", [$id, $this->getDeDeLanguageId(), $salesChannelId, $productid, $path, $seo_path]);
+        $conn->executeStatement("INSERT INTO seo_url (id, language_id, sales_channel_id, foreign_key, route_name, path_info, seo_path_info, is_canonical, is_modified, is_deleted, custom_fields, created_at) VALUES (UNHEX(?), UNHEX(?), UNHEX(?), UNHEX(?), 'frontend.detail.page', ?, ?, true, false, false, NULL, CURRENT_TIMESTAMP())", [$id, $this->getDeDeLanguageId(), $salesChannelId, $productid, $path, $seo_path]);
         array_push($this->seoUrlIds, $id);
         array_push($this->seoUrls, [$id, $seo_path, $path, $salesChannelId, $productid]);
     }
@@ -56,7 +81,7 @@ class SeoUrlRedirectsWithQueryParametersTest extends RedirectTestCase
         $path = sprintf($path, $productid);
 
         $id = Uuid::randomHex();
-        $conn->executeUpdate("INSERT INTO seo_url (id, language_id, sales_channel_id, foreign_key, route_name, path_info, seo_path_info, is_canonical, is_modified, is_deleted, custom_fields, created_at) VALUES (UNHEX(?), UNHEX(?), UNHEX(?), UNHEX(?), 'frontend.detail.page', ?, ?, false, false, false, NULL, CURRENT_TIMESTAMP())", [$id, $this->getDeDeLanguageId(), $salesChannelId, $productid, $path, $seo_path]);
+        $conn->executeStatement("INSERT INTO seo_url (id, language_id, sales_channel_id, foreign_key, route_name, path_info, seo_path_info, is_canonical, is_modified, is_deleted, custom_fields, created_at) VALUES (UNHEX(?), UNHEX(?), UNHEX(?), UNHEX(?), 'frontend.detail.page', ?, ?, false, false, false, NULL, CURRENT_TIMESTAMP())", [$id, $this->getDeDeLanguageId(), $salesChannelId, $productid, $path, $seo_path]);
         array_push($this->seoUrlIds, $id);
         array_push($this->seoUrls, [$id, $seo_path, $path, $salesChannelId, $productid]);
     }
@@ -71,13 +96,13 @@ class SeoUrlRedirectsWithQueryParametersTest extends RedirectTestCase
         return $array;
     }
 
-    protected function tearDown(): void
+    public function tearDown(): void
     {
 
         /** @var Connection $conn */
         $conn = $this->getContainer()->get(Connection::class);
         foreach($this->seoUrlIds as $id)
-        $conn->executeUpdate("DELETE FROM seo_url WHERE id = UNHEX(?)", [$id]);
+        $conn->executeStatement("DELETE FROM seo_url WHERE id = UNHEX(?)", [$id]);
 
         parent::tearDown();
     }

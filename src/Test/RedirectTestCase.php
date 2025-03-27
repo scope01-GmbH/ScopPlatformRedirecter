@@ -20,6 +20,9 @@ namespace Scop\PlatformRedirecter\Test;
 
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
+use Shopware\Core\Defaults;
+use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Test\TestCaseBase\BasicTestDataBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\CacheTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\FilesystemBehaviour;
@@ -27,11 +30,10 @@ use Shopware\Core\Framework\Test\TestCaseBase\KernelTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\RequestStackTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\SalesChannelApiTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\SessionTestBehaviour;
-use Shopware\Core\Framework\Test\TestCaseHelper\TestBrowser;
-use Shopware\Core\Framework\Test\TestDataCollection;
 use Shopware\Core\Framework\Util\Random;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\PlatformRequest;
+use Shopware\Core\Test\Stub\Framework\IdsCollection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -62,12 +64,12 @@ abstract class RedirectTestCase extends TestCase
     /**
      * @var string
      */
-    protected  $host = "shopware6.local";
+    protected  $host = "sw67.local";
 
     /**
      * @var string
      */
-    protected  $hostWithLanguage = "shopware6.local/de-DE";
+    protected  $hostWithLanguage = "sw67.local/de-DE";
 
     /**
      * Set up test case
@@ -77,7 +79,7 @@ abstract class RedirectTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->ids = new TestDataCollection();
+        $this->ids = new IdsCollection();
 
         $this->browser = $this->createCustomSalesChannelBrowser([
             'id' => $this->ids->create('sales-channel'),
@@ -91,11 +93,42 @@ abstract class RedirectTestCase extends TestCase
         /** @var Connection $conn */
         $conn = $this->getContainer()->get(Connection::class);
 
-        $conn->executeUpdate('TRUNCATE scop_platform_redirecter_redirect', []);
+        $conn->executeStatement('TRUNCATE scop_platform_redirecter_redirect', []);
         foreach ($this->getDatabaseRedirects() as $testRedirect) {
             $salesChannelId = $testRedirect[5] ?? null;
-            $conn->executeUpdate('INSERT INTO scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, enabled, queryParamsHandling, salesChannelId, created_at) VALUES (UNHEX(?), ?, ?, ?, ?, ?, ' . ($salesChannelId !== null ? 'UNHEX(' : '') . '?' . ($salesChannelId !== null ? ')' : '') . ', CURRENT_TIMESTAMP())', [UUID::randomHex(), $testRedirect[0], $testRedirect[1], $testRedirect[2], $testRedirect[3] ? 1 : 0, $testRedirect[4] ?? 0, $salesChannelId]);
+            $conn->executeStatement('INSERT INTO scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, enabled, queryParamsHandling, salesChannelId, created_at) VALUES (UNHEX(?), ?, ?, ?, ?, ?, ' . ($salesChannelId !== null ? 'UNHEX(' : '') . '?' . ($salesChannelId !== null ? ')' : '') . ', CURRENT_TIMESTAMP())', [UUID::randomHex(), $testRedirect[0], $testRedirect[1], $testRedirect[2], $testRedirect[3] ? 1 : 0, $testRedirect[4] ?? 0, $salesChannelId]);
         }
+
+        /** @var EntityRepository $productRepo */
+        $productRepo = $this->getContainer()->get('product.repository');
+
+        $data = [
+            'id' => Uuid::randomHex(),
+            'name' => 'Test Product',
+            'productNumber' => 'P_' . rand(0, 10000000),
+            'price' => [
+                [
+                    'currencyId' => Defaults::CURRENCY,
+                    'net' => 4,
+                    'gross' => 10,
+                    'linked' => true
+                ]
+            ],
+            'taxId' => $this->getContainer()->get(Connection::class)->fetchOne('SELECT LOWER(HEX(id)) FROM tax WHERE tax_rate = "19.000"'),
+            'stock' => 10
+        ];
+
+        $productRepo->upsert([$data], Context::createDefaultContext());
+
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        $conn = $this->getContainer()->get(Connection::class);
+        $conn->executeStatement('DELETE FROM product WHERE product_number LIKE "P_%"');
+        $conn->executeStatement('DELETE FROM seo_url');
 
     }
 

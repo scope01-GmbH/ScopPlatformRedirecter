@@ -102,3 +102,7 @@
 # v3.1.3
 
 - Fehlerbehebung Sales Channel Auflösung mit Parametern
+
+# v4.0.0
+
+- Shopware 6.7 Kompatibilität
