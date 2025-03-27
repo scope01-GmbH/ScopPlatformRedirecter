@@ -49,6 +49,6 @@ class ScopPlatformRedirecter extends Plugin
 
         $sql = "DROP TABLE IF EXISTS `scop_platform_redirecter_redirect`;";
 
-        $connection->executeUpdate($sql);
+        $connection->executeStatement($sql);
     }
 }

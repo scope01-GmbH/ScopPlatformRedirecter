@@ -102,3 +102,7 @@
 # v3.1.3
 
 - Fixed sales channel specific lookup for url with query parameters
+
+# v4.0.0
+
+- Shopware 6.7 compatibility

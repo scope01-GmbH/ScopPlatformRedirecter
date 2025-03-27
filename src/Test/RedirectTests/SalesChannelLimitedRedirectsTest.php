@@ -94,7 +94,7 @@ class SalesChannelLimitedRedirectsTest extends RedirectTestCase
         $result = $conn->executeQuery("SELECT HEX(sc.id) as id, sales_channel_domain.url as url FROM `sales_channel` sc LEFT JOIN sales_channel_type ON sc.type_id = sales_channel_type.id LEFT JOIN sales_channel_domain ON sales_channel_domain.id = (SELECT id FROM sales_channel_domain WHERE sales_channel_domain.sales_channel_id = sc.id LIMIT 1) WHERE sales_channel_type.icon_name = 'regular-storefront' ORDER BY RAND() LIMIT 2");
         self::assertTrue($result->rowCount() > 1, 'This test requires at least two sales channels!');
 
-        while ($salesChannel = $result->fetch()) {
+        while ($salesChannel = $result->fetchAllAssociative()) {
             $this->salesChannels[] = ['id' => $salesChannel['id'], 'url' => $salesChannel['url']];
         }
     }

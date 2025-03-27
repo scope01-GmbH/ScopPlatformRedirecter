@@ -17,7 +17,7 @@ class Migration1692278638SalesChannelLimitation extends MigrationStep
         $sql = <<<SQL
         ALTER TABLE `scop_platform_redirecter_redirect` ADD COLUMN `salesChannelId` BINARY(16) NULL DEFAULT NULL AFTER `queryParamsHandling`;
 SQL;
-        $connection->executeUpdate($sql);
+        $connection->executeStatement($sql);
     }
 
     public function updateDestructive(Connection $connection): void

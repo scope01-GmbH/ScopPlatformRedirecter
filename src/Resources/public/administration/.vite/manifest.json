@@ -1,0 +1,11 @@
+{
+  "main.js": {
+    "file": "assets/scop-platform-redirecter-xTMLI4RF.js",
+    "name": "scop-platform-redirecter",
+    "src": "main.js",
+    "isEntry": true,
+    "css": [
+      "assets/scop-platform-redirecter-Zq_N7TFv.css"
+    ]
+  }
+}

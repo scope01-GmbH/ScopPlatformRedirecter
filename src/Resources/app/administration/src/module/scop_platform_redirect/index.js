@@ -33,11 +33,12 @@ Shopware.Module.register('scop-platform-redirect', {
                 }
             },
         },
-        settingsItem: [{
+        settingsItem: {
+            group: 'general',
             to: 'scop.platform.redirect.list',
-            group: 'shop',
-            icon: 'regular-double-chevron-right-s'
-        }],
+            icon: 'regular-double-chevron-right-s',
+            privilege: 'system.system_config',
+        },
         snippets: {
             'de-DE': deDE,
             'en-GB': enGB

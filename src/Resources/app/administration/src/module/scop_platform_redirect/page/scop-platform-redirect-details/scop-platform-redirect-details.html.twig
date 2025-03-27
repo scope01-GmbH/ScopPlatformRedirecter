@@ -1,7 +1,8 @@
 {% block scop_platform_redirect_details %}
     <sw-page class="scop-platform-redirect-details">
         <template #smart-bar-actions>
-            <sw-button :routerLink="{name: 'scop.platform.redirect.list'}">
+            <sw-button size="default"
+                       variant="secondary" :routerLink="{name: 'scop.platform.redirect.list'}">
                 {{ $t('scopplatformredirecter.detail.cancelButton') }}</sw-button>
             <sw-button-process :isLoading="isLoading"
                                :processSuccess="processSuccess" variant="primary"

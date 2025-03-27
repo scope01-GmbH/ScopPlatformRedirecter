@@ -84,7 +84,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
         this.repository.search(criteria, Shopware.Context.api).then((result) => {
             this.redirect = result;
         });
-        this.$on('inline-edit-assign', this.onInlineEditAssign);
+
+        this.$emit('inline-edit-assign', this.onInlineEditAssign);
     },
 
     methods: {
