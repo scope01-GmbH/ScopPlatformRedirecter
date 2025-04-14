@@ -67,7 +67,7 @@ Component.register('scop-platform-redirect-import-export-modal', {
     created() {
         const criteria = new Criteria(1, 25);
         criteria.addFilter(
-            Criteria.equals('name', 'Default redirect')
+            Criteria.equals('technicalName', 'default_scop_platform_redirecter_redirect')
         );
         this.importExportProfileRepository.search(criteria).then((result) => {
             if (result[0]) {

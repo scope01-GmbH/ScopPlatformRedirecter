@@ -2,18 +2,18 @@
     <sw-page class="scop-platform-redirect-list">
         <template #smart-bar-actions>
             {% block scop_platform_redirect_list_smarbar %}
-                <sw-button variant="primary" :routerLink="{name: 'scop.platform.redirect.create'}">
+                <mt-button variant="primary" :routerLink="{name: 'scop.platform.redirect.create'}">
                     {{ $t('scopplatformredirecter.list.createButton') }}
-                </sw-button>
-                <sw-button @click="onClickExport" :isLoading="exportLoading" :disabled="noRedirect">
+                </mt-button>
+                <mt-button variant="secondary" @click="onClickExport" :isLoading="exportLoading" :disabled="noRedirect">
                     {{ $t('scopplatformredirecter.list.exportAllButton') }}
-                </sw-button>
-                <sw-button @click="onClickImport">
+                </mt-button>
+                <mt-button variant="secondary" @click="onClickImport">
                     {{ $t('scopplatformredirecter.list.importButton') }}
-                </sw-button>
-                <sw-button class="mt-external-link" variant="contrast" :link="$tc('scopplatformredirecter.list.faqButton.link')">
+                </mt-button>
+                <mt-button class="mt-external-link" variant="contrast" :link="$tc('scopplatformredirecter.list.faqButton.link')">
                     {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
-                </sw-button>
+                </mt-button>
             {% endblock %}
         </template>
         <template #content>

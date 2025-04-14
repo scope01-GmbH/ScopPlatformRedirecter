@@ -35,12 +35,12 @@
             {% endblock %}
             {% block scop_platform_redirect_import_modal_footer %}
                 <template #modal-footer>
-                    <sw-button @click="onClose" :disabled="processing">
+                    <mt-button variant="secondary" @click="onClose" :disabled="processing">
                         {{ $t('scopplatformredirecter.list.' + type + 'Modal.cancel') }}
-                    </sw-button>
-                    <sw-button variant="primary" :disabled="noFile && type !== 'export'" :isLoading="processing" @click="startProcess">
+                    </mt-button>
+                    <mt-button variant="primary" :disabled="noFile && type !== 'export'" :isLoading="processing" @click="startProcess">
                         {{ $t('scopplatformredirecter.list.' + type + 'Modal.start') }}
-                    </sw-button>
+                    </mt-button>
                 </template>
             {% endblock %}
         </sw-modal>
