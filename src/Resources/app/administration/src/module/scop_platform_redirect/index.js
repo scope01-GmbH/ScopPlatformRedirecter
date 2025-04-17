@@ -34,7 +34,7 @@ Shopware.Module.register('scop-platform-redirect', {
             },
         },
         settingsItem: {
-            group: 'general',
+            group: 'content',
             to: 'scop.platform.redirect.list',
             icon: 'regular-double-chevron-right-s',
             privilege: 'system.system_config',
