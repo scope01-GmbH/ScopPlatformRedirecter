@@ -1,4 +1,5 @@
 import template from './scop-platform-redirect-list.html.twig';
+import './scop-platform-redirect-list.scss'
 
 const Criteria = Shopware.Data.Criteria;
 
@@ -24,7 +25,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
             showImportExportModal: false,
             modalType: 'export',
             page: 1,
-            limit: 25
+            limit: 25,
+            searchTerm: '',
         };
     },
 
@@ -35,6 +37,19 @@ Shopware.Component.register('scop-platform-redirect-list', {
     },
 
     computed: {
+        filteredRedirects() {
+            if (!this.searchTerm) {
+                return this.redirect;
+            }
+
+            const term = this.searchTerm.toLowerCase();
+
+            return this.redirect.filter(item => {
+                return (item.sourceURL && item.sourceURL.toLowerCase().includes(term))
+                    || (item.targetURL && item.targetURL.toLowerCase().includes(term));
+            });
+        },
+
         columns() {
             return [{
                 property: 'sourceURL',
@@ -84,8 +99,6 @@ Shopware.Component.register('scop-platform-redirect-list', {
         this.repository.search(criteria, Shopware.Context.api).then((result) => {
             this.redirect = result;
         });
-
-        this.$emit('inline-edit-assign', this.onInlineEditAssign);
     },
 
     methods: {
@@ -109,49 +122,6 @@ Shopware.Component.register('scop-platform-redirect-list', {
             this.repository.search(criteria, Shopware.Context.api).then((result) => {
                 this.redirect = result;
             });
-        },
-        onInlineEditSave(promise, redirect) {
-            if (redirect.sourceURL.trim() === redirect.targetURL.trim() && redirect.enabled) {
-                this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                    message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription')
-                });
-
-                redirect.enabled = false;
-                redirect._origin.enabled = true;
-
-                promise.then(() => {
-                    this.repository.save(redirect, Shopware.Context.api).then(() => {
-                        return this.updateList();
-                    });
-                });
-                return;
-            }
-
-            if (!redirect.sourceURL) {
-                this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                    message: this.$tc('scopplatformredirecter.detail.errorEmptySourceURL')
-                });
-                this.updateList();
-                return;
-            }
-            if (!redirect.targetURL) {
-                this.createNotificationError({
-                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
-                    message: this.$tc('scopplatformredirecter.detail.errorEmptyTargetURL')
-                });
-                this.updateList();
-                return;
-            }
-
-            return promise
-                .catch(() => {
-                    this.updateList();
-                    this.createNotificationError({
-                        message: this.$tc('global.notification.notificationSaveErrorMessageRequiredFieldsInvalid'),
-                    });
-                });
         }
     },
 
