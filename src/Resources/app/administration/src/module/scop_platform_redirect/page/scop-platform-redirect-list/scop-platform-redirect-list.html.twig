@@ -1,12 +1,5 @@
 {% block scop_platform_redirect_list %}
     <sw-page class="scop-platform-redirect-list">
-        <template #search-bar>
-            <sw-text-field
-                    class="search-bar"
-                    v-model:value="searchTerm"
-                    :placeholder="$t('scopplatformredirecter.list.searchBarPlaceholder')">
-            </sw-text-field>
-        </template>
         <template #smart-bar-actions>
             {% block scop_platform_redirect_list_smarbar %}
                 <mt-button variant="primary" @click="$router.push({name: 'scop.platform.redirect.create'})">
@@ -28,7 +21,7 @@
                 <sw-entity-listing
                         ref="listing"
                         v-if="redirect"
-                        :items="filteredRedirects"
+                        :items="redirect"
                         :repository="repository"
                         :columns="columns"
                         detailRoute="scop.platform.redirect.details"

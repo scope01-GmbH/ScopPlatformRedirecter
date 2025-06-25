@@ -5,7 +5,6 @@
       "errorTitle": "Error"
     },
     "list": {
-      "searchBarPlaceholder": "Search",
       "columnSourceUrl": "Source URL",
       "columnTargetUrl": "Target URL",
       "columnHttpCode": "HTTP Status Code",

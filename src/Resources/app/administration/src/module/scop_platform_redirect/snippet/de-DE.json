@@ -5,7 +5,6 @@
       "errorTitle": "Fehler"
     },
     "list": {
-      "searchBarPlaceholder": "Suche",
       "columnSourceUrl": "Quell URL",
       "columnTargetUrl": "Ziel URL",
       "columnHttpCode": "HTTP Status Code",
