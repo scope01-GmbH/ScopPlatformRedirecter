@@ -7,12 +7,26 @@ import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
 
 Shopware.Module.register('scop-platform-redirect', {
+        entity: 'scop_platform_redirecter_redirect',
         type: 'plugin',
         name: 'scop-platform-redirect',
         title: 'scopplatformredirecter.general.title',
         description: 'scopplatformredirecter.general.title',
         color: '#019994',
-        icon: 'small-copy',
+        icon: 'regular-double-chevron-right-s',
+        defaultSearchConfiguration: {
+            _searchable: true,
+            sourceURL: {
+                _searchable: true,
+                _score: 500,
+            },
+            targetURL: {
+                name: {
+                    _searchable: true,
+                    _score: 500,
+                },
+            },
+        },
         routes: {
             list: {
                 component: 'scop-platform-redirect-list',
@@ -45,3 +59,19 @@ Shopware.Module.register('scop-platform-redirect', {
         }
     }
 );
+
+const { Application } = Shopware;
+
+Application.addServiceProviderDecorator('searchTypeService', searchTypeService => {
+    searchTypeService.upsertType('scop_platform_redirecter_redirect', {
+        entityName: 'scop_platform_redirecter_redirect',
+        placeholderSnippet: 'scopplatformredirecter.general.title',
+        listingRoute: 'scop-platform-redirect-list',
+        hideOnGlobalSearchBar: false
+    });
+
+    return searchTypeService;
+});
+
+Shopware.Component.override('sw-search-bar-item', () => import('../../app/component/structure/sw-search-bar-item'));
+

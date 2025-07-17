@@ -24,7 +24,9 @@ Shopware.Component.register('scop-platform-redirect-list', {
             showImportExportModal: false,
             modalType: 'export',
             page: 1,
-            limit: 25
+            limit: 25,
+            searchConfigEntity: 'scop_platform_redirecter_redirect',
+            entitySearchable: true
         };
     },
 
