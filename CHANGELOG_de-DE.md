@@ -106,3 +106,8 @@
 # v4.0.0
 
 - Shopware 6.7 Kompatibilität
+
+# v4.1.0
+
+- Umsetzung Suchfunktion
+- Primärschlüssel zur Tabelle hinzugefügt

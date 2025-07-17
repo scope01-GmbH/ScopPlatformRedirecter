@@ -106,3 +106,8 @@
 # v4.0.0
 
 - Shopware 6.7 compatibility
+
+# v4.1.0
+
+- Added search function
+- Added primary key
