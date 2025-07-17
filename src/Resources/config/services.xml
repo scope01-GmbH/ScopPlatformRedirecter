@@ -7,6 +7,7 @@
     <services>
         <service id="Scop\PlatformRedirecter\Redirect\RedirectDefinition">
             <tag name="shopware.entity.definition" entity="scop_platform_redirecter_redirect"/>
+            <tag name="shopware.composite_search.definition" priority="1000" />
         </service>
         <service id="Scop\PlatformRedirecter\Decorator\CanonicalRedirectServiceDecorator" decorates="Shopware\Core\Framework\Routing\CanonicalRedirectService">
             <argument type="service" id="Scop\PlatformRedirecter\Decorator\CanonicalRedirectServiceDecorator.inner"/>
@@ -14,4 +15,5 @@
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
         </service>
     </services>
+
 </container>

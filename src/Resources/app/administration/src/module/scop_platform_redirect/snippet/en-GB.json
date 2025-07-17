@@ -1,4 +1,9 @@
 {
+  "global": {
+    "entities": {
+      "scop_platform_redirecter_redirect": "Redirects"
+    }
+  },
   "scopplatformredirecter": {
     "general": {
       "title": "Redirects",

@@ -1,5 +1,13 @@
 {% block scop_platform_redirect_list %}
+
     <sw-page class="scop-platform-redirect-list">
+        <template #search-bar>
+            <sw-search-bar
+                    initial-search-type="scop_platform_redirecter_redirect"
+                    :initial-search="term"
+                    @search="onSearch"
+            />
+        </template>
         <template #smart-bar-actions>
             {% block scop_platform_redirect_list_smarbar %}
                 <mt-button variant="primary" @click="$router.push({name: 'scop.platform.redirect.create'})">
