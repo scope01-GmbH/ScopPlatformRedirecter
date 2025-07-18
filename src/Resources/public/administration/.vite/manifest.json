@@ -1,12 +1,12 @@
 {
   "app/component/structure/sw-search-bar-item/index.js": {
-    "file": "assets/index-DSLHrO0o.js",
+    "file": "assets/index-KgHJOBrb.js",
     "name": "index",
     "src": "app/component/structure/sw-search-bar-item/index.js",
     "isDynamicEntry": true
   },
   "main.js": {
-    "file": "assets/scop-platform-redirecter-DsiBJcMq.js",
+    "file": "assets/scop-platform-redirecter-D_jIV4nt.js",
     "name": "scop-platform-redirecter",
     "src": "main.js",
     "isEntry": true,

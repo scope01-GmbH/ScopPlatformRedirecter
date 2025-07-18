@@ -1,18 +1,26 @@
 import template from './scop-platform-redirect-list.html.twig';
 
-const Criteria = Shopware.Data.Criteria;
-
-const {Component, Mixin} = Shopware;
+const {Mixin} = Shopware;
+const {Criteria} = Shopware.Data;
+const {cloneDeep} = Shopware.Utils.object;
 
 Shopware.Component.register('scop-platform-redirect-list', {
     template,
 
     inject: [
-        'repositoryFactory', 'syncService', 'loginService', 'importExport'
+        'repositoryFactory',
+        'syncService',
+        'loginService',
+        'importExport',
+        'numberRangeService',
+        'acl',
+        'filterFactory',
     ],
 
     mixins: [
-        Mixin.getByName('notification')
+        Mixin.getByName('notification'),
+        Mixin.getByName('listing'),
+        Mixin.getByName('placeholder'),
     ],
 
     data() {
@@ -20,13 +28,16 @@ Shopware.Component.register('scop-platform-redirect-list', {
             repository: null,
             redirect: null,
             exportLoading: false,
+            isLoading: false,
             noRedirect: true,
             showImportExportModal: false,
             modalType: 'export',
             page: 1,
             limit: 25,
             searchConfigEntity: 'scop_platform_redirecter_redirect',
-            entitySearchable: true
+            entitySearchable: true,
+            total: 0,
+            term: ''
         };
     },
 
@@ -37,6 +48,15 @@ Shopware.Component.register('scop-platform-redirect-list', {
     },
 
     computed: {
+        redirectRepository() {
+            return this.repositoryFactory.create('scop_platform_redirecter_redirect');
+        },
+        redirectCriteria() {
+            const redirectCriteria = new Criteria(this.page, this.limit);
+            redirectCriteria.setTerm(this.term);
+
+            return redirectCriteria;
+        },
         columns() {
             return [{
                 property: 'sourceURL',
@@ -77,25 +97,45 @@ Shopware.Component.register('scop-platform-redirect-list', {
         }
     },
 
-    created() {
-        this.repository = this.repositoryFactory.create('scop_platform_redirecter_redirect');
-
-        let criteria = new Criteria(this.page, this.limit);
-        criteria.addAssociation('salesChannel');
-
-        this.repository.search(criteria, Shopware.Context.api).then((result) => {
-            this.redirect = result;
-        });
-
-        this.$emit('inline-edit-assign', this.onInlineEditAssign);
+    watch: {
+        redirectCriteria: {
+            handler() {
+                this.getList();
+            },
+            deep: true,
+        },
     },
 
     methods: {
+        updateCriteria(criteria) {
+            this.page = 1;
+        },
+        async getList() {
+            this.isLoading = true;
+
+            try {
+                let criteria = await this.addQueryScores(this.term, this.redirectCriteria);
+                const result = await Promise.all([
+                    this.redirectRepository.search(criteria),
+                ]);
+
+                const redirect = result[0];
+
+                this.total = redirect.total;
+                this.redirect = redirect;
+
+                this.isLoading = false;
+
+                this.selection = {};
+            } catch {
+                this.isLoading = false;
+            }
+        },
         onClickExport() {
             this.modalType = 'export';
             this.showImportExportModal = true;
         },
-        onUpdate(records) {
+        updateTotal(records) {
             this.noRedirect = records.length === 0;
         },
         onClickImport() {

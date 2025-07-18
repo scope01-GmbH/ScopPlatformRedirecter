@@ -65,8 +65,7 @@ const { Application } = Shopware;
 Application.addServiceProviderDecorator('searchTypeService', searchTypeService => {
     searchTypeService.upsertType('scop_platform_redirecter_redirect', {
         entityName: 'scop_platform_redirecter_redirect',
-        placeholderSnippet: 'scopplatformredirecter.general.title',
-        listingRoute: 'scop-platform-redirect-list',
+        placeholderSnippet: 'scopplatformredirecter.general.searchAllRedirects',
         hideOnGlobalSearchBar: false
     });
 

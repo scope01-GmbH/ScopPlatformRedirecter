@@ -13,18 +13,4 @@
             </span>
         {% endblock %}
     </router-link>
-
-    <router-link v-else-if="type === 'scop-platform-redirect-list'"
-                 v-bind:to="{ name: 'scop.platform.redirect.details' }"
-                 ref="routerLink"
-                 class="sw-search-bar-item__link">
-        {% block sw_search_bar_item_foo_bar_label %}
-            <span class="sw-search-bar-item__label">
-                <sw-highlight-text v-bind:searchTerm="searchTerm"
-                                   v-bind:text="item.sourceURL">
-                </sw-highlight-text>
-            </span>
-        {% endblock %}
-    </router-link>
-
 {% endblock %}
