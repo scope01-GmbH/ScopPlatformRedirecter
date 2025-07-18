@@ -7,7 +7,8 @@
   "scopplatformredirecter": {
     "general": {
       "title": "Redirects",
-      "errorTitle": "Error"
+      "errorTitle": "Error",
+      "searchAllRedirects": "Search all redirects ..."
     },
     "list": {
       "columnSourceUrl": "Source URL",

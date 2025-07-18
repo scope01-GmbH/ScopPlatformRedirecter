@@ -8,6 +8,7 @@
                     @search="onSearch"
             />
         </template>
+
         <template #smart-bar-actions>
             {% block scop_platform_redirect_list_smarbar %}
                 <mt-button variant="primary" @click="$router.push({name: 'scop.platform.redirect.create'})">
@@ -27,13 +28,16 @@
         <template #content>
             {% block scop_platform_redirect_list_content %}
                 <sw-entity-listing
+                        v-if="entitySearchable"
                         ref="listing"
-                        v-if="redirect"
                         :items="redirect"
-                        :repository="repository"
+                        :repository="redirectRepository"
                         :columns="columns"
                         detailRoute="scop.platform.redirect.details"
-                        @update-records="onUpdate"
+                        :is-loading="isLoading"
+                        identifier="scop-platform-redirect-list"
+                        @page-change="onPageChange"
+                        @update-records="updateTotal"
                         @inline-edit-save="onInlineEditSave"
                 >
                     <template #column-queryParamsHandling="{ item }">

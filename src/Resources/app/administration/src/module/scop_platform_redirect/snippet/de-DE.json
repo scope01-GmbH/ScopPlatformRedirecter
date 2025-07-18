@@ -7,7 +7,8 @@
   "scopplatformredirecter": {
     "general": {
       "title": "Weiterleitungen",
-      "errorTitle": "Fehler"
+      "errorTitle": "Fehler",
+      "searchAllRedirects": "Durchsuche alle Weiterleitungen ..."
     },
     "list": {
       "columnSourceUrl": "Quell URL",
