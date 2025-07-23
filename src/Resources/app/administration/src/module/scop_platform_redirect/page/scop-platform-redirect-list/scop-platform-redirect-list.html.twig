@@ -20,6 +20,9 @@
                 <mt-button variant="secondary" @click="onClickImport">
                     {{ $t('scopplatformredirecter.list.importButton') }}
                 </mt-button>
+                <mt-button v-if="inAppActive" variant="secondary" @click="onClickCheckLinks">
+                    {{ $t('scopplatformredirecter.list.check404') }}
+                </mt-button>
                 <mt-button class="mt-external-link" variant="action" :link="$tc('scopplatformredirecter.list.faqButton.link')">
                     {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
                 </mt-button>

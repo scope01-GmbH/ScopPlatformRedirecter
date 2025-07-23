@@ -19,6 +19,7 @@
       "createButton": "Weiterleitung anlegen",
       "exportAllButton": "Alle Exportieren",
       "importButton": "Importieren",
+      "check404": "Fehlerhafte Url's prüfen",
       "faqButton": {
         "text": "FAQ",
         "link": "https://scope01.com/shopware-redirect-plugin/"
