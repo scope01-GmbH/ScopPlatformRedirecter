@@ -3,6 +3,7 @@ import template from './scop-platform-redirect-list.html.twig';
 const {Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
 const {cloneDeep} = Shopware.Utils.object;
+var inAppPurchaseId = 'my-iap-identifier';
 
 Shopware.Component.register('scop-platform-redirect-list', {
     template,
@@ -48,12 +49,21 @@ Shopware.Component.register('scop-platform-redirect-list', {
     },
 
     computed: {
+        inAppActive() {
+            let active = true;
+            if (!Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
+               // active = false;
+            }
+            return active;
+        },
         redirectRepository() {
             return this.repositoryFactory.create('scop_platform_redirecter_redirect');
         },
         redirectCriteria() {
             const redirectCriteria = new Criteria(this.page, this.limit);
-            redirectCriteria.setTerm(this.term);
+            if (Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
+                redirectCriteria.setTerm(this.term);
+            }
 
             return redirectCriteria;
         },
@@ -115,6 +125,10 @@ Shopware.Component.register('scop-platform-redirect-list', {
 
             try {
                 let criteria = await this.addQueryScores(this.term, this.redirectCriteria);
+                // disable search if in app purchase is inactive
+                if (!Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
+                    criteria = await this.addQueryScores('', this.redirectCriteria);
+                }
                 const result = await Promise.all([
                     this.redirectRepository.search(criteria),
                 ]);
@@ -141,6 +155,32 @@ Shopware.Component.register('scop-platform-redirect-list', {
         onClickImport() {
             this.modalType = 'import';
             this.showImportExportModal = true;
+        },
+        onClickCheckLinks() {
+            const client = Shopware.Application.getContainer('init').httpClient;
+            const headers = {
+                headers: {
+                    Authorization: `Bearer ${Shopware.Service('loginService').getToken()}`,
+                },
+            };
+            console.log(headers)
+            client
+                .post(
+                    `/_admin/scop-check-redirects`,
+                    {},
+                    {
+                        headers
+                    },
+                )
+                .then((response) => {
+                    console.log(response)
+                })
+                .catch((error) => {
+                    if (error instanceof CanceledError) {
+                        return {};
+                    }
+                    throw error;
+                });
         },
         closeImportExport() {
             this.showImportExportModal = false;

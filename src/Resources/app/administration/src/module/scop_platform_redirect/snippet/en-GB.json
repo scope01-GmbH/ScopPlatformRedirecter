@@ -19,6 +19,7 @@
       "createButton": "Add Redirect",
       "exportAllButton": "Export All",
       "importButton": "Import",
+      "check404": "Check broken url's",
       "faqButton": {
         "text": "FAQ",
         "link": "https://scope01.com/en/shopware-redirect-plugin/"
