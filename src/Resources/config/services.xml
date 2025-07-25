@@ -18,9 +18,14 @@
                  public="true">
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
+            <argument type="service" id="messenger.default_bus"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>
+        </service>
+
+        <service id="Scop\PlatformRedirecter\MessageQueue\Handler\CheckRedirectHandler">
+            <tag name="messenger.message_handler" handles="Scop\PlatformRedirecter\MessageQueue\Message\CheckRedirectMessage"/>
         </service>
     </services>
 
