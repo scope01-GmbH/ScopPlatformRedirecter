@@ -9,6 +9,8 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\OrFilter;
 use Shopware\Core\Framework\Routing\CanonicalRedirectService;
+use Shopware\Core\Framework\Script\Execution\Hook;
+use Shopware\Core\Framework\Extensions\ExtensionDispatcher;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,9 +34,9 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
      */
     private SystemConfigService $configService;
 
-    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository)
+    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository, ExtensionDispatcher $extensionDispatcher)
     {
-        parent::__construct($configService);
+        parent::__construct($configService, $extensionDispatcher);
         $this->configService = $configService;
         $this->repository = $redirectRepository;
         $this->inner = $inner;
