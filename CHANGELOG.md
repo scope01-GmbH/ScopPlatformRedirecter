@@ -106,3 +106,7 @@
 # v4.0.0
 
 - Shopware 6.7 compatibility
+
+# v4.0.1
+
+- Shopware 6.7.1 compatibility
