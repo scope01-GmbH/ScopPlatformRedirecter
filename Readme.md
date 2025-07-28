@@ -38,7 +38,7 @@
 ## Zip Installation package for the Shopware Plugin Manager
 
 * Download the [latest plugin version](https://github.com/scope01-GmbH/ScopPlatformRedirecter/releases/latest/) (
-  e.g. `ScopPlatformRedirecter-1.0.4.zip`)
+  e.g. `ScopPlatformRedirecter-4.0.1.zip`)
 * Upload and install plugin using Plugin Manager
 
 ## Git Version
