@@ -1,4 +1,5 @@
 import template from './scop-platform-redirect-list.html.twig';
+import './scop-platform-redirect-list.scss'
 
 const Criteria = Shopware.Data.Criteria;
 
@@ -24,7 +25,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
             showImportExportModal: false,
             modalType: 'export',
             page: 1,
-            limit: 25
+            limit: 25,
+            searchTerm: ''
         };
     },
 
@@ -35,6 +37,19 @@ Shopware.Component.register('scop-platform-redirect-list', {
     },
 
     computed: {
+        filteredRedirects() {
+            if (!this.searchTerm) {
+                return this.redirect;
+            }
+
+            const term = this.searchTerm.toLowerCase();
+
+            return this.redirect.filter(item => {
+                return (item.sourceURL && item.sourceURL.toLowerCase().includes(term))
+                    || (item.targetURL && item.targetURL.toLowerCase().includes(term));
+            });
+        },
+
         columns() {
             return [{
                 property: 'sourceURL',
