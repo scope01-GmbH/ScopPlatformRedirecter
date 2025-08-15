@@ -110,3 +110,7 @@
 # v4.0.1
 
 - Shopware 6.7.1 Kompatibilität
+
+# v4.0.2
+
+- Behebung eines Migrationsfehlers, der die Neuinstallation des Plugins verhinderte.
