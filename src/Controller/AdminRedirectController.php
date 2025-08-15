@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Package('framework')]
 class AdminRedirectController extends AbstractController
 {
-    const inAppPurchaseId = 'my-iap-identifier';
+    const inAppPurchaseId = 'scopPlatformRedirecterPremium';
 
     public function __construct(private readonly EntityRepository $redirectRepository, private readonly InAppPurchase $inAppPurchase, private readonly MessageBusInterface $bus)
     {
