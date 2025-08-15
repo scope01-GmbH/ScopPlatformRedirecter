@@ -3,7 +3,7 @@ import template from './scop-platform-redirect-list.html.twig';
 const {Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
 const {cloneDeep} = Shopware.Utils.object;
-var inAppPurchaseId = 'my-iap-identifier';
+var inAppPurchaseId = 'inAppPurchaseId';
 
 Shopware.Component.register('scop-platform-redirect-list', {
     template,
