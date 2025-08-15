@@ -107,7 +107,15 @@
 
 - Shopware 6.7 compatibility
 
-# v4.1.0
+# v4.0.1
+
+- Shopware 6.7.1 compatibility
+
+# v4.0.2
+
+- Fixed migration which prevented reinstallation of plugin
+
+# v4.1.3
 
 - Added search function
 - Added primary key
