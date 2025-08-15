@@ -107,7 +107,15 @@
 
 - Shopware 6.7 Kompatibilität
 
-# v4.1.0
+# v4.0.1
+
+- Shopware 6.7.1 Kompatibilität
+
+# v4.0.2
+
+- Behebung eines Migrationsfehlers, der die Neuinstallation des Plugins verhinderte.
+
+# v4.1.3
 
 - Umsetzung Suchfunktion
 - Primärschlüssel zur Tabelle hinzugefügt

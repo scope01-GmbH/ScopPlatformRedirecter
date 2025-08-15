@@ -26,7 +26,7 @@ class Migration1743088146AddExportProfile extends MigrationStep
         $defaultLangId = Uuid::fromHexToBytes(Defaults::LANGUAGE_SYSTEM);
 
         $sql = <<<SQL
-INSERT INTO `import_export_profile` (`id`, `system_default`, `source_entity`, `file_type`, `delimiter`, `enclosure`, `type`, `mapping`, `created_at`, `technical_name`)
+INSERT IGNORE INTO `import_export_profile` (`id`, `system_default`, `source_entity`, `file_type`, `delimiter`, `enclosure`, `type`, `mapping`, `created_at`, `technical_name`)
 VALUES (:id, '1', 'scop_platform_redirecter_redirect', 'text/csv', ';', '\"', 'import-export', '[{\"key\":\"id\",\"mappedKey\":\"id\",\"position\":0},{\"key\":\"sourceURL\",\"mappedKey\":\"source_url\",\"position\":1},{\"key\":\"targetURL\",\"mappedKey\":\"target_url\",\"position\":2},{\"key\":\"httpCode\",\"mappedKey\":\"http_code\",\"position\":3},{\"key\":\"enabled\",\"mappedKey\":\"enabled\",\"position\":4},{\"key\":\"queryParamsHandling\",\"mappedKey\":\"query_params_handling\",\"position\":5},{\"key\":\"salesChannelId\",\"mappedKey\":\"sales_channel_id\",\"position\":6}]',:createdAt, 'default_scop_platform_redirecter_redirect');
 SQL;
 

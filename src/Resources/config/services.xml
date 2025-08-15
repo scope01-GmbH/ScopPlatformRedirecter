@@ -13,6 +13,7 @@
             <argument type="service" id="Scop\PlatformRedirecter\Decorator\CanonicalRedirectServiceDecorator.inner"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\Extensions\ExtensionDispatcher"/>
         </service>
         <service id="Scop\PlatformRedirecter\Controller\AdminRedirectController"
                  public="true">
