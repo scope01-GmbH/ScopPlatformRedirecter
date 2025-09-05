@@ -3,7 +3,7 @@ import template from './scop-platform-redirect-list.html.twig';
 const {Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
 const {cloneDeep} = Shopware.Utils.object;
-var inAppPurchaseId = 'inAppPurchaseId';
+var inAppPurchaseId = 'scopPlatformRedirecterPremium';
 
 Shopware.Component.register('scop-platform-redirect-list', {
     template,
@@ -52,7 +52,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
         inAppActive() {
             let active = true;
             if (!Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
-               // active = false;
+                active = false;
             }
             return active;
         },

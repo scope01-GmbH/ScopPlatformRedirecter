@@ -5,7 +5,7 @@ import './page/scop-platform-redirect-import-export-modal';
 import './page/scop-platform-redirect-import-export-activity';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
-var inAppPurchaseId = 'inAppPurchaseId';
+var inAppPurchaseId = 'scopPlatformRedirecterPremium';
 Shopware.Module.register('scop-platform-redirect', {
         entity: 'scop_platform_redirecter_redirect',
         type: 'plugin',
