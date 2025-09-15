@@ -48,7 +48,8 @@
         "2": "Transfer"
       },
       "salesChannel": "Sales Channel",
-      "allSalesChannels": "All"
+      "allSalesChannels": "All",
+      "iap": "Unlock more features"
     },
     "detail": {
       "sourceUrlLabel": "Source URL",

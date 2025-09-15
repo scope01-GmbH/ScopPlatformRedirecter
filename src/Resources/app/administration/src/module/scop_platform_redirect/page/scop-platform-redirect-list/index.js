@@ -4,7 +4,6 @@ const {Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
 const {cloneDeep} = Shopware.Utils.object;
 var inAppPurchaseId = 'scopPlatformRedirecterPremium';
-
 Shopware.Component.register('scop-platform-redirect-list', {
     template,
 
@@ -49,6 +48,13 @@ Shopware.Component.register('scop-platform-redirect-list', {
     },
 
     computed: {
+        inAppPurchaseCheckout() {
+            return Shopware.Store.get('inAppPurchaseCheckout');
+        },
+
+        hideButton() {
+            return Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId);
+        },
         inAppActive() {
             let active = true;
             if (!Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
@@ -151,6 +157,9 @@ Shopware.Component.register('scop-platform-redirect-list', {
         },
         updateTotal(records) {
             this.noRedirect = records.length === 0;
+        },
+        onClickIap() {
+            this.inAppPurchaseCheckout.request({ identifier: inAppPurchaseId }, 'ScopPlatformRedirecter');
         },
         onClickImport() {
             this.modalType = 'import';

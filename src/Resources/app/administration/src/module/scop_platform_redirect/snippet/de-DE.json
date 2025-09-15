@@ -48,7 +48,8 @@
         "2": "Übernehmen"
       },
       "salesChannel": "Verkaufskanal",
-      "allSalesChannels": "Alle"
+      "allSalesChannels": "Alle",
+      "iap": "Weitere Funktionen freischalten"
     },
     "detail": {
       "sourceUrlLabel": "Quell URL",
