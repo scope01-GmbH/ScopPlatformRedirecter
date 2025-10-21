@@ -20,13 +20,13 @@
                 <mt-button variant="secondary" @click="onClickImport">
                     {{ $t('scopplatformredirecter.list.importButton') }}
                 </mt-button>
-                <mt-button v-if="inAppActive" variant="secondary" @click="onClickCheckLinks">
+                <!-- <mt-button v-if="inAppActive" variant="secondary" @click="onClickCheckLinks">
                     {{ $t('scopplatformredirecter.list.check404') }}
-                </mt-button>
+                </mt-button> -->
                 <mt-button class="mt-external-link" variant="action" :link="$tc('scopplatformredirecter.list.faqButton.link')">
                     {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
                 </mt-button>
-                <mt-button variant="primary" @click="onClickIap">
+                <mt-button v-if="hideButton" variant="primary" @click="onClickIap">
                     {{ $t('scopplatformredirecter.list.iap') }} <mt-icon name="regular-shopping-cart" />
                 </mt-button>
             {% endblock %}

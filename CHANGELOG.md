@@ -119,4 +119,3 @@
 
 - Added search function
 - Added primary key
-- Added broken redirect check
