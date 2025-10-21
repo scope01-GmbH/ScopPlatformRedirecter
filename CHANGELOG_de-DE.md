@@ -119,4 +119,3 @@
 
 - Umsetzung Suchfunktion
 - Primärschlüssel zur Tabelle hinzugefügt
-- Prüfung der fehlerhaften Weiterleitungen
