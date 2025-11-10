@@ -1,0 +1,9 @@
+{
+    "Scop": {
+        "PlatformRedirecter": {
+            "validation": {
+                "choice": "This value {{ value }} is not a valid choice. Allowed: {{ choices }}"
+            }
+        }
+    }
+}

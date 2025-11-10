@@ -30,7 +30,7 @@ class Redirect extends Entity
      * @var String $sourceURL
      * @var String $targetURL
      * @var int $httpCode
-     * @var boolean $enabled
+     * @var bool $enabled
      */
     protected $sourceURL;
     protected $targetURL;
