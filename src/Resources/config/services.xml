@@ -14,5 +14,12 @@
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Extensions\ExtensionDispatcher"/>
         </service>
+
+        <service id="Scop\PlatformRedirecter\Subscriber\RedirectValidationSubscriber" >
+            <argument id="validator" type="service"/>
+            <argument id="Shopware\Core\Framework\Adapter\Translation\Translator" type="service"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
     </services>
 </container>
