@@ -114,3 +114,8 @@
 # v4.0.2
 
 - Fixed migration which prevented reinstallation of plugin
+
+# v4.0.3
+
+- Extended validation during import
+- Prevented duplicate creation on re-import

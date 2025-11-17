@@ -114,3 +114,8 @@
 # v4.0.2
 
 - Behebung eines Migrationsfehlers, der die Neuinstallation des Plugins verhinderte.
+
+# v4.0.3
+
+- Validierung beim Import erweitert
+- Duplikaterstellung bei Re-Import verhindert
