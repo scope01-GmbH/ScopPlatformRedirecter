@@ -1,8 +1,14 @@
 {
+  "global": {
+    "entities": {
+      "scop_platform_redirecter_redirect": "Redirects"
+    }
+  },
   "scopplatformredirecter": {
     "general": {
       "title": "Redirects",
-      "errorTitle": "Error"
+      "errorTitle": "Error",
+      "searchAllRedirects": "Search all redirects ..."
     },
     "list": {
       "columnSourceUrl": "Source URL",
@@ -13,6 +19,7 @@
       "createButton": "Add Redirect",
       "exportAllButton": "Export All",
       "importButton": "Import",
+      "check404": "Check broken url's",
       "faqButton": {
         "text": "FAQ",
         "link": "https://scope01.com/en/shopware-redirect-plugin/"
@@ -41,7 +48,8 @@
         "2": "Transfer"
       },
       "salesChannel": "Sales Channel",
-      "allSalesChannels": "All"
+      "allSalesChannels": "All",
+      "iap": "Unlock more features"
     },
     "detail": {
       "sourceUrlLabel": "Source URL",

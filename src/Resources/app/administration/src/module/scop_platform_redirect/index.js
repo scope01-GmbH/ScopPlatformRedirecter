@@ -5,14 +5,43 @@ import './page/scop-platform-redirect-import-export-modal';
 import './page/scop-platform-redirect-import-export-activity';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
-
+var inAppPurchaseId = 'scopPlatformRedirecterPremium';
 Shopware.Module.register('scop-platform-redirect', {
+        entity: 'scop_platform_redirecter_redirect',
         type: 'plugin',
         name: 'scop-platform-redirect',
         title: 'scopplatformredirecter.general.title',
         description: 'scopplatformredirecter.general.title',
         color: '#019994',
-        icon: 'small-copy',
+        icon: 'regular-double-chevron-right-s',
+        defaultSearchConfiguration: {
+            _searchable: true,
+            sourceURL: {
+                _searchable: true,
+                _score: 500,
+            },
+            targetURL: {
+                name: {
+                    _searchable: true,
+                    _score: 500,
+                },
+            },
+        },
+        computed: {
+            inAppPurchaseCheckout() {
+                return Shopware.Store.get('inAppPurchaseCheckout');
+            },
+
+            hideButton() {
+                return Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId);
+            }
+        },
+
+        methods: {
+            onClick() {
+                this.inAppPurchaseCheckout.request({ identifier: inAppPurchaseId }, 'ScopPlatformRedirecter');
+            }
+        },
         routes: {
             list: {
                 component: 'scop-platform-redirect-list',
@@ -45,3 +74,21 @@ Shopware.Module.register('scop-platform-redirect', {
         }
     }
 );
+
+const { Application } = Shopware;
+
+// Disable search if no in app purchase active
+if (Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
+    Application.addServiceProviderDecorator('searchTypeService', searchTypeService => {
+        searchTypeService.upsertType('scop_platform_redirecter_redirect', {
+            entityName: 'scop_platform_redirecter_redirect',
+            placeholderSnippet: 'scopplatformredirecter.general.searchAllRedirects',
+            hideOnGlobalSearchBar: false
+        });
+
+        return searchTypeService;
+    });
+}
+
+Shopware.Component.override('sw-search-bar-item', () => import('../../app/component/structure/sw-search-bar-item'));
+

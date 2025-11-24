@@ -7,6 +7,7 @@
     <services>
         <service id="Scop\PlatformRedirecter\Redirect\RedirectDefinition">
             <tag name="shopware.entity.definition" entity="scop_platform_redirecter_redirect"/>
+            <tag name="shopware.composite_search.definition" priority="1000" />
         </service>
         <service id="Scop\PlatformRedirecter\Decorator\CanonicalRedirectServiceDecorator" decorates="Shopware\Core\Framework\Routing\CanonicalRedirectService">
             <argument type="service" id="Scop\PlatformRedirecter\Decorator\CanonicalRedirectServiceDecorator.inner"/>
@@ -27,5 +28,19 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="Scop\PlatformRedirecter\Controller\AdminRedirectController"
+                 public="true">
+            <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
+            <argument type="service" id="messenger.default_bus"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service id="Scop\PlatformRedirecter\MessageQueue\Handler\CheckRedirectHandler">
+            <tag name="messenger.message_handler" handles="Scop\PlatformRedirecter\MessageQueue\Message\CheckRedirectMessage"/>
+        </service>
     </services>
+
 </container>

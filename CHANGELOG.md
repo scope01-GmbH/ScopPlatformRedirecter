@@ -119,3 +119,8 @@
 
 - Extended validation during import
 - Prevented duplicate creation on re-import
+
+# v4.1.3
+
+- Added search function for IAP
+- Added primary key
