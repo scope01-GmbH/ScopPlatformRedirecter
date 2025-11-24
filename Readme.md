@@ -29,7 +29,7 @@
 | 4.0.1   | Shopware 6.7.1 compatibility                                                                                                                                            | 6.7.1            |
 | 4.0.2   | Fixed migration which prevented reinstallation of plugin                                                                                                                | 6.7.1            |
 | 4.0.3   | Extended validation during import<br/>Prevented duplicate creation on re-import                                                                                         | 6.7.1            |
-| 4.1.3   | Added search function for IAP<br/>Added primary key to the table                                                                                                        | 6.7.1            |
+| 4.1.3   | Added search function for IAP<br/>Added primary key to the table                                                                                                        | 6.7.4.0          |
 
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
