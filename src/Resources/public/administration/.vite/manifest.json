@@ -1,9 +1,18 @@
 {
+  "app/component/structure/sw-search-bar-item/index.js": {
+    "file": "assets/index-KgHJOBrb.js",
+    "name": "index",
+    "src": "app/component/structure/sw-search-bar-item/index.js",
+    "isDynamicEntry": true
+  },
   "main.js": {
-    "file": "assets/scop-platform-redirecter-c9ZqAk20.js",
+    "file": "assets/scop-platform-redirecter-DHlq4Xs0.js",
     "name": "scop-platform-redirecter",
     "src": "main.js",
     "isEntry": true,
+    "dynamicImports": [
+      "app/component/structure/sw-search-bar-item/index.js"
+    ],
     "css": [
       "assets/scop-platform-redirecter-Zq_N7TFv.css"
     ]

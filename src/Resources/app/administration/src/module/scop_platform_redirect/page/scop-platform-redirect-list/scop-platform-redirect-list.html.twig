@@ -1,5 +1,14 @@
 {% block scop_platform_redirect_list %}
+
     <sw-page class="scop-platform-redirect-list">
+        <template #search-bar>
+            <sw-search-bar
+                    initial-search-type="scop_platform_redirecter_redirect"
+                    :initial-search="term"
+                    @search="onSearch"
+            />
+        </template>
+
         <template #smart-bar-actions>
             {% block scop_platform_redirect_list_smarbar %}
                 <mt-button variant="primary" @click="$router.push({name: 'scop.platform.redirect.create'})">
@@ -11,21 +20,30 @@
                 <mt-button variant="secondary" @click="onClickImport">
                     {{ $t('scopplatformredirecter.list.importButton') }}
                 </mt-button>
+                <!-- <mt-button v-if="inAppActive" variant="secondary" @click="onClickCheckLinks">
+                    {{ $t('scopplatformredirecter.list.check404') }}
+                </mt-button> -->
                 <mt-button class="mt-external-link" variant="action" :link="$tc('scopplatformredirecter.list.faqButton.link')">
                     {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
+                </mt-button>
+                <mt-button v-if="hideButton" variant="primary" @click="onClickIap">
+                    {{ $t('scopplatformredirecter.list.iap') }} <mt-icon name="regular-shopping-cart" />
                 </mt-button>
             {% endblock %}
         </template>
         <template #content>
             {% block scop_platform_redirect_list_content %}
                 <sw-entity-listing
+                        v-if="entitySearchable"
                         ref="listing"
-                        v-if="redirect"
                         :items="redirect"
-                        :repository="repository"
+                        :repository="redirectRepository"
                         :columns="columns"
                         detailRoute="scop.platform.redirect.details"
-                        @update-records="onUpdate"
+                        :is-loading="isLoading"
+                        identifier="scop-platform-redirect-list"
+                        @page-change="onPageChange"
+                        @update-records="updateTotal"
                         @inline-edit-save="onInlineEditSave"
                 >
                     <template #column-queryParamsHandling="{ item }">

@@ -119,3 +119,8 @@
 
 - Validierung beim Import erweitert
 - Duplikaterstellung bei Re-Import verhindert
+
+# v4.1.3
+
+- Umsetzung Suchfunktion für IAP
+- Primärschlüssel zur Tabelle hinzugefügt
