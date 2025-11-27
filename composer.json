@@ -12,7 +12,7 @@
     }
   ],
   "require": {
-    "shopware/core": "^6.7.1"
+    "shopware/core": "^6.7.4"
   },
   "extra": {
     "shopware-plugin-class": "Scop\\PlatformRedirecter\\ScopPlatformRedirecter",
