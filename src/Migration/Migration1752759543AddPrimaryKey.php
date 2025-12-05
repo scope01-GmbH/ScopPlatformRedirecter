@@ -3,6 +3,7 @@
 namespace Scop\PlatformRedirecter\Migration;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Shopware\Core\Framework\Migration\MigrationStep;
 
 /**
@@ -18,6 +19,9 @@ class Migration1752759543AddPrimaryKey extends MigrationStep
     public function update(Connection $connection): void
     {
         $sql = "ALTER TABLE `scop_platform_redirecter_redirect` ADD PRIMARY KEY `id` (`id`);";
-        $connection->executeStatement($sql);
+        try {
+            $connection->executeStatement($sql);
+        } catch (Exception $e) {
+        }
     }
 }
