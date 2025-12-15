@@ -124,3 +124,8 @@
 
 - Umsetzung Suchfunktion für IAP
 - Primärschlüssel zur Tabelle hinzugefügt
+
+# v4.1.4
+
+- Behebt Problem mit der Validierung bei der Einstellung der Verkaufskanäle auf "Alle"
+- Behebt Problem bei der Migration, wenn der Primärschlüssel bereits existiert

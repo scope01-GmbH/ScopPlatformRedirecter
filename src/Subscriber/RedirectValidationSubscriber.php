@@ -119,12 +119,16 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param string $id
+     * @param string|null $id
      * @param ExecutionContextInterface $assertContext
      * @return void
      */
-    public function validateSaleChannelId(string $id, ExecutionContextInterface $assertContext): void
+    public function validateSaleChannelId(?string $id, ExecutionContextInterface $assertContext): void
     {
+        if ($id === null) {
+            return;
+        }
+
         $salesChannelsIds = $this->salesChannelRepository->searchIds(new Criteria(), $this->context)->getIds();
         if (!in_array(strtolower($id), $salesChannelsIds, true) && !in_array(Uuid::fromBytesToHex($id), $salesChannelsIds, true)) {
             $assertContext->buildViolation('Sales channel is not exist')
@@ -133,13 +137,13 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param string $id
+     * @param string|null $id
      * @param ExecutionContextInterface $assertContext
      * @return void
      */
-    public function validateId(string $id, ExecutionContextInterface $assertContext): void
+    public function validateId(?string $id, ExecutionContextInterface $assertContext): void
     {
-        if (!Uuid::isValid($id) && !Uuid::isValid(Uuid::fromBytesToHex($id))) {
+        if ($id !== null && !Uuid::isValid($id) && !Uuid::isValid(Uuid::fromBytesToHex($id))) {
             $assertContext->buildViolation('This is not a valid UUID: ' . $id)
                 ->addViolation();
         }

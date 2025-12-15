@@ -124,3 +124,8 @@
 
 - Added search function for IAP
 - Added primary key
+
+# v4.1.4
+
+- Fixed issue with validation when setting Sales Channels to "All"
+- Fixed issue with Migration when Primary Key already exists
