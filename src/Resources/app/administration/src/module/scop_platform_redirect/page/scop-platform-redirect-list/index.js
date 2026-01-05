@@ -67,6 +67,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
         },
         redirectCriteria() {
             const redirectCriteria = new Criteria(this.page, this.limit);
+            redirectCriteria.addAssociation('salesChannel');
             if (Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
                 redirectCriteria.setTerm(this.term);
             }
