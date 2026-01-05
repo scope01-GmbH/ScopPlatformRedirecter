@@ -129,3 +129,7 @@
 
 - Behebt Problem mit der Validierung bei der Einstellung der Verkaufskanäle auf "Alle"
 - Behebt Problem bei der Migration, wenn der Primärschlüssel bereits existiert
+
+# v4.1.5
+
+- Behebt Problem mit der Anzeige der Verkaufskanäle in der Weiterleitungsliste
