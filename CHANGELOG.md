@@ -129,3 +129,7 @@
 
 - Fixed issue with validation when setting Sales Channels to "All"
 - Fixed issue with Migration when Primary Key already exists
+
+# v4.1.5
+
+- Fixed issue with displaying Sales Channels in the Redirect List
