@@ -36,6 +36,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
             limit: 25,
             searchConfigEntity: 'scop_platform_redirecter_redirect',
             entitySearchable: true,
+            sortBy: 'createdAt',
+            sortDirection: 'DESC',
             total: 0,
             term: ''
         };
@@ -68,6 +70,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
         redirectCriteria() {
             const redirectCriteria = new Criteria(this.page, this.limit);
             redirectCriteria.addAssociation('salesChannel');
+            redirectCriteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
+
             if (Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId)) {
                 redirectCriteria.setTerm(this.term);
             }
@@ -109,6 +113,11 @@ Shopware.Component.register('scop-platform-redirect-list', {
                 dataIndex: 'salesChannel',
                 label: this.$tc('scopplatformredirecter.list.salesChannel'),
                 allowResize: true
+            }, {
+                property: 'createdAt',
+                dataIndex: 'createdAt',
+                label: this.$tc('scopplatformredirecter.list.columnDate'),
+                allowResize: true
             },
             ];
         }
@@ -124,6 +133,9 @@ Shopware.Component.register('scop-platform-redirect-list', {
     },
 
     methods: {
+        formatDate(date) {
+            return Shopware.Filter.getByName('date')(date);
+        },
         updateCriteria(criteria) {
             this.page = 1;
         },
