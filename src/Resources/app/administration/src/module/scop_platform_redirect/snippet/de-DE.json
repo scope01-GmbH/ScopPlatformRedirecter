@@ -16,6 +16,7 @@
       "columnHttpCode": "HTTP Status Code",
       "columnEnabled": "Aktiviert",
       "columnQueryParamsHandling": "Umgang mit Query Parametern",
+      "columnDate": "Erstellt am",
       "createButton": "Weiterleitung anlegen",
       "exportAllButton": "Alle Exportieren",
       "importButton": "Importieren",

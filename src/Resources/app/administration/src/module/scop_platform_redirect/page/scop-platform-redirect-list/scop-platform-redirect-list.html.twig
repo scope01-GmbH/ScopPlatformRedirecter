@@ -44,6 +44,8 @@
                         identifier="scop-platform-redirect-list"
                         @page-change="onPageChange"
                         @update-records="updateTotal"
+                        :sort-by="sortBy"
+                        :sort-direction="sortDirection"
                         @inline-edit-save="onInlineEditSave"
                 >
                     <template #column-queryParamsHandling="{ item }">
@@ -51,6 +53,9 @@
                     </template>
                     <template #column-salesChannel="{ item }">
                         {{ item.salesChannel ? item.salesChannel.translated.name : $tc('scopplatformredirecter.list.allSalesChannels') }}
+                    </template>
+                    <template #column-createdAt="{ item }">
+                        {{ formatDate(item.createdAt) }}
                     </template>
                 </sw-entity-listing>
             {% endblock %}
