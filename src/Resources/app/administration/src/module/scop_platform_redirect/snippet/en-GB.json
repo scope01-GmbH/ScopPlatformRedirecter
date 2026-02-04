@@ -16,6 +16,7 @@
       "columnHttpCode": "HTTP Status Code",
       "columnEnabled": "Enabled",
       "columnQueryParamsHandling": "Query Parameter Handling",
+      "columnDate": "Created at",
       "createButton": "Add Redirect",
       "exportAllButton": "Export All",
       "importButton": "Import",
