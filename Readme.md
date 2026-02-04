@@ -32,6 +32,7 @@
 | 4.1.3   | Added search function for IAP<br/>Added primary key to the table                                                                                                        | 6.7.4.0          |
 | 4.1.4   | Fixed issue with validation when setting Sales Channels to "All" <br>Fixed issue with Migration when Primary Key already                                                | 6.7.4.0          |
 | 4.1.5   | Fixed issue with displaying Sales Channels in the Redirect List                                                                                                         | 6.7.4.0          |
+| 4.1.6   | Added creation date to the redirect list and allow sorting by it                                                                                                        | 6.7.4.0          |
 
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
