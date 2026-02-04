@@ -133,3 +133,7 @@
 # v4.1.5
 
 - Behebt Problem mit der Anzeige der Verkaufskanäle in der Weiterleitungsliste
+
+# v4.1.6
+
+- Hinzufügen von Erstellungsdatum zur Redirect Liste und Sortierungsmöglichkeit danach

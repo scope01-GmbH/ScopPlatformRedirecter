@@ -133,3 +133,7 @@
 # v4.1.5
 
 - Fixed issue with displaying Sales Channels in the Redirect List
+
+# v4.1.6
+
+- Added creation date to the redirect list and allow sorting by it
