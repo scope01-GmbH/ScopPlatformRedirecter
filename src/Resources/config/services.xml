@@ -18,7 +18,7 @@
 
         <service id="Scop\PlatformRedirecter\Subscriber\RedirectValidationSubscriber" >
             <argument id="validator" type="service"/>
-            <argument id="Shopware\Core\Framework\Adapter\Translation\Translator" type="service"/>
+            <argument type="service" id="translator"/>
             <argument type="service" id="sales_channel.repository"/>
             <tag name="kernel.event_subscriber"/>
         </service>
