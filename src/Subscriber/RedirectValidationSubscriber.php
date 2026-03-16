@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Scop\PlatformRedirecter\Subscriber;
 
 use Scop\PlatformRedirecter\Redirect\RedirectDefinition;
-use Shopware\Core\Framework\Adapter\Translation\AbstractTranslator;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -24,6 +23,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RedirectValidationSubscriber implements EventSubscriberInterface
 {
@@ -31,7 +31,7 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
     private Context $context;
     public function __construct(
         readonly private ValidatorInterface $validator,
-        readonly private AbstractTranslator $translator,
+        readonly private TranslatorInterface $translator,
         readonly private EntityRepository   $salesChannelRepository,
     )
     {}
@@ -96,6 +96,12 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
                 'sourceURL' => [
                     new Assert\NotBlank(),
                     new Assert\Type('string'),
+                    new Assert\NotEqualTo('/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.homeSourceUrl')),
+                    new Assert\Regex(pattern: '/^(?!\/admin).*$/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.notBeginWith', ['%forbidden%' => '/admin'])),
+                    new Assert\Regex(pattern: '/^(?!\/api).*$/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.notBeginWith', ['%forbidden%' => '/api'])),
+                    new Assert\Regex(pattern: '/^(?!\/widgets).*$/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.notBeginWith', ['%forbidden%' => '/widgets'])),
+                    new Assert\Regex(pattern: '/^(?!\/store-api).*$/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.notBeginWith', ['%forbidden%' => '/store-api'])),
+                    new Assert\Regex(pattern: '/^(?!\/_profiler).*$/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.notBeginWith', ['%forbidden%' => '/_profiler']))
                 ],
                 'targetURL' => [
                     new Assert\NotBlank(),
