@@ -1,0 +1,11 @@
+{
+    "Scop": {
+        "PlatformRedirecter": {
+            "validation": {
+                "choice": "This value {{ value }} is not a valid choice. Allowed: {{ choices }}",
+                "homeSourceUrl": "The source url {{ value }} is not allowed and should be redirected via the htaccess file.",
+                "notBeginWith": "The source url {{ value }} is not allowed. Source urls must not begin with %forbidden%."
+            }
+        }
+    }
+}
