@@ -137,3 +137,7 @@
 # v4.1.6
 
 - Hinzufügen von Erstellungsdatum zur Redirect Liste und Sortierungsmöglichkeit danach
+
+# v4.1.7
+
+- Validierung für verbotene URLs hinzugefügt und "/" als Quell-URL verboten
