@@ -137,3 +137,7 @@
 # v4.1.6
 
 - Added creation date to the redirect list and allow sorting by it
+
+# v4.1.7
+
+- Added validation for forbidden urls and disallow "/" as source url
