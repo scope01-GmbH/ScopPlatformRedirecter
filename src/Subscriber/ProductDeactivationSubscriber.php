@@ -127,6 +127,7 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
                 $seoPath = ltrim($seoUrl['seoPathInfo'], '/');
                 $salesChannelId = $seoUrl['salesChannelId'] ?? null;
                 $languageId = $seoUrl['languageId'] ?? null;
+                $redirectProductId = $seoUrl['productId'] ?? $productId;
 
                 $prefix = $this->resolvePrefix($domainPrefixes, $salesChannelId, $languageId);
                 $sourceUrl = rtrim($prefix, '/') . '/' . $seoPath;
@@ -137,7 +138,7 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
                     'targetURL' => '/',
                     'httpCode' => 302,
                     'enabled' => true,
-                    'productId' => $productId,
+                    'productId' => $redirectProductId,
                     'salesChannelId' => $salesChannelId,
                 ];
             }

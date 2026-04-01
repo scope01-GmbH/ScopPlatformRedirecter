@@ -34,6 +34,7 @@
 | 4.1.5   | Fixed issue with displaying Sales Channels in the Redirect List                                                                                                      | 6.7.4.0          |
 | 4.1.6   | Added creation date to the redirect list and allow sorting by it                                                                                                     | 6.7.4.0          |
 | 4.1.7   | Added validation for forbidden urls and disallow "/" as source url                                                                                                   | 6.7.4.0          |
+| 4.2.0   | Added automatic redirect creation when products are deactivated (Premium feature)                                                                                    | 6.7.4.0          |
 
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
