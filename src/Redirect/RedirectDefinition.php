@@ -22,6 +22,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
+use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\System\SalesChannel\SalesChannelDefinition;
 
 class RedirectDefinition extends EntityDefinition
@@ -73,7 +74,9 @@ class RedirectDefinition extends EntityDefinition
             new BoolField("enabled", "enabled"),
             new IntField("queryParamsHandling", "queryParamsHandling"),
             (new FkField('salesChannelId', 'salesChannelId', SalesChannelDefinition::class))->addFlags(new ApiAware()),
-            new ManyToOneAssociationField('salesChannel', 'salesChannelId', SalesChannelDefinition::class, 'id', false)
+            new ManyToOneAssociationField('salesChannel', 'salesChannelId', SalesChannelDefinition::class, 'id', false),
+            (new FkField('product_id', 'productId', ProductDefinition::class))->addFlags(new ApiAware()),
+            new ManyToOneAssociationField('product', 'product_id', ProductDefinition::class, 'id', false)
         ]);
     }
 }
