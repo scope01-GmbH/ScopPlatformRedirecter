@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Scop\PlatformRedirecter\Redirect;
 
 use phpDocumentor\Reflection\Types\Boolean;
+use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 use Shopware\Core\System\SalesChannel\SalesChannelEntity;
@@ -53,6 +54,15 @@ class Redirect extends Entity
      * @var SalesChannelEntity|null $salesChannel
      */
     protected $salesChannel;
+
+    /**
+     * @var string|null $productId
+     */
+    protected $productId;
+    /**
+     * @var ProductEntity|null $product
+     */
+    protected $product;
 
     /**
      * @return string
@@ -164,5 +174,37 @@ class Redirect extends Entity
     public function setSalesChannel(?SalesChannelEntity $salesChannel): void
     {
         $this->salesChannel = $salesChannel;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProductId(): ?string
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param string|null $productId
+     */
+    public function setProductId(?string $productId): void
+    {
+        $this->productId = $productId;
+    }
+
+    /**
+     * @return ProductEntity|null
+     */
+    public function getProduct(): ?ProductEntity
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param ProductEntity|null $product
+     */
+    public function setProduct(?ProductEntity $product): void
+    {
+        $this->product = $product;
     }
 }
