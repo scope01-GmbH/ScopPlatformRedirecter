@@ -103,7 +103,6 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
 
     private function isFeatureEnabled(): bool
     {
-        return true;
         if (!$this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID)) {
             return false;
         }
