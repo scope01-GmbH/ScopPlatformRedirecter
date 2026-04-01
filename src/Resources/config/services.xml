@@ -32,6 +32,7 @@
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
             <argument type="service" id="seo_url.repository"/>
             <argument type="service" id="sales_channel_domain.repository"/>
+            <argument type="service" id="product.repository"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
             <tag name="kernel.event_subscriber"/>

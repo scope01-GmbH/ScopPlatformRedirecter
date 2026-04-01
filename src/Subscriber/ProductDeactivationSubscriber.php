@@ -4,11 +4,14 @@ namespace Scop\PlatformRedirecter\Subscriber;
 
 use Shopware\Core\Content\Product\ProductDefinition;
 use Shopware\Core\Content\Product\ProductEvents;
+use Shopware\Core\Content\Seo\SeoUrl\SeoUrlEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenEvent;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\MultiFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Write\Command\ChangeSetAware;
 use Shopware\Core\Framework\DataAbstractionLayer\Write\Command\UpdateCommand;
 use Shopware\Core\Framework\DataAbstractionLayer\Write\Validation\PreWriteValidationEvent;
@@ -25,6 +28,7 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
         private readonly EntityRepository $redirectRepository,
         private readonly EntityRepository $seoUrlRepository,
         private readonly EntityRepository $salesChannelDomainRepository,
+        private readonly EntityRepository $productRepository,
         private readonly SystemConfigService $systemConfigService,
         private readonly InAppPurchase $inAppPurchase,
     ) {
@@ -99,6 +103,7 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
 
     private function isFeatureEnabled(): bool
     {
+        return true;
         if (!$this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID)) {
             return false;
         }
@@ -111,7 +116,8 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
         $domainPrefixes = $this->getDomainPrefixes($context);
 
         foreach ($productIds as $productId) {
-            $seoUrls = $this->getProductSeoUrls($productId, $context);
+            $allProductIds = $this->getProductAndVariantIds($productId, $context);
+            $seoUrls = $this->getSeoUrlsForProducts($allProductIds, $context);
 
             if (empty($seoUrls)) {
                 continue;
@@ -146,8 +152,9 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
     private function deleteRedirectsForActivatedProducts(array $productIds, Context $context): void
     {
         foreach ($productIds as $productId) {
+            $allProductIds = $this->getProductAndVariantIds($productId, $context);
             $criteria = new Criteria();
-            $criteria->addFilter(new EqualsFilter('productId', $productId));
+            $criteria->addFilter(new EqualsAnyFilter('productId', $allProductIds));
 
             $ids = $this->redirectRepository->searchIds($criteria, $context);
 
@@ -164,10 +171,31 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function getProductSeoUrls(string $productId, Context $context): array
+    /**
+     * Returns the product ID and all its variant IDs.
+     *
+     * @return string[]
+     */
+    private function getProductAndVariantIds(string $productId, Context $context): array
+    {
+        $ids = [$productId];
+
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('parentId', $productId));
+        $criteria->addFilter(new EqualsFilter('active', null));
+
+        $variantIds = $this->productRepository->searchIds($criteria, $context)->getIds();
+
+        return array_merge($ids, $variantIds);
+    }
+
+    /**
+     * Returns canonical SEO URLs for multiple product IDs.
+     */
+    private function getSeoUrlsForProducts(array $productIds, Context $context): array
     {
         $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('foreignKey', $productId));
+        $criteria->addFilter(new EqualsAnyFilter('foreignKey', $productIds));
         $criteria->addFilter(new EqualsFilter('routeName', 'frontend.detail.page'));
         $criteria->addFilter(new EqualsFilter('isCanonical', true));
 
@@ -176,6 +204,7 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
         $result = [];
         foreach ($seoUrls as $seoUrl) {
             $result[] = [
+                'productId' => $seoUrl->getForeignKey(),
                 'seoPathInfo' => $seoUrl->getSeoPathInfo(),
                 'salesChannelId' => $seoUrl->getSalesChannelId(),
                 'languageId' => $seoUrl->getLanguageId(),
