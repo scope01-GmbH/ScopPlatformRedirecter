@@ -50,9 +50,24 @@
       },
       "salesChannel": "Sales Channel",
       "allSalesChannels": "All",
-      "iap": "Unlock more features"
+      "iap": "Unlock more features",
+      "autoCreated": "Auto"
+    },
+    "autoRedirect": {
+      "enabledLabel": "Automatic redirect on product deactivation",
+      "helpText": "When a product with an existing SEO URL is deactivated, a 302 redirect to the homepage is automatically created. When the product is reactivated, the redirect is automatically removed.",
+      "iapRequired": "This feature requires the Premium In-App Purchase.",
+      "purchaseButton": "Unlock Premium",
+      "deleteModal": {
+        "title": "Delete automatic redirects?",
+        "message": "Would you like to delete all automatically created redirects? This action cannot be undone.",
+        "delete": "Yes, delete all",
+        "keep": "No, keep them",
+        "cancel": "Cancel"
+      }
     },
     "detail": {
+      "autoCreatedInfo": "This redirect was automatically created for the product:",
       "sourceUrlLabel": "Source URL",
       "targetUrlLabel": "Target URL",
       "httpCodeLabel": "HTTP Status Code",

@@ -1,0 +1,73 @@
+{% block scop_platform_redirect_auto_redirect_config %}
+<div class="scop-platform-redirect-auto-redirect-config">
+
+    {% block scop_platform_redirect_auto_redirect_config_iap_notice %}
+    <mt-banner
+        v-if="!isIapActive"
+        variant="attention"
+        class="scop-platform-redirect-auto-redirect-config__iap-notice"
+    >
+        <p>{{ $tc('scopplatformredirecter.autoRedirect.iapRequired') }}</p>
+        <mt-button
+            variant="primary"
+            size="small"
+            @click="onClickPurchase"
+        >
+            {{ $tc('scopplatformredirecter.autoRedirect.purchaseButton') }}
+        </mt-button>
+    </mt-banner>
+    {% endblock %}
+
+    {% block scop_platform_redirect_auto_redirect_config_help %}
+        <p class="scop-platform-redirect-auto-redirect-config__help-text">
+            {{ $tc('scopplatformredirecter.autoRedirect.helpText') }}
+        </p>
+    {% endblock %}
+
+    {% block scop_platform_redirect_auto_redirect_config_switch %}
+    <mt-switch
+        v-model="switchValue"
+        :label="$tc('scopplatformredirecter.autoRedirect.enabledLabel')"
+        bordered
+        :disabled="!isIapActive"
+        @update:model-value="onSwitchChange"
+    />
+    {% endblock %}
+
+    {% block scop_platform_redirect_auto_redirect_config_delete_modal %}
+    <sw-modal
+        v-if="showDeleteModal"
+        :title="$tc('scopplatformredirecter.autoRedirect.deleteModal.title')"
+        variant="small"
+        @modal-close="onModalCancel"
+    >
+        <p>{{ $tc('scopplatformredirecter.autoRedirect.deleteModal.message') }}</p>
+
+        <template #modal-footer>
+            <mt-button
+                variant="secondary"
+                size="small"
+                @click="onModalCancel"
+            >
+                {{ $tc('scopplatformredirecter.autoRedirect.deleteModal.cancel') }}
+            </mt-button>
+            <mt-button
+                variant="primary"
+                size="small"
+                @click="onModalKeepConfirm"
+            >
+                {{ $tc('scopplatformredirecter.autoRedirect.deleteModal.keep') }}
+            </mt-button>
+            <mt-button
+                variant="critical"
+                size="small"
+                @click="onModalDeleteConfirm"
+            >
+                {{ $tc('scopplatformredirecter.autoRedirect.deleteModal.delete') }}
+            </mt-button>
+        </template>
+    </sw-modal>
+    {% endblock %}
+
+</div>
+{% endblock %}
