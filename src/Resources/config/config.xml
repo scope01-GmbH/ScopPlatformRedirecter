@@ -14,4 +14,13 @@
 
     </card>
 
+    <card>
+        <title>Auto-Redirect for deactivated products</title>
+        <title lang="de-DE">Auto-Redirect für deaktivierte Produkte</title>
+
+        <component name="scop-platform-redirect-auto-redirect-config">
+            <name>autoRedirectEnabled</name>
+        </component>
+    </card>
+
 </config>

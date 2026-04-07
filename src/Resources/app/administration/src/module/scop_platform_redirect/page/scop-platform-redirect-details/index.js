@@ -36,7 +36,10 @@ Component.register('scop-platform-redirect-details', {
 
     methods: {
         getRedirect() {
-            this.repository.get(this.$route.params.id, Shopware.Context.api).then((entity) => {
+            const criteria = new Shopware.Data.Criteria();
+            criteria.addAssociation('product');
+
+            this.repository.get(this.$route.params.id, Shopware.Context.api, criteria).then((entity) => {
                 this.redirect = entity;
             })
         },

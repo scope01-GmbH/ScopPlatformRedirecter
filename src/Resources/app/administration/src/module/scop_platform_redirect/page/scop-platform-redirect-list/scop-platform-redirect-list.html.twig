@@ -42,12 +42,19 @@
                         detailRoute="scop.platform.redirect.details"
                         :is-loading="isLoading"
                         identifier="scop-platform-redirect-list"
-                        @page-change="onPageChange"
                         @update-records="updateTotal"
                         :sort-by="sortBy"
                         :sort-direction="sortDirection"
                         @inline-edit-save="onInlineEditSave"
                 >
+                    <template #column-sourceURL="{ item }">
+                        <router-link :to="{ name: 'scop.platform.redirect.details', params: { id: item.id } }">
+                            {{ item.sourceURL }}
+                        </router-link>
+                        <sw-label v-if="item.productId" variant="info" appearance="pill" size="medium" style="margin-left: 8px;">
+                            {{ $tc('scopplatformredirecter.list.autoCreated') }}
+                        </sw-label>
+                    </template>
                     <template #column-queryParamsHandling="{ item }">
                         {{ $tc('scopplatformredirecter.list.queryParamsHandlingValues.' + item.queryParamsHandling) }}
                     </template>

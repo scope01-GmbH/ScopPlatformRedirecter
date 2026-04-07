@@ -141,3 +141,7 @@
 # v4.1.7
 
 - Added validation for forbidden urls and disallow "/" as source url
+
+# v4.2.0
+
+- Added automatic redirect creation when products are deactivated (Premium feature)
