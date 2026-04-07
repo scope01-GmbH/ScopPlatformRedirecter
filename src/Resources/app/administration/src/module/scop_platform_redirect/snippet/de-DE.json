@@ -50,9 +50,24 @@
       },
       "salesChannel": "Verkaufskanal",
       "allSalesChannels": "Alle",
-      "iap": "Weitere Funktionen freischalten"
+      "iap": "Weitere Funktionen freischalten",
+      "autoCreated": "Auto"
+    },
+    "autoRedirect": {
+      "enabledLabel": "Automatische Weiterleitung bei Produkt-Deaktivierung",
+      "helpText": "Wenn ein Produkt deaktiviert wird, das bereits eine SEO-URL hat, wird automatisch eine 302-Weiterleitung auf die Startseite erstellt. Beim Reaktivieren wird die Weiterleitung automatisch entfernt.",
+      "iapRequired": "Diese Funktion erfordert den Premium In-App Kauf.",
+      "purchaseButton": "Premium freischalten",
+      "deleteModal": {
+        "title": "Automatische Weiterleitungen löschen?",
+        "message": "Möchten Sie alle automatisch erstellten Weiterleitungen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "delete": "Ja, alle löschen",
+        "keep": "Nein, beibehalten",
+        "cancel": "Abbrechen"
+      }
     },
     "detail": {
+      "autoCreatedInfo": "Diese Weiterleitung wurde automatisch erstellt für das Produkt:",
       "sourceUrlLabel": "Quell URL",
       "targetUrlLabel": "Ziel URL",
       "httpCodeLabel": "HTTP Status Code",

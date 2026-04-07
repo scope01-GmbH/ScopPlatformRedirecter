@@ -12,6 +12,20 @@
         <template #content>
             <sw-card-view>
                 <sw-card v-if="redirect" :isLoading="isLoading">
+                    {% block scop_platform_redirect_details_auto_created_banner %}
+                        <mt-banner
+                                v-if="redirect && redirect.productId"
+                                variant="info"
+                        >
+                            {{ $tc('scopplatformredirecter.detail.autoCreatedInfo') }}
+                            <router-link
+                                    v-if="redirect.product"
+                                    :to="{ name: 'sw.product.detail', params: { id: redirect.productId } }"
+                            >
+                                {{ redirect.product.translated ? redirect.product.translated.name : redirect.product.name }}
+                            </router-link>
+                        </mt-banner>
+                    {% endblock %}
                     <sw-text-field :label="$t('scopplatformredirecter.detail.sourceUrlLabel')" v-model:value="redirect.sourceURL"
                               validation="required"></sw-text-field>
                     <sw-text-field :label="$t('scopplatformredirecter.detail.targetUrlLabel')" v-model:value="redirect.targetURL"
