@@ -141,3 +141,7 @@
 # v4.1.7
 
 - Validierung für verbotene URLs hinzugefügt und "/" als Quell-URL verboten
+
+# v4.2.0
+
+- Automatische Erstellung von Weiterleitungen beim Deaktivieren von Produkten hinzugefügt (Premium-Funktion)
