@@ -1,0 +1,115 @@
+{% block scop_platform_redirect_not_found_list %}
+    <sw-page class="scop-platform-redirect-not-found-list">
+        <template #search-bar>
+            <sw-search-bar
+                initial-search-type="scop_platform_redirecter_404"
+                :initial-search="term"
+                @search="onSearch"
+            />
+        </template>
+
+        <template #smart-bar-actions>
+            {% block scop_platform_redirect_not_found_list_smartbar %}
+                <sw-single-select
+                    v-if="inAppActive"
+                    :value="filterLinked"
+                    :options="filterOptions"
+                    @update:value="onFilterChange"
+                    size="small"
+                    style="min-width: 180px; text-align: left; margin-left: 10px"
+                />
+                <mt-button v-else variant="primary" @click="onClickIap">
+                    {{ $t('scopplatformredirecter.list.iap') }} <mt-icon name="regular-shopping-cart" />
+                </mt-button>
+            {% endblock %}
+        </template>
+
+        <template #content>
+            {% block scop_platform_redirect_not_found_list_iap_teaser %}
+                <mt-banner v-if="!inAppActive" variant="info" style="margin: 24px;">
+                    {{ $tc('scopplatformredirecter.notFound.iapTeaser') }}
+                </mt-banner>
+            {% endblock %}
+            {% block scop_platform_redirect_not_found_list_content %}
+                <sw-entity-listing
+                    v-if="inAppActive && notFoundLogs"
+                    ref="listing"
+                    :items="notFoundLogs"
+                    :repository="notFoundLogRepository"
+                    :columns="columns"
+                    :is-loading="isLoading"
+                    identifier="scop-platform-redirect-not-found-list"
+                    :sort-by="sortBy"
+                    :sort-direction="sortDirection"
+                    :allow-inline-edit="false"
+                >
+                    <template #column-url="{ item }">
+                        {{ item.url }}
+                    </template>
+
+                    <template #column-lastHitAt="{ item }">
+                        {{ formatDate(item.lastHitAt) }}
+                    </template>
+
+                    <template #column-salesChannel="{ item }">
+                        {{ item.salesChannel ? item.salesChannel.translated.name : $tc('scopplatformredirecter.list.allSalesChannels') }}
+                    </template>
+
+                    <template #column-status="{ item }">
+                        <sw-label v-if="item.ignored" variant="neutral" appearance="pill" size="medium">
+                            {{ $tc('scopplatformredirecter.notFound.statusIgnored') }}
+                        </sw-label>
+                        <sw-label v-else-if="item.redirectId" variant="success" appearance="pill" size="medium">
+                            {{ $tc('scopplatformredirecter.notFound.statusLinked') }}
+                        </sw-label>
+                        <sw-label v-else variant="warning" appearance="pill" size="medium">
+                            {{ $tc('scopplatformredirecter.notFound.statusOpen') }}
+                        </sw-label>
+                    </template>
+
+                    <template #actions="{ item }">
+                        <sw-context-menu-item
+                            v-if="!item.redirectId"
+                            @click="onCreateRedirect(item)"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.createRedirect') }}
+                        </sw-context-menu-item>
+                        <sw-context-menu-item
+                            v-if="item.redirectId"
+                            :routerLink="{ name: 'scop.platform.redirect.details', params: { id: item.redirectId } }"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.viewRedirect') }}
+                        </sw-context-menu-item>
+                        <sw-context-menu-item
+                            v-if="!item.ignored"
+                            @click="onIgnoreEntry(item)"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.ignoreEntry') }}
+                        </sw-context-menu-item>
+                        <sw-context-menu-item
+                            v-if="item.ignored"
+                            @click="onUnignoreEntry(item)"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.unignoreEntry') }}
+                        </sw-context-menu-item>
+                        <sw-context-menu-item
+                            variant="danger"
+                            @click="onDeleteEntry(item)"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.deleteEntry') }}
+                        </sw-context-menu-item>
+                    </template>
+                </sw-entity-listing>
+            {% endblock %}
+
+            {% block scop_platform_redirect_not_found_create_modal %}
+                <scop-platform-redirect-not-found-create-modal
+                    v-if="showCreateRedirectModal"
+                    :not-found-log="currentNotFoundLog"
+                    @close="onCloseCreateRedirectModal"
+                    @redirect-created="onRedirectCreated"
+                />
+            {% endblock %}
+        </template>
+    </sw-page>
+{% endblock %}

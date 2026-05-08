@@ -1,4 +1,5 @@
 import template from './scop-platform-redirect-list.html.twig';
+import './scop-platform-redirect-list.scss';
 
 const {Mixin} = Shopware;
 const {Criteria} = Shopware.Data;
@@ -39,7 +40,8 @@ Shopware.Component.register('scop-platform-redirect-list', {
             sortBy: 'createdAt',
             sortDirection: 'DESC',
             total: 0,
-            term: ''
+            term: '',
+            openNotFoundCount: 0,
         };
     },
 
@@ -55,7 +57,7 @@ Shopware.Component.register('scop-platform-redirect-list', {
         },
 
         hideButton() {
-            return Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId);
+            return !Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', inAppPurchaseId);
         },
         inAppActive() {
             let active = true;
@@ -64,8 +66,14 @@ Shopware.Component.register('scop-platform-redirect-list', {
             }
             return active;
         },
+        searchBlocked() {
+            return !this.inAppActive && typeof this.term === 'string' && this.term.trim().length > 0;
+        },
         redirectRepository() {
             return this.repositoryFactory.create('scop_platform_redirecter_redirect');
+        },
+        notFoundLogRepository() {
+            return this.repositoryFactory.create('scop_platform_redirecter_404');
         },
         redirectCriteria() {
             const redirectCriteria = new Criteria(this.page, this.limit);
@@ -132,9 +140,32 @@ Shopware.Component.register('scop-platform-redirect-list', {
         },
     },
 
+    created() {
+        this.loadOpenNotFoundCount();
+    },
+
+    activated() {
+        this.loadOpenNotFoundCount();
+    },
+
     methods: {
         formatDate(date) {
             return Shopware.Filter.getByName('date')(date);
+        },
+        async loadOpenNotFoundCount() {
+            if (!this.inAppActive) {
+                this.openNotFoundCount = 0;
+                return;
+            }
+            try {
+                const criteria = new Criteria(1, 1);
+                criteria.addFilter(Criteria.equals('redirectId', null));
+                criteria.addFilter(Criteria.equals('ignored', false));
+                const result = await this.notFoundLogRepository.searchIds(criteria, Shopware.Context.api);
+                this.openNotFoundCount = result.total ?? 0;
+            } catch {
+                this.openNotFoundCount = 0;
+            }
         },
         updateCriteria(criteria) {
             this.page = 1;
