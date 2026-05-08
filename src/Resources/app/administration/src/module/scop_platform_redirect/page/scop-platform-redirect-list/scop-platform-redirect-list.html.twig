@@ -20,6 +20,10 @@
                 <mt-button variant="secondary" @click="onClickImport">
                     {{ $t('scopplatformredirecter.list.importButton') }}
                 </mt-button>
+                <mt-button v-if="inAppActive" variant="secondary" @click="$router.push({name: 'scop.platform.redirect.notFoundLog'})">
+                    {{ $t('scopplatformredirecter.list.show404Button') }}
+                    <span v-if="openNotFoundCount > 0" class="scop-platform-redirect-list__not-found-badge">{{ openNotFoundCount }}</span>
+                </mt-button>
                 <!-- <mt-button v-if="inAppActive" variant="secondary" @click="onClickCheckLinks">
                     {{ $t('scopplatformredirecter.list.check404') }}
                 </mt-button> -->
@@ -27,14 +31,22 @@
                     {{ $t('scopplatformredirecter.list.faqButton.text') }} <sw-icon name="regular-external-link" small="true"/>
                 </mt-button>
                 <mt-button v-if="hideButton" variant="primary" @click="onClickIap">
-                    {{ $t('scopplatformredirecter.list.iap') }} <mt-icon name="regular-shopping-cart" />
+                    {{ $t('scopplatformredirecter.list.iap') }}
                 </mt-button>
             {% endblock %}
         </template>
         <template #content>
+            {% block scop_platform_redirect_list_search_iap_block %}
+                <mt-banner v-if="searchBlocked" variant="attention" style="margin: 24px;">
+                    <p>{{ $tc('scopplatformredirecter.list.searchIapRequired') }}</p>
+                    <mt-button variant="primary" size="small" @click="onClickIap">
+                        {{ $t('scopplatformredirecter.list.iap') }}
+                    </mt-button>
+                </mt-banner>
+            {% endblock %}
             {% block scop_platform_redirect_list_content %}
                 <sw-entity-listing
-                        v-if="entitySearchable"
+                        v-if="entitySearchable && !searchBlocked"
                         ref="listing"
                         :items="redirect"
                         :repository="redirectRepository"

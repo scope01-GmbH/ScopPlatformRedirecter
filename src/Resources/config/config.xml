@@ -23,4 +23,13 @@
         </component>
     </card>
 
+    <card>
+        <title>404 Errors</title>
+        <title lang="de-DE">404-Fehler</title>
+
+        <component name="scop-platform-redirect-not-found-config">
+            <name>notFoundLogCleanupEnabled</name>
+        </component>
+    </card>
+
 </config>

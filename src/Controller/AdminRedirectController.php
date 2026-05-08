@@ -22,8 +22,11 @@ class AdminRedirectController extends AbstractController
 {
     const inAppPurchaseId = 'scopPlatformRedirecterPremium';
 
-    public function __construct(private readonly EntityRepository $redirectRepository, private readonly InAppPurchase $inAppPurchase, private readonly MessageBusInterface $bus)
-    {
+    public function __construct(
+        private readonly EntityRepository $redirectRepository,
+        private readonly InAppPurchase $inAppPurchase,
+        private readonly MessageBusInterface $bus,
+    ) {
     }
 
     #[Route(path: '/api/_admin/scop-check-redirects', name: 'api.admin.scop.check.redirects', defaults: ['_entity' => 'scop_platform_redirecter_redirect'], methods: ['POST'])]
@@ -57,4 +60,5 @@ class AdminRedirectController extends AbstractController
             'error' => ''
         ]);
     }
+
 }

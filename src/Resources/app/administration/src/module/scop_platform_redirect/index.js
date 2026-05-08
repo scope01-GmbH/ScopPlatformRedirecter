@@ -3,6 +3,8 @@ import './page/scop-platform-redirect-details';
 import './page/scop-platform-redirect-create';
 import './page/scop-platform-redirect-import-export-modal';
 import './page/scop-platform-redirect-import-export-activity';
+import './page/scop-platform-redirect-not-found-list';
+import './page/scop-platform-redirect-not-found-create-modal';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
 var inAppPurchaseId = 'scopPlatformRedirecterPremium';
@@ -57,6 +59,13 @@ Shopware.Module.register('scop-platform-redirect', {
             create: {
                 component: 'scop-platform-redirect-create',
                 path: 'create',
+                meta: {
+                    parentPath: 'scop.platform.redirect.list'
+                }
+            },
+            notFoundLog: {
+                component: 'scop-platform-redirect-not-found-list',
+                path: 'not-found',
                 meta: {
                     parentPath: 'scop.platform.redirect.list'
                 }

@@ -145,3 +145,7 @@
 # v4.2.0
 
 - Automatische Erstellung von Weiterleitungen beim Deaktivieren von Produkten hinzugefügt (Premium-Funktion)
+
+# v4.3.0
+
+- 404-Fehler werden geloggt und können direkt mit einer Weiterleitung verknüpft werden (Premium-Funktion)

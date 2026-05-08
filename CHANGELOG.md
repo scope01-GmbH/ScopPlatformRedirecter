@@ -145,3 +145,7 @@
 # v4.2.0
 
 - Added automatic redirect creation when products are deactivated (Premium feature)
+
+# v4.3.0
+
+- 404 errors are logged and can be linked directly to a redirect (Premium feature)

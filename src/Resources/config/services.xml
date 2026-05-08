@@ -38,6 +38,16 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="Scop\PlatformRedirecter\NotFoundLog\NotFoundLogDefinition">
+            <tag name="shopware.entity.definition" entity="scop_platform_redirecter_404"/>
+        </service>
+
+        <service id="Scop\PlatformRedirecter\Subscriber\NotFoundSubscriber">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <service id="Scop\PlatformRedirecter\Controller\AdminRedirectController"
                  public="true">
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
@@ -50,6 +60,19 @@
 
         <service id="Scop\PlatformRedirecter\MessageQueue\Handler\CheckRedirectHandler">
             <tag name="messenger.message_handler" handles="Scop\PlatformRedirecter\MessageQueue\Message\CheckRedirectMessage"/>
+        </service>
+
+        <service id="Scop\PlatformRedirecter\MessageQueue\ScheduledTask\CleanupNotFoundLogTask">
+            <tag name="shopware.scheduled.task"/>
+        </service>
+
+        <service id="Scop\PlatformRedirecter\MessageQueue\ScheduledTask\CleanupNotFoundLogTaskHandler">
+            <argument type="service" id="scheduled_task.repository"/>
+            <argument type="service" id="logger"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
+            <tag name="messenger.message_handler"/>
         </service>
     </services>
 

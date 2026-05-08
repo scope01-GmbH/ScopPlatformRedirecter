@@ -1,0 +1,54 @@
+{% block scop_platform_redirect_not_found_config %}
+<div class="scop-platform-redirect-not-found-config">
+
+    {% block scop_platform_redirect_not_found_config_iap_notice %}
+    <mt-banner
+        v-if="!isIapActive"
+        variant="attention"
+        class="scop-platform-redirect-not-found-config__iap-notice"
+    >
+        <p>{{ $tc('scopplatformredirecter.notFoundConfig.iapRequired') }}</p>
+        <mt-button
+            variant="primary"
+            size="small"
+            @click="onClickPurchase"
+        >
+            {{ $tc('scopplatformredirecter.notFoundConfig.purchaseButton') }}
+        </mt-button>
+    </mt-banner>
+    {% endblock %}
+
+    {% block scop_platform_redirect_not_found_config_query_handling %}
+    <mt-select
+        :label="$tc('scopplatformredirecter.detail.queryParamsHandling')"
+        :model-value="defaultQueryParamsHandling"
+        :options="queryParamsHandlingOptions"
+        :disabled="!isIapActive"
+        @update:model-value="onQueryParamsHandlingChange"
+    />
+    {% endblock %}
+
+    {% block scop_platform_redirect_not_found_config_cleanup_switch %}
+    <mt-switch
+        v-model="cleanupEnabled"
+        :label="$tc('scopplatformredirecter.notFoundConfig.cleanupEnabledLabel')"
+        bordered
+        :disabled="!isIapActive"
+    />
+    {% endblock %}
+
+    {% block scop_platform_redirect_not_found_config_retention %}
+    <mt-number-field
+        :label="$tc('scopplatformredirecter.notFoundConfig.retentionDaysLabel')"
+        :help-text="$tc('scopplatformredirecter.notFoundConfig.retentionDaysHelpText')"
+        :model-value="retentionDays"
+        :min="1"
+        :step="1"
+        number-type="int"
+        :disabled="!isIapActive"
+        @change="onRetentionDaysChange"
+    />
+    {% endblock %}
+
+</div>
+{% endblock %}
