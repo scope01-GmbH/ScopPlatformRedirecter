@@ -8,8 +8,30 @@
             />
         </template>
 
+        <template #smart-bar-header>
+            <h2>{{ $tc('scopplatformredirecter.notFound.title') }}</h2>
+        </template>
+
         <template #smart-bar-actions>
             {% block scop_platform_redirect_not_found_list_smartbar %}
+                <span v-if="inAppActive" class="scop-platform-redirect-not-found-list__stats-inline">
+                    <span class="scop-platform-redirect-not-found-list__stat-chip">
+                        <span class="scop-platform-redirect-not-found-list__stat-label">{{ $tc('scopplatformredirecter.notFound.filterAll') }}:</span>
+                        <strong>{{ stats.total }}</strong>
+                    </span>
+                    <span class="scop-platform-redirect-not-found-list__stat-chip scop-platform-redirect-not-found-list__stat-chip--open">
+                        <span class="scop-platform-redirect-not-found-list__stat-label">{{ $tc('scopplatformredirecter.notFound.filterOpen') }}:</span>
+                        <strong>{{ stats.open }}</strong>
+                    </span>
+                    <span class="scop-platform-redirect-not-found-list__stat-chip scop-platform-redirect-not-found-list__stat-chip--linked">
+                        <span class="scop-platform-redirect-not-found-list__stat-label">{{ $tc('scopplatformredirecter.notFound.filterLinked') }}:</span>
+                        <strong>{{ stats.linked }}</strong>
+                    </span>
+                    <span class="scop-platform-redirect-not-found-list__stat-chip scop-platform-redirect-not-found-list__stat-chip--ignored">
+                        <span class="scop-platform-redirect-not-found-list__stat-label">{{ $tc('scopplatformredirecter.notFound.filterIgnored') }}:</span>
+                        <strong>{{ stats.ignored }}</strong>
+                    </span>
+                </span>
                 <sw-single-select
                     v-if="inAppActive"
                     :value="filterLinked"
@@ -30,6 +52,7 @@
                     {{ $tc('scopplatformredirecter.notFound.iapTeaser') }}
                 </mt-banner>
             {% endblock %}
+
             {% block scop_platform_redirect_not_found_list_content %}
                 <sw-entity-listing
                     v-if="inAppActive && notFoundLogs"
@@ -42,9 +65,35 @@
                     :sort-by="sortBy"
                     :sort-direction="sortDirection"
                     :allow-inline-edit="false"
+                    :show-selection="true"
+                    @selection-change="onSelectionChange"
                 >
+                    <template #bulk>
+                        <a
+                            v-if="bulkSelection.length > 0"
+                            class="link link-primary"
+                            @click="onOpenBulkCreateModal"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.bulkCreateRedirectsButton') }}
+                        </a>
+                        <a
+                            v-if="bulkSelectionAll.length > 0"
+                            class="link link-danger"
+                            @click="onOpenBulkDeleteModal"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.bulkDeleteButton') }}
+                        </a>
+                    </template>
+
                     <template #column-url="{ item }">
-                        {{ item.url }}
+                        <a
+                            href="#"
+                            class="scop-platform-redirect-not-found-list__url-link"
+                            :title="item.url"
+                            @click.prevent="onShowDetails(item)"
+                        >
+                            <span class="scop-platform-redirect-not-found-list__url-text">{{ item.url }}</span>
+                        </a>
                     </template>
 
                     <template #column-lastHitAt="{ item }">
@@ -109,6 +158,132 @@
                     @close="onCloseCreateRedirectModal"
                     @redirect-created="onRedirectCreated"
                 />
+            {% endblock %}
+
+            {% block scop_platform_redirect_not_found_bulk_modal %}
+                <scop-platform-redirect-not-found-bulk-modal
+                    v-if="showBulkCreateModal"
+                    :selection="bulkSelection"
+                    @close="onCloseBulkCreateModal"
+                    @redirects-created="onBulkRedirectsCreated"
+                />
+            {% endblock %}
+
+            {% block scop_platform_redirect_not_found_bulk_delete_modal %}
+                <sw-modal
+                    v-if="showBulkDeleteModal"
+                    :title="$tc('scopplatformredirecter.notFound.bulkDeleteModal.title')"
+                    variant="small"
+                    @modal-close="onCloseBulkDeleteModal"
+                >
+                    <p>
+                        {{ $tc('scopplatformredirecter.notFound.bulkDeleteModal.message', bulkSelectionAll.length, { count: bulkSelectionAll.length }) }}
+                    </p>
+
+                    <template #modal-footer>
+                        <mt-button variant="secondary" :disabled="isBulkDeleting" @click="onCloseBulkDeleteModal">
+                            {{ $tc('scopplatformredirecter.detail.cancelButton') }}
+                        </mt-button>
+                        <mt-button variant="critical" :isLoading="isBulkDeleting" @click="onConfirmBulkDelete">
+                            {{ $tc('scopplatformredirecter.notFound.bulkDeleteModal.confirm') }}
+                        </mt-button>
+                    </template>
+                </sw-modal>
+            {% endblock %}
+
+            {% block scop_platform_redirect_not_found_details_modal %}
+                <sw-modal
+                    v-if="showDetailsModal && currentDetailsItem"
+                    :title="$tc('scopplatformredirecter.notFound.detailsModalTitle')"
+                    variant="default"
+                    @modal-close="onCloseDetailsModal"
+                >
+                    <div class="scop-platform-redirect-not-found-list__details-header">
+                        <a
+                            :href="currentDetailsItem.url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="scop-platform-redirect-not-found-list__details-url"
+                            :title="currentDetailsItem.url"
+                        >
+                            {{ currentDetailsItem.url }}
+                        </a>
+                    </div>
+
+                    <dl class="scop-platform-redirect-not-found-list__details-meta">
+                        <div class="scop-platform-redirect-not-found-list__details-meta-row">
+                            <dt>{{ $tc('scopplatformredirecter.notFound.columnHitCount') }}</dt>
+                            <dd>{{ currentDetailsItem.hitCount }}</dd>
+                        </div>
+                        <div class="scop-platform-redirect-not-found-list__details-meta-row">
+                            <dt>{{ $tc('scopplatformredirecter.notFound.columnLastHit') }}</dt>
+                            <dd>{{ formatDate(currentDetailsItem.lastHitAt) }}</dd>
+                        </div>
+                        <div class="scop-platform-redirect-not-found-list__details-meta-row">
+                            <dt>{{ $tc('scopplatformredirecter.notFound.columnSalesChannel') }}</dt>
+                            <dd>{{ currentDetailsItem.salesChannel ? currentDetailsItem.salesChannel.translated.name : $tc('scopplatformredirecter.list.allSalesChannels') }}</dd>
+                        </div>
+                        <div class="scop-platform-redirect-not-found-list__details-meta-row">
+                            <dt>{{ $tc('scopplatformredirecter.notFound.columnStatus') }}</dt>
+                            <dd>
+                                <sw-label v-if="currentDetailsItem.ignored" variant="neutral" appearance="pill" size="medium">
+                                    {{ $tc('scopplatformredirecter.notFound.statusIgnored') }}
+                                </sw-label>
+                                <sw-label v-else-if="currentDetailsItem.redirectId" variant="success" appearance="pill" size="medium">
+                                    {{ $tc('scopplatformredirecter.notFound.statusLinked') }}
+                                </sw-label>
+                                <sw-label v-else variant="warning" appearance="pill" size="medium">
+                                    {{ $tc('scopplatformredirecter.notFound.statusOpen') }}
+                                </sw-label>
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <h4 class="scop-platform-redirect-not-found-list__details-sources-title">
+                        {{ $tc('scopplatformredirecter.notFound.detailsSourcesHeading') }}
+                    </h4>
+                    <ul v-if="getRefererList(currentDetailsItem).length > 0" class="scop-platform-redirect-not-found-list__sources-list">
+                        <li
+                            v-for="entry in getRefererList(currentDetailsItem)"
+                            :key="entry.url"
+                            class="scop-platform-redirect-not-found-list__sources-item"
+                        >
+                            <a
+                                :href="entry.url"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="scop-platform-redirect-not-found-list__sources-item-link"
+                                :title="entry.url"
+                            >
+                                {{ entry.url }}
+                            </a>
+                            <div class="scop-platform-redirect-not-found-list__sources-item-meta">
+                                <span class="scop-platform-redirect-not-found-list__sources-item-count">
+                                    {{ entry.hitCount }}×
+                                </span>
+                                <span class="scop-platform-redirect-not-found-list__sources-item-date">
+                                    {{ formatDate(entry.lastHitAt) }}
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                    <p v-else class="scop-platform-redirect-not-found-list__details-sources-empty">
+                        {{ $tc('scopplatformredirecter.notFound.detailsNoSources') }}
+                    </p>
+
+                    <template #modal-footer>
+                        <mt-button variant="secondary" @click="onCloseDetailsModal">
+                            {{ $tc('scopplatformredirecter.notFound.detailsClose') }}
+                        </mt-button>
+                        <mt-button
+                            v-if="!currentDetailsItem.redirectId"
+                            variant="primary"
+                            @click="onCreateRedirectFromDetails"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.createRedirect') }}
+                        </mt-button>
+                    </template>
+                </sw-modal>
             {% endblock %}
         </template>
     </sw-page>

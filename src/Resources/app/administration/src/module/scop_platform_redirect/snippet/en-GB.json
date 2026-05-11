@@ -1,7 +1,8 @@
 {
   "global": {
     "entities": {
-      "scop_platform_redirecter_redirect": "Redirects"
+      "scop_platform_redirecter_redirect": "Redirects",
+      "scop_platform_redirecter_404": "404 Log"
     }
   },
   "scopplatformredirecter": {
@@ -56,12 +57,39 @@
       "searchIapRequired": "Searching redirects is part of the premium extension. Please unlock the in-app purchase to use search."
     },
     "notFound": {
-      "title": "404 Errors",
+      "title": "404 Log",
       "columnUrl": "URL",
       "columnHitCount": "Hits",
       "columnLastHit": "Last Hit",
       "columnSalesChannel": "Sales Channel",
       "columnStatus": "Status",
+      "detailsModalTitle": "404 entry details",
+      "detailsSourcesHeading": "Sources",
+      "detailsNoSources": "No sources have been recorded for this entry yet.",
+      "detailsClose": "Close",
+      "bulkSelected": "{count} entry selected | {count} entries selected",
+      "bulkCreateRedirectsButton": "Create redirects",
+      "bulkDeleteButton": "Delete",
+      "bulkDeleteSuccess": "Selected entries have been deleted.",
+      "bulkDeleteError": "Failed to delete entries.",
+      "bulkDeleteModal": {
+        "title": "Delete entries?",
+        "message": "Do you really want to delete the selected entry? This action cannot be undone. | Do you really want to delete the {count} selected entries? This action cannot be undone.",
+        "confirm": "Yes, delete"
+      },
+      "bulkRedirectsCreatedSuccess": "Bulk redirects have been created.",
+      "bulk": {
+        "title": "Create redirects for multiple 404 entries",
+        "summary": "{count} entry will be redirected to the same target. | {count} entries will be redirected to the same target.",
+        "selectedUrlsHeading": "Selected URLs",
+        "salesChannelLabel": "Sales channel for all redirects",
+        "salesChannelHelpText": "If empty, the sales channel of each 404 entry is used.",
+        "saveButton": "Create redirects",
+        "progress": "Processing {current} of {total}…",
+        "errorTargetEmpty": "Please provide a target URL.",
+        "errorPartial": "{created} redirects created, {count} errors.",
+        "warningSkipped": "{count} entry was skipped (source empty or identical to target). | {count} entries were skipped (source empty or identical to target)."
+      },
       "statusOpen": "Open",
       "statusLinked": "Linked",
       "statusIgnored": "Ignored",
@@ -98,9 +126,18 @@
     "notFoundConfig": {
       "iapRequired": "This feature requires the Premium In-App Purchase.",
       "purchaseButton": "Unlock Premium",
+      "defaultQueryParamsHandlingLabel": "Default Query Parameter Handling",
       "cleanupEnabledLabel": "Enable automatic cleanup of 404 log entries",
       "retentionDaysLabel": "Retention period for 404 log entries (days)",
-      "retentionDaysHelpText": "Entries older than this value (based on last hit) are deleted by the scheduled task. Ignored entries and entries linked to a redirect are kept."
+      "retentionDaysHelpText": "Entries older than this value (based on last hit) are deleted by the scheduled task. Ignored entries and entries linked to a redirect are kept.",
+      "refererModeLabel": "Referer storage mode",
+      "refererModeHelpText": "Controls how much of the referer URL is stored. From a GDPR perspective, 'Origin + path' is the recommended default, since query parameters (search terms, tokens) are discarded.",
+      "refererModeFull": "Full URL",
+      "refererModeOriginPath": "Origin + path (recommended)",
+      "refererModeOrigin": "Origin only (host)",
+      "ignorePatternsLabel": "URL patterns to ignore",
+      "ignorePatternsHelpText": "One pattern per line. Glob syntax: * = any characters, ? = one character, [abc] = character class. Matches are neither logged nor counted.",
+      "ignorePatternsPlaceholder": "/admin/*\n/login*\n/.env\n/.git/*\n/bin/*"
     },
     "autoRedirect": {
       "enabledLabel": "Automatic redirect on product deactivation",

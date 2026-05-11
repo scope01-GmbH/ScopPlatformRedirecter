@@ -1,0 +1,109 @@
+{% block scop_platform_redirect_not_found_bulk_modal %}
+    <sw-modal
+        :title="$tc('scopplatformredirecter.notFound.bulk.title')"
+        variant="large"
+        @modal-close="onClose"
+    >
+        <p class="scop-platform-redirect-not-found-bulk-modal__summary">
+            {{ $tc('scopplatformredirecter.notFound.bulk.summary', selection.length, { count: selection.length }) }}
+        </p>
+
+        <sw-data-grid
+            class="scop-platform-redirect-not-found-bulk-modal__grid"
+            :dataSource="selection"
+            :columns="selectionColumns"
+            :showSelection="false"
+            :showActions="false"
+            :showSettings="false"
+            :plainAppearance="true"
+            :compactMode="true"
+            identifier="scop-platform-redirect-not-found-bulk-selection"
+        />
+
+        <sw-single-select
+            :label="$tc('scopplatformredirecter.notFound.modal.targetModeLabel')"
+            :value="targetMode"
+            :options="targetModeOptions"
+            @update:value="onTargetModeChange"
+        />
+
+        <template v-if="targetMode === 'manual'">
+            <sw-text-field
+                :label="$tc('scopplatformredirecter.detail.targetUrlLabel')"
+                v-model:value="targetURL"
+                validation="required"
+            />
+        </template>
+
+        <template v-if="targetMode === 'product'">
+            <sw-entity-single-select
+                :label="$tc('scopplatformredirecter.notFound.modal.selectProduct')"
+                entity="product"
+                v-model:value="selectedProductId"
+                @update:value="onProductChange"
+            />
+            <sw-text-field
+                v-if="targetURL"
+                :label="$tc('scopplatformredirecter.detail.targetUrlLabel')"
+                v-model:value="targetURL"
+                :helpText="$tc('scopplatformredirecter.notFound.modal.seoUrlHelpText')"
+            />
+        </template>
+
+        <template v-if="targetMode === 'category'">
+            <sw-category-tree-field
+                :label="$tc('scopplatformredirecter.notFound.modal.selectCategory')"
+                :categories-collection="categoryCollection"
+                :singleSelect="true"
+                @selection-add="onCategoryChange($event.id)"
+                @selection-remove="onCategoryChange(null)"
+            />
+            <sw-text-field
+                v-if="targetURL"
+                :label="$tc('scopplatformredirecter.detail.targetUrlLabel')"
+                v-model:value="targetURL"
+                :helpText="$tc('scopplatformredirecter.notFound.modal.seoUrlHelpText')"
+            />
+        </template>
+
+        <sw-select-number-field
+            :label="$tc('scopplatformredirecter.detail.httpCodeLabel')"
+            v-model:value="httpCode"
+            @update:value="transformHttpCodeValueToNumber"
+        >
+            <option value="301">{{ $tc('scopplatformredirecter.detail.httpCodeLabelValues.301') }}</option>
+            <option value="302">{{ $tc('scopplatformredirecter.detail.httpCodeLabelValues.302') }}</option>
+        </sw-select-number-field>
+
+        <sw-select-number-field
+            :label="$tc('scopplatformredirecter.detail.queryParamsHandling')"
+            v-model:value="queryParamsHandling"
+            @update:value="transformQueryFieldValueToNumber"
+        >
+            <option value="0">{{ $tc('scopplatformredirecter.detail.queryParamsHandlingValues.consider') }}</option>
+            <option value="1">{{ $tc('scopplatformredirecter.detail.queryParamsHandlingValues.ignore') }}</option>
+            <option value="2">{{ $tc('scopplatformredirecter.detail.queryParamsHandlingValues.transfer') }}</option>
+        </sw-select-number-field>
+
+        <sw-entity-single-select
+            v-model:value="salesChannelId"
+            entity="sales_channel"
+            :resetOption="$tc('scopplatformredirecter.detail.salesChannel.all')"
+            :label="$tc('scopplatformredirecter.notFound.bulk.salesChannelLabel')"
+            :helpText="$tc('scopplatformredirecter.notFound.bulk.salesChannelHelpText')"
+        />
+
+        <p v-if="isSaving" class="scop-platform-redirect-not-found-bulk-modal__progress">
+            {{ $tc('scopplatformredirecter.notFound.bulk.progress', 0, { current: progressCurrent, total: progressTotal }) }}
+        </p>
+
+        <template #modal-footer>
+            <mt-button variant="secondary" :disabled="isSaving" @click="onClose">
+                {{ $tc('scopplatformredirecter.detail.cancelButton') }}
+            </mt-button>
+            <mt-button variant="primary" :isLoading="isSaving" :disabled="!canSave" @click="onSave">
+                {{ $tc('scopplatformredirecter.notFound.bulk.saveButton') }}
+            </mt-button>
+        </template>
+    </sw-modal>
+{% endblock %}

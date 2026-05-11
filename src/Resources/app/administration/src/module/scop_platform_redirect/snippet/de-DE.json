@@ -1,7 +1,8 @@
 {
   "global": {
     "entities": {
-      "scop_platform_redirecter_redirect": "Weiterleitungen"
+      "scop_platform_redirecter_redirect": "Weiterleitungen",
+      "scop_platform_redirecter_404": "404-Log"
     }
   },
   "scopplatformredirecter": {
@@ -56,12 +57,39 @@
       "searchIapRequired": "Die Suche in den Weiterleitungen ist Teil der Premium-Erweiterung. Bitte schalten Sie den In-App-Kauf frei, um die Suche zu nutzen."
     },
     "notFound": {
-      "title": "404-Fehler",
+      "title": "404-Log",
       "columnUrl": "URL",
       "columnHitCount": "Aufrufe",
       "columnLastHit": "Letzter Aufruf",
       "columnSalesChannel": "Verkaufskanal",
       "columnStatus": "Status",
+      "detailsModalTitle": "Details zum 404-Eintrag",
+      "detailsSourcesHeading": "Quellen",
+      "detailsNoSources": "Für diesen Eintrag wurden noch keine Quellen erfasst.",
+      "detailsClose": "Schließen",
+      "bulkSelected": "{count} Eintrag ausgewählt | {count} Einträge ausgewählt",
+      "bulkCreateRedirectsButton": "Weiterleitungen erstellen",
+      "bulkDeleteButton": "Löschen",
+      "bulkDeleteSuccess": "Ausgewählte Einträge wurden gelöscht.",
+      "bulkDeleteError": "Beim Löschen ist ein Fehler aufgetreten.",
+      "bulkDeleteModal": {
+        "title": "Einträge löschen?",
+        "message": "Möchtest du den ausgewählten Eintrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden. | Möchtest du die {count} ausgewählten Einträge wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "confirm": "Ja, löschen"
+      },
+      "bulkRedirectsCreatedSuccess": "Bulk-Weiterleitungen wurden erstellt.",
+      "bulk": {
+        "title": "Weiterleitungen für mehrere 404-Einträge erstellen",
+        "summary": "{count} Eintrag wird auf das gleiche Ziel umgeleitet. | {count} Einträge werden auf das gleiche Ziel umgeleitet.",
+        "selectedUrlsHeading": "Ausgewählte URLs",
+        "salesChannelLabel": "Verkaufskanal für alle Weiterleitungen",
+        "salesChannelHelpText": "Wenn leer, wird der Sales-Channel jedes 404-Eintrags übernommen.",
+        "saveButton": "Weiterleitungen erstellen",
+        "progress": "Verarbeite {current} von {total}…",
+        "errorTargetEmpty": "Bitte gib eine Ziel-URL an.",
+        "errorPartial": "{created} Weiterleitungen erstellt, {count} Fehler.",
+        "warningSkipped": "{count} Eintrag wurde übersprungen (Quelle leer oder identisch zum Ziel). | {count} Einträge wurden übersprungen (Quelle leer oder identisch zum Ziel)."
+      },
       "statusOpen": "Offen",
       "statusLinked": "Verknüpft",
       "statusIgnored": "Ignoriert",
@@ -98,9 +126,18 @@
     "notFoundConfig": {
       "iapRequired": "Diese Funktion erfordert den Premium In-App Kauf.",
       "purchaseButton": "Premium freischalten",
+      "defaultQueryParamsHandlingLabel": "Default Query Parameter Handling",
       "cleanupEnabledLabel": "Automatisches Aufräumen der 404-Log-Einträge aktivieren",
       "retentionDaysLabel": "Aufbewahrungsdauer der 404-Log-Einträge (Tage)",
-      "retentionDaysHelpText": "Einträge, deren letzter Aufruf älter als dieser Wert ist, werden vom Scheduled Task gelöscht. Ignorierte und mit einer Weiterleitung verknüpfte Einträge bleiben erhalten."
+      "retentionDaysHelpText": "Einträge, deren letzter Aufruf älter als dieser Wert ist, werden vom Scheduled Task gelöscht. Ignorierte und mit einer Weiterleitung verknüpfte Einträge bleiben erhalten.",
+      "refererModeLabel": "Speichermodus für Referer",
+      "refererModeHelpText": "Bestimmt, wie viel der Referer-URL gespeichert wird. Aus DSGVO-Sicht ist 'Origin + Pfad' der empfohlene Standard, da Query-Parameter (z. B. Suchbegriffe, Tokens) verworfen werden.",
+      "refererModeFull": "Vollständige URL",
+      "refererModeOriginPath": "Origin + Pfad (empfohlen)",
+      "refererModeOrigin": "Nur Origin (Host)",
+      "ignorePatternsLabel": "URL-Muster ignorieren",
+      "ignorePatternsHelpText": "Ein Muster pro Zeile. Glob-Syntax: * = beliebige Zeichenfolge, ? = ein Zeichen, [abc] = Zeichenklasse. Treffer werden weder geloggt noch gezählt.",
+      "ignorePatternsPlaceholder": "/admin/*\n/login*\n/.env\n/.git/*\n/bin/*"
     },
     "autoRedirect": {
       "enabledLabel": "Automatische Weiterleitung bei Produkt-Deaktivierung",

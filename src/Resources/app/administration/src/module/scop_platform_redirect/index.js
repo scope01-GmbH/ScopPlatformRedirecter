@@ -5,6 +5,7 @@ import './page/scop-platform-redirect-import-export-modal';
 import './page/scop-platform-redirect-import-export-activity';
 import './page/scop-platform-redirect-not-found-list';
 import './page/scop-platform-redirect-not-found-create-modal';
+import './page/scop-platform-redirect-not-found-bulk-modal';
 import deDE from './snippet/de-DE.json';
 import enGB from './snippet/en-GB.json';
 var inAppPurchaseId = 'scopPlatformRedirecterPremium';

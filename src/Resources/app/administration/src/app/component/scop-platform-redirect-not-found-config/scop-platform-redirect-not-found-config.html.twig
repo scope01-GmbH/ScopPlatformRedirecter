@@ -20,7 +20,7 @@
 
     {% block scop_platform_redirect_not_found_config_query_handling %}
     <mt-select
-        :label="$tc('scopplatformredirecter.detail.queryParamsHandling')"
+        :label="$tc('scopplatformredirecter.notFoundConfig.defaultQueryParamsHandlingLabel')"
         :model-value="defaultQueryParamsHandling"
         :options="queryParamsHandlingOptions"
         :disabled="!isIapActive"
@@ -47,6 +47,29 @@
         number-type="int"
         :disabled="!isIapActive"
         @change="onRetentionDaysChange"
+    />
+    {% endblock %}
+
+    {% block scop_platform_redirect_not_found_config_referer_mode %}
+    <mt-select
+        :label="$tc('scopplatformredirecter.notFoundConfig.refererModeLabel')"
+        :help-text="$tc('scopplatformredirecter.notFoundConfig.refererModeHelpText')"
+        :model-value="refererStorageMode"
+        :options="refererStorageModeOptions"
+        :disabled="!isIapActive"
+        @update:model-value="onRefererStorageModeChange"
+    />
+    {% endblock %}
+
+    {% block scop_platform_redirect_not_found_config_ignore_patterns %}
+    <mt-textarea
+        :label="$tc('scopplatformredirecter.notFoundConfig.ignorePatternsLabel')"
+        :help-text="$tc('scopplatformredirecter.notFoundConfig.ignorePatternsHelpText')"
+        :placeholder="$tc('scopplatformredirecter.notFoundConfig.ignorePatternsPlaceholder')"
+        :model-value="ignorePatterns"
+        :disabled="!isIapActive"
+        :rows="6"
+        @change="onIgnorePatternsChange"
     />
     {% endblock %}
 

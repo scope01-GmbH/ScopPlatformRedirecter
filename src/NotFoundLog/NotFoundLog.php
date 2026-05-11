@@ -16,6 +16,7 @@ class NotFoundLog extends Entity
     protected ?SalesChannelEntity $salesChannel = null;
     protected int $hitCount = 1;
     protected ?\DateTimeInterface $lastHitAt = null;
+    protected ?array $referers = null;
     protected ?string $redirectId = null;
     protected ?Redirect $redirect = null;
     protected bool $ignored = false;
@@ -68,6 +69,16 @@ class NotFoundLog extends Entity
     public function setLastHitAt(?\DateTimeInterface $lastHitAt): void
     {
         $this->lastHitAt = $lastHitAt;
+    }
+
+    public function getReferers(): ?array
+    {
+        return $this->referers;
+    }
+
+    public function setReferers(?array $referers): void
+    {
+        $this->referers = $referers;
     }
 
     public function getRedirectId(): ?string

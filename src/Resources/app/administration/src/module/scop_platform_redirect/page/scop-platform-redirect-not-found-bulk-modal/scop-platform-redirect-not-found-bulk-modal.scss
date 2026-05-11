@@ -1,0 +1,22 @@
+.scop-platform-redirect-not-found-bulk-modal {
+    &__summary {
+        margin: 0 0 16px;
+        font-size: 13px;
+        color: var(--color-darkgray-200, #758ca3);
+    }
+
+    &__grid {
+        margin-bottom: 24px;
+        max-height: 220px;
+        overflow-y: auto;
+        border: 1px solid var(--color-gray-300, #d1d9e0);
+        border-radius: 4px;
+    }
+
+    &__progress {
+        margin-top: 12px;
+        color: var(--color-darkgray-200, #758ca3);
+        font-size: 13px;
+        font-style: italic;
+    }
+}
