@@ -22,6 +22,8 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
         return {
             defaultQueryParamsHandling: 0,
             retentionDays: 90,
+            refererStorageMode: 'origin_path',
+            ignorePatterns: '',
             isLoading: false,
         };
     },
@@ -60,6 +62,23 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
                 },
             ];
         },
+
+        refererStorageModeOptions() {
+            return [
+                {
+                    value: 'full',
+                    label: this.$tc('scopplatformredirecter.notFoundConfig.refererModeFull'),
+                },
+                {
+                    value: 'origin_path',
+                    label: this.$tc('scopplatformredirecter.notFoundConfig.refererModeOriginPath'),
+                },
+                {
+                    value: 'origin',
+                    label: this.$tc('scopplatformredirecter.notFoundConfig.refererModeOrigin'),
+                },
+            ];
+        },
     },
 
     created() {
@@ -78,6 +97,14 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
                 const retention = config?.['ScopPlatformRedirecter.config.notFoundLogRetentionDays'];
                 if (retention !== undefined && retention !== null && retention !== '') {
                     this.retentionDays = Number(retention);
+                }
+                const refererMode = config?.['ScopPlatformRedirecter.config.refererStorageMode'];
+                if (typeof refererMode === 'string' && refererMode !== '') {
+                    this.refererStorageMode = refererMode;
+                }
+                const patterns = config?.['ScopPlatformRedirecter.config.notFoundIgnorePatterns'];
+                if (typeof patterns === 'string') {
+                    this.ignorePatterns = patterns;
                 }
             } finally {
                 this.isLoading = false;
@@ -99,6 +126,20 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
             this.retentionDays = numeric;
             await this.systemConfigApiService.saveValues({
                 'ScopPlatformRedirecter.config.notFoundLogRetentionDays': this.retentionDays,
+            });
+        },
+
+        async onRefererStorageModeChange(newValue) {
+            this.refererStorageMode = newValue;
+            await this.systemConfigApiService.saveValues({
+                'ScopPlatformRedirecter.config.refererStorageMode': this.refererStorageMode,
+            });
+        },
+
+        async onIgnorePatternsChange(newValue) {
+            this.ignorePatterns = typeof newValue === 'string' ? newValue : '';
+            await this.systemConfigApiService.saveValues({
+                'ScopPlatformRedirecter.config.notFoundIgnorePatterns': this.ignorePatterns,
             });
         },
 

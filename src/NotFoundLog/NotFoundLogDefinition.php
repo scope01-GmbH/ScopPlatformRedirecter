@@ -13,6 +13,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\SearchRanking;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\JsonField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
@@ -46,6 +47,7 @@ class NotFoundLogDefinition extends EntityDefinition
             new ManyToOneAssociationField('salesChannel', 'sales_channel_id', SalesChannelDefinition::class, 'id', false),
             (new IntField('hit_count', 'hitCount'))->addFlags(new Required()),
             (new DateTimeField('last_hit_at', 'lastHitAt'))->addFlags(new Required()),
+            (new JsonField('referers', 'referers'))->addFlags(new ApiAware()),
             (new FkField('redirect_id', 'redirectId', RedirectDefinition::class))->addFlags(new ApiAware()),
             new ManyToOneAssociationField('redirect', 'redirect_id', RedirectDefinition::class, 'id', false),
             new BoolField('ignored', 'ignored'),

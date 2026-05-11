@@ -1,4 +1,5 @@
 import template from './scop-platform-redirect-not-found-list.html.twig';
+import './scop-platform-redirect-not-found-list.scss';
 
 const { Mixin } = Shopware;
 const { Criteria } = Shopware.Data;
@@ -30,7 +31,20 @@ Shopware.Component.register('scop-platform-redirect-not-found-list', {
             term: '',
             showCreateRedirectModal: false,
             currentNotFoundLog: null,
+            showDetailsModal: false,
+            currentDetailsItem: null,
             filterLinked: 'open',
+            stats: {
+                total: 0,
+                open: 0,
+                linked: 0,
+                ignored: 0,
+            },
+            showBulkCreateModal: false,
+            bulkSelection: [],
+            bulkSelectionAll: [],
+            showBulkDeleteModal: false,
+            isBulkDeleting: false,
         };
     },
 
@@ -138,6 +152,31 @@ Shopware.Component.register('scop-platform-redirect-not-found-list', {
             });
         },
 
+        getRefererList(item) {
+            if (!item || !Array.isArray(item.referers)) {
+                return [];
+            }
+            return item.referers;
+        },
+
+        onShowDetails(item) {
+            this.currentDetailsItem = item;
+            this.showDetailsModal = true;
+        },
+
+        onCloseDetailsModal() {
+            this.showDetailsModal = false;
+            this.currentDetailsItem = null;
+        },
+
+        onCreateRedirectFromDetails() {
+            const item = this.currentDetailsItem;
+            this.onCloseDetailsModal();
+            if (item) {
+                this.onCreateRedirect(item);
+            }
+        },
+
         onClickIap() {
             this.inAppPurchaseCheckout.request({ identifier: inAppPurchaseId }, 'ScopPlatformRedirecter');
         },
@@ -146,6 +185,7 @@ Shopware.Component.register('scop-platform-redirect-not-found-list', {
             if (!this.inAppActive) {
                 this.notFoundLogs = null;
                 this.total = 0;
+                this.resetStats();
                 return;
             }
 
@@ -160,6 +200,115 @@ Shopware.Component.register('scop-platform-redirect-not-found-list', {
                 this.total = 0;
             } finally {
                 this.isLoading = false;
+            }
+
+            this.loadStats();
+        },
+
+        resetStats() {
+            this.stats = { total: 0, open: 0, linked: 0, ignored: 0 };
+        },
+
+        async loadStats() {
+            if (!this.inAppActive) {
+                this.resetStats();
+                return;
+            }
+            try {
+                const ctx = Shopware.Context.api;
+                const totalCriteria = new Criteria(1, 1);
+                const openCriteria = new Criteria(1, 1);
+                openCriteria.addFilter(Criteria.equals('redirectId', null));
+                openCriteria.addFilter(Criteria.equals('ignored', false));
+                const linkedCriteria = new Criteria(1, 1);
+                linkedCriteria.addFilter(Criteria.not('AND', [Criteria.equals('redirectId', null)]));
+                const ignoredCriteria = new Criteria(1, 1);
+                ignoredCriteria.addFilter(Criteria.equals('ignored', true));
+
+                const [total, open, linked, ignored] = await Promise.all([
+                    this.notFoundLogRepository.searchIds(totalCriteria, ctx),
+                    this.notFoundLogRepository.searchIds(openCriteria, ctx),
+                    this.notFoundLogRepository.searchIds(linkedCriteria, ctx),
+                    this.notFoundLogRepository.searchIds(ignoredCriteria, ctx),
+                ]);
+
+                this.stats = {
+                    total: total.total ?? 0,
+                    open: open.total ?? 0,
+                    linked: linked.total ?? 0,
+                    ignored: ignored.total ?? 0,
+                };
+            } catch {
+                this.resetStats();
+            }
+        },
+
+        onSelectionChange(selection) {
+            const items = selection && typeof selection === 'object' ? Object.values(selection) : [];
+            this.bulkSelectionAll = items;
+            this.bulkSelection = items.filter((entry) => !entry.redirectId);
+        },
+
+        onOpenBulkCreateModal() {
+            if (this.bulkSelection.length === 0) {
+                return;
+            }
+            this.showBulkCreateModal = true;
+        },
+
+        onCloseBulkCreateModal() {
+            this.showBulkCreateModal = false;
+        },
+
+        onBulkRedirectsCreated() {
+            this.showBulkCreateModal = false;
+            this.bulkSelection = [];
+            this.bulkSelectionAll = [];
+            if (this.$refs.listing && typeof this.$refs.listing.resetSelection === 'function') {
+                this.$refs.listing.resetSelection();
+            }
+            this.getList();
+            this.createNotificationSuccess({
+                message: this.$tc('scopplatformredirecter.notFound.bulkRedirectsCreatedSuccess'),
+            });
+        },
+
+        onOpenBulkDeleteModal() {
+            if (this.bulkSelectionAll.length === 0) {
+                return;
+            }
+            this.showBulkDeleteModal = true;
+        },
+
+        onCloseBulkDeleteModal() {
+            if (this.isBulkDeleting) {
+                return;
+            }
+            this.showBulkDeleteModal = false;
+        },
+
+        async onConfirmBulkDelete() {
+            this.isBulkDeleting = true;
+            try {
+                const ids = this.bulkSelectionAll.map((entry) => entry.id);
+                await this.notFoundLogRepository.syncDeleted(ids, Shopware.Context.api);
+                this.showBulkDeleteModal = false;
+                this.bulkSelection = [];
+                this.bulkSelectionAll = [];
+                if (this.$refs.listing && typeof this.$refs.listing.resetSelection === 'function') {
+                    this.$refs.listing.resetSelection();
+                }
+                this.getList();
+                this.createNotificationSuccess({
+                    message: this.$tc('scopplatformredirecter.notFound.bulkDeleteSuccess'),
+                });
+            } catch {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.notFound.bulkDeleteError'),
+                });
+            } finally {
+                this.isBulkDeleting = false;
             }
         },
 
