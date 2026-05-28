@@ -1,0 +1,47 @@
+{% block scop_platform_redirect_auto_redirect_delete_config %}
+<div class="scop-platform-redirect-auto-redirect-delete-config">
+
+    {% block scop_platform_redirect_auto_redirect_delete_config_iap_notice %}
+    <mt-banner
+        v-if="!isIapActive"
+        variant="attention"
+        class="scop-platform-redirect-auto-redirect-delete-config__iap-notice"
+    >
+        <p>{{ $tc('scopplatformredirecter.autoRedirectDelete.iapRequired') }}</p>
+        <mt-button
+            variant="primary"
+            size="small"
+            @click="onClickPurchase"
+        >
+            {{ $tc('scopplatformredirecter.autoRedirectDelete.purchaseButton') }}
+        </mt-button>
+    </mt-banner>
+    {% endblock %}
+
+    {% block scop_platform_redirect_auto_redirect_delete_config_help %}
+        <p class="scop-platform-redirect-auto-redirect-delete-config__help-text">
+            {{ $tc('scopplatformredirecter.autoRedirectDelete.helpText') }}
+        </p>
+    {% endblock %}
+
+    {% block scop_platform_redirect_auto_redirect_delete_config_switch %}
+    <mt-switch
+        v-model="enabled"
+        :label="$tc('scopplatformredirecter.autoRedirectDelete.enabledLabel')"
+        bordered
+        :disabled="!isIapActive"
+    />
+    {% endblock %}
+
+    {% block scop_platform_redirect_auto_redirect_delete_config_http_code %}
+    <mt-select
+        :label="$tc('scopplatformredirecter.autoRedirectDelete.httpCodeLabel')"
+        :model-value="httpCode"
+        :options="httpCodeOptions"
+        :disabled="!isIapActive"
+        @update:model-value="onHttpCodeChange"
+    />
+    {% endblock %}
+
+</div>
+{% endblock %}
