@@ -139,6 +139,15 @@
       "ignorePatternsHelpText": "Ein Muster pro Zeile. Glob-Syntax: * = beliebige Zeichenfolge, ? = ein Zeichen, [abc] = Zeichenklasse. Treffer werden weder geloggt noch gezählt.",
       "ignorePatternsPlaceholder": "/admin/*\n/login*\n/.env\n/.git/*\n/bin/*"
     },
+    "autoRedirectDelete": {
+      "enabledLabel": "Automatische Weiterleitung bei Produkt-Löschung",
+      "helpText": "Wenn ein Produkt gelöscht wird, das bereits eine SEO-URL hat, wird automatisch eine Weiterleitung auf die Startseite erstellt. Varianten werden ebenfalls berücksichtigt. Die Weiterleitung bleibt nach dem Löschen bestehen und eine Wiederherstellung des Produkts entfernt sie nicht automatisch.",
+      "iapRequired": "Diese Funktion erfordert den Premium In-App Kauf.",
+      "purchaseButton": "Premium freischalten",
+      "httpCodeLabel": "HTTP Status Code",
+      "httpCode301": "301 (Permanent verschoben)",
+      "httpCode302": "302 (Temporär verschoben)"
+    },
     "autoRedirect": {
       "enabledLabel": "Automatische Weiterleitung bei Produkt-Deaktivierung",
       "helpText": "Wenn ein Produkt deaktiviert wird, das bereits eine SEO-URL hat, wird automatisch eine 302-Weiterleitung auf die Startseite erstellt. Beim Reaktivieren wird die Weiterleitung automatisch entfernt.",
