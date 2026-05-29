@@ -149,3 +149,7 @@
 # v4.3.0
 
 - 404 errors are logged and can be linked directly to a redirect (Premium feature)
+
+# v4.4.0
+
+- Added automatic redirect creation when products are deleted, with configurable HTTP status code (Premium feature)
