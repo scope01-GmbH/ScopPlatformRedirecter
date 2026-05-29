@@ -149,3 +149,7 @@
 # v4.3.0
 
 - 404-Fehler werden geloggt und können direkt mit einer Weiterleitung verknüpft werden (Premium-Funktion)
+
+# v4.4.0
+
+- Automatische Erstellung von Weiterleitungen beim Löschen von Produkten hinzugefügt, mit konfigurierbarem HTTP-Statuscode (Premium-Funktion)
