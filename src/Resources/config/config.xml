@@ -24,6 +24,15 @@
     </card>
 
     <card>
+        <title>Auto-Redirect for deleted products</title>
+        <title lang="de-DE">Auto-Redirect für gelöschte Produkte</title>
+
+        <component name="scop-platform-redirect-auto-redirect-delete-config">
+            <name>autoRedirectOnDeleteEnabled</name>
+        </component>
+    </card>
+
+    <card>
         <title>404 Errors</title>
         <title lang="de-DE">404-Fehler</title>
 

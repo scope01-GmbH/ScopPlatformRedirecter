@@ -139,6 +139,15 @@
       "ignorePatternsHelpText": "One pattern per line. Glob syntax: * = any characters, ? = one character, [abc] = character class. Matches are neither logged nor counted.",
       "ignorePatternsPlaceholder": "/admin/*\n/login*\n/.env\n/.git/*\n/bin/*"
     },
+    "autoRedirectDelete": {
+      "enabledLabel": "Automatic redirect on product deletion",
+      "helpText": "When a product with an existing SEO URL is deleted, a redirect to the homepage is automatically created. Variants are included. The redirect persists after deletion and restoring the product will not remove it automatically.",
+      "iapRequired": "This feature requires the Premium In-App Purchase.",
+      "purchaseButton": "Unlock Premium",
+      "httpCodeLabel": "HTTP Status Code",
+      "httpCode301": "301 (Moved Permanently)",
+      "httpCode302": "302 (Moved Temporarily)"
+    },
     "autoRedirect": {
       "enabledLabel": "Automatic redirect on product deactivation",
       "helpText": "When a product with an existing SEO URL is deactivated, a 302 redirect to the homepage is automatically created. When the product is reactivated, the redirect is automatically removed.",
