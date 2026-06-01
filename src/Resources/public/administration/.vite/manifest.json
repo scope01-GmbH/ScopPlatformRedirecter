@@ -6,7 +6,7 @@
     "isDynamicEntry": true
   },
   "main.js": {
-    "file": "assets/scop-platform-redirecter-BCMmQHWp.js",
+    "file": "assets/scop-platform-redirecter-3YhogKEo.js",
     "name": "scop-platform-redirecter",
     "src": "main.js",
     "isEntry": true,
@@ -14,7 +14,7 @@
       "app/component/structure/sw-search-bar-item/index.js"
     ],
     "css": [
-      "assets/scop-platform-redirecter-ESsbVe0S.css"
+      "assets/scop-platform-redirecter-CRVoTrJO.css"
     ]
   }
 }

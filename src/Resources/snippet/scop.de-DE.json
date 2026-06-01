@@ -4,7 +4,8 @@
       "validation": {
         "choice": "Der Wert {{ value }} ist keine gültige Auswahl. Erlaubt: {{ choices }}",
         "homeSourceUrl": "Die Quell URL {{ value }} ist nicht erlaubt und sollte über die htaccess Datei weitergeleitet werden.",
-        "notBeginWith": "Die Quell URL {{ value }} ist nicht erlaubt. Quell URLs dürfen nicht mit %forbidden% beginnen."
+        "notBeginWith": "Die Quell URL {{ value }} ist nicht erlaubt. Quell URLs dürfen nicht mit %forbidden% beginnen.",
+        "entityLinkRequiresIap": "Das Verknüpfen einer Weiterleitung mit einem Produkt oder einer Kategorie erfordert den Premium In-App Kauf."
       }
     }
   }

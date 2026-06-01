@@ -10,6 +10,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\OrFilter;
 use Shopware\Core\Framework\Routing\CanonicalRedirectService;
 use Shopware\Core\Framework\Extensions\ExtensionDispatcher;
+use Shopware\Core\Framework\Store\InAppPurchase;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,19 +36,29 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
 
     private EntityRepository $seoUrlRepository;
 
-    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository, ExtensionDispatcher $extensionDispatcher, EntityRepository $seoUrlRepository)
+    private InAppPurchase $inAppPurchase;
+
+    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository, ExtensionDispatcher $extensionDispatcher, EntityRepository $seoUrlRepository, InAppPurchase $inAppPurchase)
     {
         parent::__construct($configService, $extensionDispatcher);
         $this->configService = $configService;
         $this->repository = $redirectRepository;
         $this->inner = $inner;
         $this->seoUrlRepository = $seoUrlRepository;
+        $this->inAppPurchase = $inAppPurchase;
     }
+
+    private const IN_APP_PURCHASE_ID = 'scopPlatformRedirecterPremium';
 
     private const ENTITY_ROUTE_MAP = [
         'product' => 'frontend.detail.page',
         'category' => 'frontend.navigation.page',
     ];
+
+    private function isEntityLinkFeatureEnabled(): bool
+    {
+        return $this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID);
+    }
 
     private function resolveEntityUrl(string $entityType, string $entityId, ?string $salesChannelId, Context $context): ?string
     {
@@ -168,10 +179,11 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $code = $redirect->getHttpCode();
 
         // Prefer dynamically resolved entity URL when the redirect is linked to a product/category.
+        // Entity-link resolution is part of the Premium IAP; without it, fall back to the stored targetURL.
         $entityType = $redirect->getTargetEntityType();
         $entityId = $redirect->getTargetEntityId();
         $resolvedEntityUrl = null;
-        if ($entityType !== null && $entityId !== null) {
+        if ($entityType !== null && $entityId !== null && $this->isEntityLinkFeatureEnabled()) {
             $resolvedEntityUrl = $this->resolveEntityUrl($entityType, $entityId, $salesChannelId, $context);
         }
 

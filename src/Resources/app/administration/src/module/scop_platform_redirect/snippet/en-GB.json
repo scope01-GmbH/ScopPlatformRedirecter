@@ -188,10 +188,12 @@
         "category": "Category"
       },
       "resolvedSeoUrlHint": "Current SEO URL:",
+      "entityLinkIapRequired": "This redirect is linked to a product or category. Dynamic resolution requires the Premium In-App Purchase.",
       "danglingEntity": {
         "product": "The linked product no longer exists. This redirect is currently broken.",
         "category": "The linked category no longer exists. This redirect is currently broken.",
-        "convertToManual": "Convert to manual URL"
+        "convertToManual": "Convert to manual URL",
+        "purchaseButton": "Unlock Premium"
       },
       "cancelButton": "Cancel",
       "saveButton": "Save",
