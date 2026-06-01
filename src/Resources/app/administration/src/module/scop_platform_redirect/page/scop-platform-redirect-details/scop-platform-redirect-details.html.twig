@@ -43,10 +43,17 @@
                             >
                                 {{ $tc('scopplatformredirecter.detail.danglingEntity.purchaseButton') }}
                             </mt-button>
+                            <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    @click="onConvertDanglingToManual"
+                            >
+                                {{ $tc('scopplatformredirecter.detail.danglingEntity.convertToManual') }}
+                            </mt-button>
                         </mt-banner>
 
                         <mt-banner
-                                v-if="isEntityDangling"
+                                v-if="isEntityDangling && !showIapLockedBanner"
                                 variant="critical"
                                 class="scop-platform-redirect-details__dangling-banner"
                         >
@@ -60,7 +67,7 @@
                             </mt-button>
                         </mt-banner>
 
-                        <template v-if="entityLookupDone && !isEntityDangling">
+                        <template v-if="entityLookupDone && !isEntityDangling && !showIapLockedBanner">
                             <sw-single-select
                                     :label="$tc('scopplatformredirecter.detail.targetModeLabel')"
                                     :value="targetMode"
