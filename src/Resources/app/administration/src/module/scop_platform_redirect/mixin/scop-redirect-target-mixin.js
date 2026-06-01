@@ -1,5 +1,7 @@
 const { Criteria, EntityCollection } = Shopware.Data;
 
+const IN_APP_PURCHASE_ID = 'scopPlatformRedirecterPremium';
+
 export default {
     inject: [
         'repositoryFactory',
@@ -37,12 +39,21 @@ export default {
             return this.repositoryFactory.create('seo_url');
         },
 
+        isEntityLinkIapActive() {
+            return Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', IN_APP_PURCHASE_ID);
+        },
+
         targetModeOptions() {
-            return [
+            const options = [
                 { value: 'manual', label: this.$tc('scopplatformredirecter.notFound.modal.targetModeManual') },
-                { value: 'product', label: this.$tc('scopplatformredirecter.notFound.modal.targetModeProduct') },
-                { value: 'category', label: this.$tc('scopplatformredirecter.notFound.modal.targetModeCategory') },
             ];
+            if (this.isEntityLinkIapActive) {
+                options.push(
+                    { value: 'product', label: this.$tc('scopplatformredirecter.notFound.modal.targetModeProduct') },
+                    { value: 'category', label: this.$tc('scopplatformredirecter.notFound.modal.targetModeCategory') },
+                );
+            }
+            return options;
         },
 
         hasEntityLink() {

@@ -188,10 +188,12 @@
         "category": "Kategorie"
       },
       "resolvedSeoUrlHint": "Aktuelle SEO-URL:",
+      "entityLinkIapRequired": "Diese Weiterleitung ist mit einem Produkt oder einer Kategorie verknüpft. Die dynamische Auflösung erfordert den Premium In-App Kauf.",
       "danglingEntity": {
         "product": "Das verlinkte Produkt existiert nicht mehr. Diese Weiterleitung läuft aktuell ins Leere.",
         "category": "Die verlinkte Kategorie existiert nicht mehr. Diese Weiterleitung läuft aktuell ins Leere.",
-        "convertToManual": "In manuelle URL umwandeln"
+        "convertToManual": "In manuelle URL umwandeln",
+        "purchaseButton": "Premium freischalten"
       },
       "cancelButton": "Abbrechen",
       "saveButton": "Speichern",

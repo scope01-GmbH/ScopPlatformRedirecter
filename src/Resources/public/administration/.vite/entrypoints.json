@@ -3,13 +3,13 @@
   "entryPoints": {
     "scop-platform-redirecter": {
       "css": [
-        "/bundles/scopplatformredirecter/administration/assets/scop-platform-redirecter-ESsbVe0S.css"
+        "/bundles/scopplatformredirecter/administration/assets/scop-platform-redirecter-CRVoTrJO.css"
       ],
       "dynamic": [
         "/bundles/scopplatformredirecter/administration/assets/index-KgHJOBrb.js"
       ],
       "js": [
-        "/bundles/scopplatformredirecter/administration/assets/scop-platform-redirecter-BCMmQHWp.js"
+        "/bundles/scopplatformredirecter/administration/assets/scop-platform-redirecter-3YhogKEo.js"
       ],
       "legacy": false,
       "preload": []

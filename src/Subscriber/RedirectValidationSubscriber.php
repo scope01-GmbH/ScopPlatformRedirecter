@@ -13,6 +13,7 @@ namespace Scop\PlatformRedirecter\Subscriber;
 use Scop\PlatformRedirecter\Redirect\RedirectDefinition;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\Store\InAppPurchase;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Write\Validation\PreWriteValidationEvent;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -28,11 +29,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RedirectValidationSubscriber implements EventSubscriberInterface
 {
 
+    private const IN_APP_PURCHASE_ID = 'scopPlatformRedirecterPremium';
+
     private Context $context;
     public function __construct(
         readonly private ValidatorInterface $validator,
         readonly private TranslatorInterface $translator,
         readonly private EntityRepository   $salesChannelRepository,
+        readonly private InAppPurchase      $inAppPurchase,
     )
     {}
 
@@ -58,6 +62,26 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
                 continue;
             }
             $payload = $command->getPayload();
+
+            // Entity-link feature is gated behind the Premium IAP. Block writes that try to set the
+            // entity-link columns when the IAP is not active.
+            $writesEntityLink = !empty($payload['target_entity_type']) || !empty($payload['target_entity_id']);
+            if ($writesEntityLink && !$this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID)) {
+                $violationList->add(new ConstraintViolation(
+                    $this->translator->trans('Scop.PlatformRedirecter.validation.entityLinkRequiresIap'),
+                    null,
+                    [],
+                    '',
+                    rtrim(str_replace('[', '/', $command->getPath()), ']') . '/targetEntityType',
+                    $payload['target_entity_type'] ?? null,
+                    null,
+                    null,
+                    null
+                ));
+                $writeException->add(new WriteConstraintViolationException($violationList));
+                continue;
+            }
+
             $violations = $this->validator->startContext()->atPath($command->getPath())->validate($payload, $this->getConstraints($payload))->getViolations();
             if ($violations->count() > 0) {
                 foreach ($violations as $v) {

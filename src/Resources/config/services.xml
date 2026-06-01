@@ -15,6 +15,7 @@
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Extensions\ExtensionDispatcher"/>
             <argument type="service" id="seo_url.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
         </service>
 
         <service id="Scop\PlatformRedirecter\Subscriber\TargetEntityFreezeSubscriber">
@@ -27,6 +28,7 @@
             <argument id="validator" type="service"/>
             <argument type="service" id="translator"/>
             <argument type="service" id="sales_channel.repository"/>
+            <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 

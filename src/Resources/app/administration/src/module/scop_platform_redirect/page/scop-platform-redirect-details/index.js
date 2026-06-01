@@ -8,6 +8,8 @@ const ENTITY_ROUTE_MAP = {
     category: 'frontend.navigation.page',
 };
 
+const IN_APP_PURCHASE_ID = 'scopPlatformRedirecterPremium';
+
 Component.register('scop-platform-redirect-details', {
     template,
 
@@ -45,18 +47,36 @@ Component.register('scop-platform-redirect-details', {
                 : 'manual';
         },
 
+        isIapActive() {
+            return Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', IN_APP_PURCHASE_ID);
+        },
+
         targetModeOptions() {
-            return [
+            const options = [
                 {value: 'manual', label: this.$tc('scopplatformredirecter.detail.targetMode.manual')},
-                {value: 'product', label: this.$tc('scopplatformredirecter.detail.targetMode.product')},
-                {value: 'category', label: this.$tc('scopplatformredirecter.detail.targetMode.category')},
             ];
+            if (this.isIapActive) {
+                options.push(
+                    {value: 'product', label: this.$tc('scopplatformredirecter.detail.targetMode.product')},
+                    {value: 'category', label: this.$tc('scopplatformredirecter.detail.targetMode.category')},
+                );
+            }
+            return options;
         },
 
         isEntityDangling() {
             return this.entityLookupDone
                 && !!(this.redirect && this.redirect.targetEntityType && this.redirect.targetEntityId)
                 && !this.resolvedEntityUrl;
+        },
+
+        showIapLockedBanner() {
+            return !this.isIapActive
+                && !!(this.redirect && this.redirect.targetEntityType);
+        },
+
+        inAppPurchaseCheckout() {
+            return Shopware.Store.get('inAppPurchaseCheckout');
         },
     },
 
@@ -126,6 +146,12 @@ Component.register('scop-platform-redirect-details', {
             }).catch(() => {
                 this.entityLookupDone = true;
             });
+        },
+
+        onClickPurchase() {
+            if (this.inAppPurchaseCheckout) {
+                this.inAppPurchaseCheckout.request({ identifier: IN_APP_PURCHASE_ID }, 'ScopPlatformRedirecter');
+            }
         },
 
         onConvertDanglingToManual() {
