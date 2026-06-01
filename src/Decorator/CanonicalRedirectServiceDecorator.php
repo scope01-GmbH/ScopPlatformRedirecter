@@ -33,12 +33,52 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
      */
     private SystemConfigService $configService;
 
-    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository, ExtensionDispatcher $extensionDispatcher)
+    private EntityRepository $seoUrlRepository;
+
+    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository, ExtensionDispatcher $extensionDispatcher, EntityRepository $seoUrlRepository)
     {
         parent::__construct($configService, $extensionDispatcher);
         $this->configService = $configService;
         $this->repository = $redirectRepository;
         $this->inner = $inner;
+        $this->seoUrlRepository = $seoUrlRepository;
+    }
+
+    private const ENTITY_ROUTE_MAP = [
+        'product' => 'frontend.detail.page',
+        'category' => 'frontend.navigation.page',
+    ];
+
+    private function resolveEntityUrl(string $entityType, string $entityId, ?string $salesChannelId, Context $context): ?string
+    {
+        $routeName = self::ENTITY_ROUTE_MAP[$entityType] ?? null;
+        if ($routeName === null) {
+            return null;
+        }
+
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('routeName', $routeName));
+        $criteria->addFilter(new EqualsFilter('foreignKey', $entityId));
+        $criteria->addFilter(new EqualsFilter('isCanonical', true));
+        if ($salesChannelId !== null) {
+            $criteria->addFilter(new OrFilter([
+                new EqualsFilter('salesChannelId', $salesChannelId),
+                new EqualsFilter('salesChannelId', null),
+            ]));
+        }
+        $criteria->setLimit(1);
+
+        $seoUrl = $this->seoUrlRepository->search($criteria, $context)->first();
+        if ($seoUrl === null) {
+            return null;
+        }
+
+        $path = $seoUrl->getSeoPathInfo();
+        if ($path === null || $path === '') {
+            return null;
+        }
+
+        return '/' . ltrim($path, '/');
     }
 
     /**
@@ -125,8 +165,23 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         }
 
         $redirect = $redirects->first();
-        $targetURL = $redirect->getTargetURL();
         $code = $redirect->getHttpCode();
+
+        // Prefer dynamically resolved entity URL when the redirect is linked to a product/category.
+        $entityType = $redirect->getTargetEntityType();
+        $entityId = $redirect->getTargetEntityId();
+        $resolvedEntityUrl = null;
+        if ($entityType !== null && $entityId !== null) {
+            $resolvedEntityUrl = $this->resolveEntityUrl($entityType, $entityId, $salesChannelId, $context);
+        }
+
+        $targetURL = $resolvedEntityUrl ?? $redirect->getTargetURL();
+
+        // Dangling entity link: linked to an entity, but neither the live SEO URL is resolvable nor is a frozen
+        // targetURL stored. Bail out instead of redirecting to "/" to avoid masking 404s with a broken redirect.
+        if ($entityType !== null && $entityId !== null && $resolvedEntityUrl === null && ($targetURL === null || trim($targetURL) === '')) {
+            return $this->inner->getRedirect($request);
+        }
 
         // If configured in the redirect, adds the query parameters from the requested URL to the target URL
         if ($redirect->getQueryParamsHandling() === 2 && str_contains($requestUri, '?')) {

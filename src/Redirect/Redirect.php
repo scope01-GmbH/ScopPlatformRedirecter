@@ -207,4 +207,27 @@ class Redirect extends Entity
     {
         $this->product = $product;
     }
+
+    protected ?string $targetEntityType = null;
+    protected ?string $targetEntityId = null;
+
+    public function getTargetEntityType(): ?string
+    {
+        return $this->targetEntityType;
+    }
+
+    public function setTargetEntityType(?string $targetEntityType): void
+    {
+        $this->targetEntityType = $targetEntityType;
+    }
+
+    public function getTargetEntityId(): ?string
+    {
+        return $this->targetEntityId;
+    }
+
+    public function setTargetEntityId(?string $targetEntityId): void
+    {
+        $this->targetEntityId = $targetEntityId;
+    }
 }

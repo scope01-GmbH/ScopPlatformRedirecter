@@ -69,14 +69,16 @@ class RedirectDefinition extends EntityDefinition
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new PrimaryKey(), new Required()),
             (new StringField("sourceURL", "sourceURL"))->addFlags(new Required(), new SearchRanking(SearchRanking::HIGH_SEARCH_RANKING)),
-            (new StringField("targetURL", "targetURL"))->addFlags(new Required(), new SearchRanking(SearchRanking::HIGH_SEARCH_RANKING)),
+            (new StringField("targetURL", "targetURL"))->addFlags(new SearchRanking(SearchRanking::HIGH_SEARCH_RANKING)),
             new IntField("httpCode", "httpCode"),
             new BoolField("enabled", "enabled"),
             new IntField("queryParamsHandling", "queryParamsHandling"),
             (new FkField('salesChannelId', 'salesChannelId', SalesChannelDefinition::class))->addFlags(new ApiAware()),
             new ManyToOneAssociationField('salesChannel', 'salesChannelId', SalesChannelDefinition::class, 'id', false),
             (new FkField('product_id', 'productId', ProductDefinition::class))->addFlags(new ApiAware()),
-            new ManyToOneAssociationField('product', 'product_id', ProductDefinition::class, 'id', false)
+            new ManyToOneAssociationField('product', 'product_id', ProductDefinition::class, 'id', false),
+            (new StringField('target_entity_type', 'targetEntityType'))->addFlags(new ApiAware()),
+            (new IdField('target_entity_id', 'targetEntityId'))->addFlags(new ApiAware()),
         ]);
     }
 }

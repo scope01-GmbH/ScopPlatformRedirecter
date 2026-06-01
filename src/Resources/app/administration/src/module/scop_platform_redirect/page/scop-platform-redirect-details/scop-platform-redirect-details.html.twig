@@ -28,8 +28,69 @@
                     {% endblock %}
                     <sw-text-field :label="$t('scopplatformredirecter.detail.sourceUrlLabel')" v-model:value="redirect.sourceURL"
                               validation="required"></sw-text-field>
-                    <sw-text-field :label="$t('scopplatformredirecter.detail.targetUrlLabel')" v-model:value="redirect.targetURL"
-                              validation="required"></sw-text-field>
+
+                    {% block scop_platform_redirect_details_target %}
+                        <mt-banner
+                                v-if="isEntityDangling"
+                                variant="critical"
+                                class="scop-platform-redirect-details__dangling-banner"
+                        >
+                            <p>{{ $tc('scopplatformredirecter.detail.danglingEntity.' + redirect.targetEntityType) }}</p>
+                            <mt-button
+                                    variant="primary"
+                                    size="small"
+                                    @click="onConvertDanglingToManual"
+                            >
+                                {{ $tc('scopplatformredirecter.detail.danglingEntity.convertToManual') }}
+                            </mt-button>
+                        </mt-banner>
+
+                        <template v-if="entityLookupDone && !isEntityDangling">
+                            <sw-single-select
+                                    :label="$tc('scopplatformredirecter.detail.targetModeLabel')"
+                                    :value="targetMode"
+                                    :options="targetModeOptions"
+                                    @update:value="onTargetModeChange"
+                            />
+
+                            <template v-if="targetMode === 'manual'">
+                                <sw-text-field
+                                        :label="$tc('scopplatformredirecter.detail.targetUrlLabel')"
+                                        v-model:value="redirect.targetURL"
+                                        validation="required"
+                                />
+                            </template>
+
+                            <template v-if="targetMode === 'product'">
+                                <sw-entity-single-select
+                                        class="scop-platform-redirect-details__entity-select"
+                                        :label="$tc('scopplatformredirecter.detail.targetEntity.product')"
+                                        entity="product"
+                                        :value="redirect.targetEntityId"
+                                        @update:value="onEntityChange('product', $event)"
+                                />
+                                <p v-if="resolvedEntityUrl" class="scop-platform-redirect-details__entity-hint">
+                                    {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
+                                    <code>{{ resolvedEntityUrl }}</code>
+                                </p>
+                            </template>
+
+                            <template v-if="targetMode === 'category'">
+                                <sw-entity-single-select
+                                        class="scop-platform-redirect-details__entity-select"
+                                        :label="$tc('scopplatformredirecter.detail.targetEntity.category')"
+                                        entity="category"
+                                        :value="redirect.targetEntityId"
+                                        @update:value="onEntityChange('category', $event)"
+                                />
+                                <p v-if="resolvedEntityUrl" class="scop-platform-redirect-details__entity-hint">
+                                    {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
+                                    <code>{{ resolvedEntityUrl }}</code>
+                                </p>
+                            </template>
+                        </template>
+                    {% endblock %}
+
                     <sw-select-number-field :label="$t('scopplatformredirecter.detail.httpCodeLabel')"
                                             v-model:value="redirect.httpCode" validation="required" @update:value="transformHttpCodeValueToNumber">
                         <option value=301>{{ $t('scopplatformredirecter.detail.httpCodeLabelValues.301') }}</option>
