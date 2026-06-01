@@ -16,6 +16,7 @@ export default {
             selectedProductId: null,
             selectedCategoryId: null,
             categoryCollection: null,
+            resolvedEntityUrl: null,
         };
     },
 
@@ -42,6 +43,34 @@ export default {
                 { value: 'product', label: this.$tc('scopplatformredirecter.notFound.modal.targetModeProduct') },
                 { value: 'category', label: this.$tc('scopplatformredirecter.notFound.modal.targetModeCategory') },
             ];
+        },
+
+        hasEntityLink() {
+            return this.targetMode === 'product'
+                ? !!this.selectedProductId
+                : this.targetMode === 'category'
+                    ? !!this.selectedCategoryId
+                    : false;
+        },
+
+        targetEntityTypeForSave() {
+            if (this.targetMode === 'product' && this.selectedProductId) {
+                return 'product';
+            }
+            if (this.targetMode === 'category' && this.selectedCategoryId) {
+                return 'category';
+            }
+            return null;
+        },
+
+        targetEntityIdForSave() {
+            if (this.targetMode === 'product') {
+                return this.selectedProductId || null;
+            }
+            if (this.targetMode === 'category') {
+                return this.selectedCategoryId || null;
+            }
+            return null;
         },
     },
 
@@ -77,28 +106,29 @@ export default {
             this.targetURL = '';
             this.selectedProductId = null;
             this.selectedCategoryId = null;
+            this.resolvedEntityUrl = null;
             this.initCategoryCollection();
         },
 
         async onProductChange(productId) {
             this.selectedProductId = productId;
+            this.resolvedEntityUrl = null;
             if (!productId) {
-                this.targetURL = '';
                 return;
             }
-            await this.loadSeoUrl('frontend.detail.page', productId);
+            await this.previewEntitySeoUrl('frontend.detail.page', productId);
         },
 
         async onCategoryChange(categoryId) {
             this.selectedCategoryId = categoryId;
+            this.resolvedEntityUrl = null;
             if (!categoryId) {
-                this.targetURL = '';
                 return;
             }
-            await this.loadSeoUrl('frontend.navigation.page', categoryId);
+            await this.previewEntitySeoUrl('frontend.navigation.page', categoryId);
         },
 
-        async loadSeoUrl(routeName, foreignKey) {
+        async previewEntitySeoUrl(routeName, foreignKey) {
             const criteria = new Criteria(1, 1);
             criteria.addFilter(Criteria.equals('routeName', routeName));
             criteria.addFilter(Criteria.equals('foreignKey', foreignKey));
@@ -112,16 +142,16 @@ export default {
 
             try {
                 const result = await this.seoUrlRepository.search(criteria);
-                if (result.total > 0) {
-                    this.targetURL = `/${result.first().seoPathInfo}`;
+                if (result.total > 0 && result.first().seoPathInfo) {
+                    this.resolvedEntityUrl = '/' + result.first().seoPathInfo.replace(/^\/+/, '');
                 } else {
-                    this.targetURL = '';
+                    this.resolvedEntityUrl = null;
                     this.createNotificationWarning({
                         message: this.$tc('scopplatformredirecter.notFound.modal.noSeoUrlFound'),
                     });
                 }
             } catch {
-                this.targetURL = '';
+                this.resolvedEntityUrl = null;
             }
         },
 

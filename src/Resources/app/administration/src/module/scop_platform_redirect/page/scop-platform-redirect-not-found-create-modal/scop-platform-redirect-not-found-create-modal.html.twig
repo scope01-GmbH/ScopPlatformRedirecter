@@ -31,34 +31,32 @@
         {# Product picker #}
         <template v-if="targetMode === 'product'">
             <sw-entity-single-select
+                    class="scop-platform-redirect-not-found-create-modal__entity-select"
                     :label="$tc('scopplatformredirecter.notFound.modal.selectProduct')"
                     entity="product"
                     v-model:value="selectedProductId"
                     @update:value="onProductChange"
             />
-            <sw-text-field
-                    v-if="targetURL"
-                    :label="$tc('scopplatformredirecter.detail.targetUrlLabel')"
-                    v-model:value="targetURL"
-                    :helpText="$tc('scopplatformredirecter.notFound.modal.seoUrlHelpText')"
-            />
+            <p v-if="resolvedEntityUrl" class="scop-platform-redirect-not-found-create-modal__entity-hint">
+                {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
+                <code>{{ resolvedEntityUrl }}</code>
+            </p>
         </template>
 
         {# Category picker #}
         <template v-if="targetMode === 'category'">
             <sw-category-tree-field
+                    class="scop-platform-redirect-not-found-create-modal__entity-select"
                     :label="$tc('scopplatformredirecter.notFound.modal.selectCategory')"
                     :categories-collection="categoryCollection"
                     :singleSelect="true"
                     @selection-add="onCategoryChange($event.id)"
                     @selection-remove="onCategoryChange(null)"
             />
-            <sw-text-field
-                    v-if="targetURL"
-                    :label="$tc('scopplatformredirecter.detail.targetUrlLabel')"
-                    v-model:value="targetURL"
-                    :helpText="$tc('scopplatformredirecter.notFound.modal.seoUrlHelpText')"
-            />
+            <p v-if="resolvedEntityUrl" class="scop-platform-redirect-not-found-create-modal__entity-hint">
+                {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
+                <code>{{ resolvedEntityUrl }}</code>
+            </p>
         </template>
 
         {# HTTP Code #}

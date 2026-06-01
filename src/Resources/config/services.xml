@@ -14,6 +14,13 @@
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Extensions\ExtensionDispatcher"/>
+            <argument type="service" id="seo_url.repository"/>
+        </service>
+
+        <service id="Scop\PlatformRedirecter\Subscriber\TargetEntityFreezeSubscriber">
+            <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
+            <argument type="service" id="seo_url.repository"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="Scop\PlatformRedirecter\Subscriber\RedirectValidationSubscriber" >

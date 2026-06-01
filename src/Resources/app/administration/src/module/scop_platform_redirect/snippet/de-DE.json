@@ -53,6 +53,10 @@
       "allSalesChannels": "Alle",
       "iap": "Weitere Funktionen freischalten",
       "autoCreated": "Auto",
+      "targetEntityLabel": {
+        "product": "Produkt-Link",
+        "category": "Kategorie-Link"
+      },
       "show404Button": "404-Fehler anzeigen",
       "searchIapRequired": "Die Suche in den Weiterleitungen ist Teil der Premium-Erweiterung. Bitte schalten Sie den In-App-Kauf frei, um die Suche zu nutzen."
     },
@@ -172,6 +176,22 @@
         "consider": "Query Parameter bei der Suche berücksichtigen",
         "ignore": "Query Parameter bei der Suche ignorieren",
         "transfer": "Query Parameter bei der Suche ignorieren und zur Ziel-URL hinzufügen"
+      },
+      "targetModeLabel": "Ziel auswählen über",
+      "targetMode": {
+        "manual": "Manuelle URL-Eingabe",
+        "product": "Produkt auswählen",
+        "category": "Kategorie auswählen"
+      },
+      "targetEntity": {
+        "product": "Produkt",
+        "category": "Kategorie"
+      },
+      "resolvedSeoUrlHint": "Aktuelle SEO-URL:",
+      "danglingEntity": {
+        "product": "Das verlinkte Produkt existiert nicht mehr. Diese Weiterleitung läuft aktuell ins Leere.",
+        "category": "Die verlinkte Kategorie existiert nicht mehr. Diese Weiterleitung läuft aktuell ins Leere.",
+        "convertToManual": "In manuelle URL umwandeln"
       },
       "cancelButton": "Abbrechen",
       "saveButton": "Speichern",

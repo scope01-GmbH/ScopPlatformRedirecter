@@ -67,6 +67,17 @@
                             {{ $tc('scopplatformredirecter.list.autoCreated') }}
                         </sw-label>
                     </template>
+                    <template #column-targetURL="{ item }">
+                        <template v-if="item.targetEntityType">
+                            <sw-label variant="info" appearance="pill" size="medium">
+                                {{ $tc('scopplatformredirecter.list.targetEntityLabel.' + item.targetEntityType) }}
+                            </sw-label>
+                            <span v-if="item.targetURL" style="margin-left: 8px;">{{ item.targetURL }}</span>
+                        </template>
+                        <template v-else>
+                            {{ item.targetURL }}
+                        </template>
+                    </template>
                     <template #column-queryParamsHandling="{ item }">
                         {{ $tc('scopplatformredirecter.list.queryParamsHandlingValues.' + item.queryParamsHandling) }}
                     </template>

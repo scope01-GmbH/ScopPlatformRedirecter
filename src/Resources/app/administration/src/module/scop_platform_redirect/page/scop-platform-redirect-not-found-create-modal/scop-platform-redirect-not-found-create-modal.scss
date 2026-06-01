@@ -1,0 +1,17 @@
+.scop-platform-redirect-not-found-create-modal {
+    &__entity-select {
+        margin-bottom: 10px !important;
+    }
+
+    &__entity-hint {
+        margin: 0 0 24px;
+        color: var(--color-darkgray-200, #758ca3);
+        font-size: 13px;
+
+        code {
+            background: var(--color-gray-100, #f0f4f8);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+    }
+}

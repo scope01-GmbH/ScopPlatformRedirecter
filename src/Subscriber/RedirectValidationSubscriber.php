@@ -58,7 +58,7 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
                 continue;
             }
             $payload = $command->getPayload();
-            $violations = $this->validator->startContext()->atPath($command->getPath())->validate($payload, $this->getConstraints())->getViolations();
+            $violations = $this->validator->startContext()->atPath($command->getPath())->validate($payload, $this->getConstraints($payload))->getViolations();
             if ($violations->count() > 0) {
                 foreach ($violations as $v) {
                     $violationList->add(new ConstraintViolation(
@@ -79,10 +79,18 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * @param array<string, mixed> $payload
      * @return Assert\Collection
      */
-    public function getConstraints(): Assert\Collection
+    public function getConstraints(array $payload = []): Assert\Collection
     {
+        $hasEntityLink = !empty($payload['target_entity_type']) && !empty($payload['target_entity_id']);
+
+        $targetUrlConstraints = [new Assert\Type('string')];
+        if (!$hasEntityLink) {
+            $targetUrlConstraints[] = new Assert\NotBlank();
+        }
+
         return new Assert\Collection([
             'fields' => [
                 'id' => [
@@ -103,10 +111,7 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
                     new Assert\Regex(pattern: '/^(?!\/store-api).*$/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.notBeginWith', ['%forbidden%' => '/store-api'])),
                     new Assert\Regex(pattern: '/^(?!\/_profiler).*$/', message: $this->translator->trans('Scop.PlatformRedirecter.validation.notBeginWith', ['%forbidden%' => '/_profiler']))
                 ],
-                'targetURL' => [
-                    new Assert\NotBlank(),
-                    new Assert\Type('string'),
-                ],
+                'targetURL' => $targetUrlConstraints,
                 'enabled' => [
                     new Assert\NotBlank(),
                     new Assert\Choice(choices:  [0, 1, false, true,], message: $this->translator->trans('Scop.PlatformRedirecter.validation.choice'))

@@ -153,3 +153,9 @@
 # v4.4.0
 
 - Added automatic redirect creation when products are deleted, with configurable HTTP status code (Premium feature)
+
+# v4.5.0
+
+- Redirects can now be linked to a product or category; the target URL is resolved dynamically from the current SEO URL of the linked entity
+- When a linked product or category is deleted, the last known SEO URL is automatically frozen into the redirect so it keeps working
+- 404 log "Create redirect" modal switched to the same entity-link mechanism (no more eager URL copy)

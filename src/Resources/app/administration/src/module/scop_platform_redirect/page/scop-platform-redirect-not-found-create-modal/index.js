@@ -1,4 +1,5 @@
 import template from './scop-platform-redirect-not-found-create-modal.html.twig';
+import './scop-platform-redirect-not-found-create-modal.scss';
 import targetMixin from '../../mixin/scop-redirect-target-mixin';
 
 const { Mixin } = Shopware;
@@ -36,7 +37,10 @@ Shopware.Component.register('scop-platform-redirect-not-found-create-modal', {
         },
 
         async onSave() {
-            if (!this.sourceURL || !this.targetURL) {
+            const entityType = this.targetEntityTypeForSave;
+            const entityId = this.targetEntityIdForSave;
+
+            if (!this.sourceURL) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
                     message: this.$tc('scopplatformredirecter.notFound.modal.errorEmptyFields'),
@@ -44,7 +48,15 @@ Shopware.Component.register('scop-platform-redirect-not-found-create-modal', {
                 return;
             }
 
-            if (this.sourceURL.trim() === this.targetURL.trim()) {
+            if (!entityType && !this.targetURL) {
+                this.createNotificationError({
+                    title: this.$tc('scopplatformredirecter.general.errorTitle'),
+                    message: this.$tc('scopplatformredirecter.notFound.modal.errorEmptyFields'),
+                });
+                return;
+            }
+
+            if (!entityType && this.sourceURL.trim() === this.targetURL.trim()) {
                 this.createNotificationError({
                     title: this.$tc('scopplatformredirecter.general.errorTitle'),
                     message: this.$tc('scopplatformredirecter.detail.errorSameUrlDescription'),
@@ -57,7 +69,9 @@ Shopware.Component.register('scop-platform-redirect-not-found-create-modal', {
             try {
                 const redirect = this.redirectRepository.create();
                 redirect.sourceURL = this.sourceURL;
-                redirect.targetURL = this.targetURL;
+                redirect.targetURL = entityType ? '' : this.targetURL;
+                redirect.targetEntityType = entityType;
+                redirect.targetEntityId = entityId;
                 redirect.httpCode = this.httpCode;
                 redirect.enabled = true;
                 redirect.queryParamsHandling = this.queryParamsHandling;
