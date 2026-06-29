@@ -17,11 +17,24 @@ class Migration1780059438AddTargetEntity extends MigrationStep
 
     public function update(Connection $connection): void
     {
-        $sql = <<<SQL
-        ALTER TABLE `scop_platform_redirecter_redirect`
-            ADD `target_entity_type` VARCHAR(64) NULL AFTER `product_id`,
-            ADD `target_entity_id` BINARY(16) NULL AFTER `target_entity_type`;
-SQL;
-        $connection->executeStatement($sql);
+        $typeColumns = $connection->fetchAllAssociative(
+            "SHOW COLUMNS FROM `scop_platform_redirecter_redirect` LIKE 'target_entity_type'"
+        );
+
+        if (\count($typeColumns) === 0) {
+            $connection->executeStatement(
+                'ALTER TABLE `scop_platform_redirecter_redirect` ADD `target_entity_type` VARCHAR(64) NULL AFTER `product_id`'
+            );
+        }
+
+        $idColumns = $connection->fetchAllAssociative(
+            "SHOW COLUMNS FROM `scop_platform_redirecter_redirect` LIKE 'target_entity_id'"
+        );
+
+        if (\count($idColumns) === 0) {
+            $connection->executeStatement(
+                'ALTER TABLE `scop_platform_redirecter_redirect` ADD `target_entity_id` BINARY(16) NULL AFTER `target_entity_type`'
+            );
+        }
     }
 }
