@@ -159,3 +159,7 @@
 - Weiterleitungen können jetzt mit einem Produkt oder einer Kategorie verknüpft werden; die Ziel-URL wird dynamisch aus der aktuellen SEO-URL der verknüpften Entität aufgelöst (Premium-Funktion)
 - Wird das verknüpfte Produkt oder die Kategorie gelöscht, wird die letzte SEO-URL automatisch in die Weiterleitung eingefroren, damit sie weiterhin funktioniert
 - 404-Log "Weiterleitung erstellen"-Modal nutzt nun denselben Entity-Link-Mechanismus (kein automatisches Vorbefüllen der URL mehr)
+
+# v4.5.1
+
+- Spalten-Migrationen sind nun wiederholbar und schlagen beim erneuten Ausführen nicht mehr fehl
