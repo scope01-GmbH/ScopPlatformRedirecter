@@ -47,6 +47,10 @@ class ScopPlatformRedirecter extends Plugin
          */
         $connection = $this->container->get(Connection::class);
 
+        $sql = "DROP TABLE IF EXISTS `scop_platform_redirecter_404`;";
+
+        $connection->executeStatement($sql);
+
         $sql = "DROP TABLE IF EXISTS `scop_platform_redirecter_redirect`;";
 
         $connection->executeStatement($sql);

@@ -38,6 +38,7 @@
 | 4.3.0   | 404 errors are logged and can be linked directly to a redirect (Premium feature)                                                                                    | 6.7.4.0          |
 | 4.4.0   | Automatic redirect creation when products are deleted, with configurable HTTP status code (Premium feature)                                                          | 6.7.4.0          |
 | 4.5.0   | Link a redirect to a product or category; target is resolved dynamically from the current SEO URL and frozen on deletion (Premium feature)                          | 6.7.4.0          |
+| 4.5.1   | Column-adding migrations are now repeatable and no longer fail when executed again                                                                                  | 6.7.4.0          |
 
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
