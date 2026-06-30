@@ -163,3 +163,7 @@
 # v4.5.1
 
 - Spalten-Migrationen sind nun wiederholbar und schlagen beim erneuten Ausführen nicht mehr fehl
+
+# v4.5.2
+
+- Automatische Erstellung von Weiterleitungen für nicht vorhandene Sales-Channel-Domains beheben

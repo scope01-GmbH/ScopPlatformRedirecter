@@ -163,3 +163,7 @@
 # v4.5.1
 
 - Column-adding migrations are now repeatable and no longer fail when executed again
+
+# v4.5.2
+
+- Fix auto creation of redirects for not existing saleschannel domains 
