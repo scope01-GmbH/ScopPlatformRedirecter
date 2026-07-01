@@ -130,6 +130,10 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
                 $redirectProductId = $seoUrl['productId'] ?? $productId;
 
                 $prefix = $this->resolvePrefix($domainPrefixes, $salesChannelId, $languageId);
+                if ($prefix === null) {
+                    continue;
+                }
+
                 $sourceUrl = rtrim($prefix, '/') . '/' . $seoPath;
 
                 $redirectData[] = [
@@ -230,14 +234,14 @@ class ProductDeactivationSubscriber implements EventSubscriberInterface
         return $prefixes;
     }
 
-    private function resolvePrefix(array $domainPrefixes, ?string $salesChannelId, ?string $languageId): string
+    private function resolvePrefix(array $domainPrefixes, ?string $salesChannelId, ?string $languageId): ?string
     {
         if ($salesChannelId === null || $languageId === null) {
-            return '/';
+            return null;
         }
 
         $key = $salesChannelId . '-' . $languageId;
 
-        return $domainPrefixes[$key] ?? '/';
+        return $domainPrefixes[$key] ?? null;
     }
 }
