@@ -17,9 +17,13 @@ class Migration1753341069CheckUrlReachable extends MigrationStep
 
     public function update(Connection $connection): void
     {
-        $sql = <<<SQL
-        ALTER TABLE `scop_platform_redirecter_redirect` ADD `brokenRedirect` tinyint(1) NULL AFTER `salesChannelId`;
-SQL;
-        $connection->executeStatement($sql);
+        $columns = $connection->fetchAllAssociative(
+            "SHOW COLUMNS FROM `scop_platform_redirecter_redirect` LIKE 'brokenRedirect'"
+        );
+        if (\count($columns) === 0) {
+            $connection->executeStatement(
+                'ALTER TABLE `scop_platform_redirecter_redirect` ADD `brokenRedirect` tinyint(1) NULL AFTER `salesChannelId`'
+            );
+        }
     }
 }
