@@ -14,10 +14,21 @@ class Migration1689242277TransferQueryParamter extends MigrationStep
 
     public function update(Connection $connection): void
     {
-        $sql = <<<SQL
-        ALTER TABLE `scop_platform_redirecter_redirect` CHANGE `ignoreQueryParams` `queryParamsHandling` TINYINT DEFAULT 0;
-SQL;
-        $connection->executeStatement($sql);
+        $existing = $connection->fetchAllAssociative(
+            "SHOW COLUMNS FROM `scop_platform_redirecter_redirect` LIKE 'queryParamsHandling'"
+        );
+        if (\count($existing) > 0) {
+            return;
+        }
+
+        $old = $connection->fetchAllAssociative(
+            "SHOW COLUMNS FROM `scop_platform_redirecter_redirect` LIKE 'ignoreQueryParams'"
+        );
+        if (\count($old) > 0) {
+            $connection->executeStatement(
+                'ALTER TABLE `scop_platform_redirecter_redirect` CHANGE `ignoreQueryParams` `queryParamsHandling` TINYINT DEFAULT 0'
+            );
+        }
     }
 
     public function updateDestructive(Connection $connection): void

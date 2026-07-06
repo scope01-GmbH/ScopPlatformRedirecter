@@ -33,6 +33,13 @@ class Migration1729331491CreateImportExportProfile extends MigrationStep
             return;
         }
 
+        $existing = $connection->fetchOne(
+            "SELECT COUNT(*) FROM `import_export_profile` WHERE `source_entity` = 'scop_platform_redirecter_redirect'"
+        );
+        if ($existing > 0) {
+            return;
+        }
+
         $importExportId = Uuid::randomHex();
 
         $enGbLangId = $this->getLanguageIdByLocale($connection, 'en-GB');
