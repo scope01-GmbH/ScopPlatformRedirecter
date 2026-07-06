@@ -167,3 +167,7 @@
 # v4.5.2
 
 - Fix auto creation of redirects for not existing saleschannel domains 
+
+# v4.5.3
+
+- All migrations are now repeatable and can be executed multiple times without errors

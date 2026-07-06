@@ -167,3 +167,7 @@
 # v4.5.2
 
 - Automatische Erstellung von Weiterleitungen für nicht vorhandene Sales-Channel-Domains beheben
+
+# v4.5.3
+
+- Alle Migrationen sind nun wiederholbar und können beliebig oft ohne Fehler ausgeführt werden

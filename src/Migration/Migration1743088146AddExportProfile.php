@@ -19,6 +19,28 @@ class Migration1743088146AddExportProfile extends MigrationStep
 
     public function update(Connection $connection): void
     {
+        // Already migrated — nothing to do.
+        $existing = $connection->fetchOne(
+            "SELECT COUNT(*) FROM `import_export_profile` WHERE `technical_name` = 'default_scop_platform_redirecter_redirect'"
+        );
+        if ($existing > 0) {
+            return;
+        }
+
+        // Profile was created on SW 6.6. During the SW 6.6→6.7 core upgrade,
+        // Shopware auto-assigned a technical_name from the name field (e.g. "default_redirect").
+        // Update it to our canonical value instead of creating a duplicate.
+        $legacyId = $connection->fetchOne(
+            "SELECT `id` FROM `import_export_profile` WHERE `source_entity` = 'scop_platform_redirecter_redirect' AND `system_default` = 1 LIMIT 1"
+        );
+        if ($legacyId) {
+            $connection->executeStatement(
+                "UPDATE `import_export_profile` SET `technical_name` = 'default_scop_platform_redirecter_redirect' WHERE `id` = :id",
+                ['id' => $legacyId]
+            );
+            return;
+        }
+
         $importExportId = Uuid::randomHex();
 
         $enGbLangId = $this->getLanguageIdByLocale($connection, 'en-GB');
