@@ -111,8 +111,35 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
             }
         },
 
+        getSystemConfigParent() {
+            let parent = this.$parent;
+            while (parent) {
+                if (parent.actualConfigData !== undefined && typeof parent.saveAll === 'function') {
+                    return parent;
+                }
+                parent = parent.$parent;
+            }
+            return null;
+        },
+
+        syncParentConfig(key, value) {
+            const parent = this.getSystemConfigParent();
+            if (!parent) {
+                return;
+            }
+            const salesChannelId = parent.currentSalesChannelId ?? null;
+            const bucket = parent.actualConfigData?.[salesChannelId];
+            if (bucket) {
+                bucket[key] = value;
+            }
+        },
+
         async onQueryParamsHandlingChange(newValue) {
             this.defaultQueryParamsHandling = Number(newValue);
+            this.syncParentConfig(
+                'ScopPlatformRedirecter.config.defaultQueryParamsHandling',
+                this.defaultQueryParamsHandling,
+            );
             await this.systemConfigApiService.saveValues({
                 'ScopPlatformRedirecter.config.defaultQueryParamsHandling': this.defaultQueryParamsHandling,
             });
@@ -124,6 +151,10 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
                 return;
             }
             this.retentionDays = numeric;
+            this.syncParentConfig(
+                'ScopPlatformRedirecter.config.notFoundLogRetentionDays',
+                this.retentionDays,
+            );
             await this.systemConfigApiService.saveValues({
                 'ScopPlatformRedirecter.config.notFoundLogRetentionDays': this.retentionDays,
             });
@@ -131,6 +162,10 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
 
         async onRefererStorageModeChange(newValue) {
             this.refererStorageMode = newValue;
+            this.syncParentConfig(
+                'ScopPlatformRedirecter.config.refererStorageMode',
+                this.refererStorageMode,
+            );
             await this.systemConfigApiService.saveValues({
                 'ScopPlatformRedirecter.config.refererStorageMode': this.refererStorageMode,
             });
@@ -138,6 +173,10 @@ Shopware.Component.register('scop-platform-redirect-not-found-config', {
 
         async onIgnorePatternsChange(newValue) {
             this.ignorePatterns = typeof newValue === 'string' ? newValue : '';
+            this.syncParentConfig(
+                'ScopPlatformRedirecter.config.notFoundIgnorePatterns',
+                this.ignorePatterns,
+            );
             await this.systemConfigApiService.saveValues({
                 'ScopPlatformRedirecter.config.notFoundIgnorePatterns': this.ignorePatterns,
             });

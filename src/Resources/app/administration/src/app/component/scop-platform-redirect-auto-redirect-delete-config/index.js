@@ -73,8 +73,35 @@ Shopware.Component.register('scop-platform-redirect-auto-redirect-delete-config'
             }
         },
 
+        getSystemConfigParent() {
+            let parent = this.$parent;
+            while (parent) {
+                if (parent.actualConfigData !== undefined && typeof parent.saveAll === 'function') {
+                    return parent;
+                }
+                parent = parent.$parent;
+            }
+            return null;
+        },
+
+        syncParentConfig(key, value) {
+            const parent = this.getSystemConfigParent();
+            if (!parent) {
+                return;
+            }
+            const salesChannelId = parent.currentSalesChannelId ?? null;
+            const bucket = parent.actualConfigData?.[salesChannelId];
+            if (bucket) {
+                bucket[key] = value;
+            }
+        },
+
         async onHttpCodeChange(newValue) {
             this.httpCode = Number(newValue);
+            this.syncParentConfig(
+                'ScopPlatformRedirecter.config.autoRedirectOnDeleteHttpCode',
+                this.httpCode,
+            );
             await this.systemConfigApiService.saveValues({
                 'ScopPlatformRedirecter.config.autoRedirectOnDeleteHttpCode': this.httpCode,
             });

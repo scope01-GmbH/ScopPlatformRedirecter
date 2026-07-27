@@ -46,7 +46,7 @@
         :step="1"
         number-type="int"
         :disabled="!isIapActive"
-        @change="onRetentionDaysChange"
+        @update:model-value="onRetentionDaysChange"
     />
     {% endblock %}
 

@@ -171,3 +171,7 @@
 # v4.5.3
 
 - Alle Migrationen sind nun wiederholbar und können beliebig oft ohne Fehler ausgeführt werden
+
+# v4.5.4
+
+- Behoben, dass Werte in der Plugin-Konfiguration (404-Log-Aufbewahrung, ignorierte URL-Muster, Referer-Modus, Query-Parameter-Behandlung, HTTP-Status beim Löschen) nicht korrekt gespeichert wurden

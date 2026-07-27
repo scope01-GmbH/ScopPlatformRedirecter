@@ -171,3 +171,7 @@
 # v4.5.3
 
 - All migrations are now repeatable and can be executed multiple times without errors
+
+# v4.5.4
+
+- Fixed plugin configuration values (404 log retention, ignored URL patterns, referer mode, query parameter handling, delete HTTP status code) not being saved correctly
