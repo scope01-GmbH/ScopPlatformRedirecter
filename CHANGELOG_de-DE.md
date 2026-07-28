@@ -175,3 +175,4 @@
 # v4.5.4
 
 - Behoben, dass Werte in der Plugin-Konfiguration (404-Log-Aufbewahrung, ignorierte URL-Muster, Referer-Modus, Query-Parameter-Behandlung, HTTP-Status beim Löschen) nicht korrekt gespeichert wurden
+- Fremdschlüssel-Fehler beim Update auf MySQL 8.0.30+ mit aktiviertem `sql_generate_invisible_primary_key` behoben

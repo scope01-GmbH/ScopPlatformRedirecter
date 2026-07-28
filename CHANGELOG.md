@@ -175,3 +175,4 @@
 # v4.5.4
 
 - Fixed plugin configuration values (404 log retention, ignored URL patterns, referer mode, query parameter handling, delete HTTP status code) not being saved correctly
+- Fixed update foreign-key error on MySQL 8.0.30+ with `sql_generate_invisible_primary_key` enabled
