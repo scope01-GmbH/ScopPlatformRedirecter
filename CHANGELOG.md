@@ -176,3 +176,7 @@
 
 - Fixed plugin configuration values (404 log retention, ignored URL patterns, referer mode, query parameter handling, delete HTTP status code) not being saved correctly
 - Fixed update foreign-key error on MySQL 8.0.30+ with `sql_generate_invisible_primary_key` enabled
+
+# v4.5.5
+
+- When redirecting to a product or category, the target SEO URL can now be selected per language and sales channel, so redirects can point to the correct language variant (Premium feature)

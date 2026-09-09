@@ -42,6 +42,7 @@
 | 4.5.2   | Fix auto creation of redirects for not existing saleschannel domains                                                                                                    | 6.7.4.0          |
 | 4.5.3   | All migrations are now repeatable and can be executed multiple times without errors                                                                                     | 6.7.4.0          |
 | 4.5.4   | Fixed plugin configuration values not being saved correctly; fixed update foreign-key error on MySQL 8.0.30+                                                             | 6.7.4.0          |
+| 4.5.5   | Select the target SEO URL per language and sales channel when redirecting to a product or category (Premium feature)                                                    | 6.7.4.0          |
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
 > Version 3.0.0 is no longer compatible with Shopware 6.5 or below!\

@@ -176,3 +176,7 @@
 
 - Behoben, dass Werte in der Plugin-Konfiguration (404-Log-Aufbewahrung, ignorierte URL-Muster, Referer-Modus, Query-Parameter-Behandlung, HTTP-Status beim Löschen) nicht korrekt gespeichert wurden
 - Fremdschlüssel-Fehler beim Update auf MySQL 8.0.30+ mit aktiviertem `sql_generate_invisible_primary_key` behoben
+
+# v4.5.5
+
+- Bei Weiterleitungen auf ein Produkt oder eine Kategorie kann die Ziel-SEO-URL nun pro Sprache und Verkaufskanal ausgewählt werden, sodass auf die richtige Sprachvariante weitergeleitet wird (Premium-Feature)
