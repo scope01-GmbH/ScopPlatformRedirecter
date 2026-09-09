@@ -23,6 +23,8 @@ use PHPUnit\Framework\TestCase;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Test\TestCaseBase\BasicTestDataBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\CacheTestBehaviour;
 use Shopware\Core\Framework\Test\TestCaseBase\FilesystemBehaviour;
@@ -81,8 +83,24 @@ abstract class RedirectTestCase extends TestCase
 
         $this->ids = new IdsCollection();
 
+        // These tests do not run inside a rolled-back transaction, so a sales channel created by a
+        // previous test (with the same fixed domain) still exists. Remove it first to avoid a unique
+        // constraint violation on the domain URL, mirroring how the core helper de-duplicates localhost.
+        $this->deleteSalesChannelsForDomain('https://' . $this->host);
+
+        // The domain must match the request host/scheme below, otherwise Shopware's RequestTransformer
+        // cannot map the request to a sales channel and never sets the "sw-original-request-uri"
+        // attribute that the redirect decorator relies on (no attribute -> no redirect).
         $this->browser = $this->createCustomSalesChannelBrowser([
             'id' => $this->ids->create('sales-channel'),
+            'domains' => [
+                [
+                    'languageId' => Defaults::LANGUAGE_SYSTEM,
+                    'currencyId' => Defaults::CURRENCY,
+                    'snippetSetId' => $this->getSnippetSetIdForLocale('en-GB'),
+                    'url' => 'https://' . $this->host,
+                ],
+            ],
         ]);
 
         $this->browser->setServerParameter('HTTP_SW_CONTEXT_TOKEN', $this->ids->create('token'));
@@ -93,7 +111,10 @@ abstract class RedirectTestCase extends TestCase
         /** @var Connection $conn */
         $conn = $this->getContainer()->get(Connection::class);
 
-        $conn->executeStatement('TRUNCATE scop_platform_redirecter_redirect', []);
+        // DELETE (child first) instead of TRUNCATE: the 404 log table has a foreign key to the
+        // redirect table, and MySQL refuses to TRUNCATE a table referenced by a foreign key.
+        $conn->executeStatement('DELETE FROM scop_platform_redirecter_404', []);
+        $conn->executeStatement('DELETE FROM scop_platform_redirecter_redirect', []);
         foreach ($this->getDatabaseRedirects() as $testRedirect) {
             $salesChannelId = $testRedirect[5] ?? null;
             $conn->executeStatement('INSERT INTO scop_platform_redirecter_redirect (id, sourceURL, targetURL, httpCode, enabled, queryParamsHandling, salesChannelId, created_at) VALUES (UNHEX(?), ?, ?, ?, ?, ?, ' . ($salesChannelId !== null ? 'UNHEX(' : '') . '?' . ($salesChannelId !== null ? ')' : '') . ', CURRENT_TIMESTAMP())', [UUID::randomHex(), $testRedirect[0], $testRedirect[1], $testRedirect[2], $testRedirect[3] ? 1 : 0, $testRedirect[4] ?? 0, $salesChannelId]);
@@ -132,7 +153,7 @@ abstract class RedirectTestCase extends TestCase
 
     }
 
-    protected function checkRedirect(string $path, array $expectedLocation = null, int $expectedStatusCode = -1, bool $notExpected = false, string $method = 'GET'): void
+    protected function checkRedirect(string $path, ?array $expectedLocation = null, int $expectedStatusCode = -1, bool $notExpected = false, string $method = 'GET'): void
     {
         $this->browser->request($method, $path);
 
@@ -165,6 +186,22 @@ abstract class RedirectTestCase extends TestCase
         $this->authorizeSalesChannelBrowser($salesChannelApiBrowser, $salesChannelOverride);
 
         return $salesChannelApiBrowser;
+    }
+
+    private function deleteSalesChannelsForDomain(string $url): void
+    {
+        /** @var EntityRepository $salesChannelRepository */
+        $salesChannelRepository = $this->getContainer()->get('sales_channel.repository');
+
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('domains.url', $url));
+
+        $ids = $salesChannelRepository->searchIds($criteria, Context::createDefaultContext())->getIds();
+        if (empty($ids)) {
+            return;
+        }
+
+        $salesChannelRepository->delete(array_map(static fn ($id) => ['id' => $id], $ids), Context::createDefaultContext());
     }
 
     protected abstract function getDatabaseRedirects(): array;

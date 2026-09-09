@@ -59,6 +59,19 @@
             </p>
         </template>
 
+        {# Language / SEO URL picker #}
+        <template v-if="targetMode !== 'manual' && seoUrlOptions.length">
+            <sw-single-select
+                    class="scop-platform-redirect-not-found-create-modal__seo-url-select"
+                    :label="$tc('scopplatformredirecter.detail.seoUrlLabel')"
+                    :placeholder="$tc('scopplatformredirecter.detail.seoUrlPlaceholder')"
+                    :helpText="$tc('scopplatformredirecter.detail.seoUrlHelpText')"
+                    :value="selectedSeoUrlId"
+                    :options="seoUrlOptions"
+                    @update:value="onSeoUrlChange"
+            />
+        </template>
+
         {# HTTP Code #}
         <sw-select-number-field
                 :label="$tc('scopplatformredirecter.detail.httpCodeLabel')"

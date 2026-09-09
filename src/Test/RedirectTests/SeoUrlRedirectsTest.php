@@ -57,9 +57,9 @@ class SeoUrlRedirectsTest extends RedirectTestCase
         self::assertTrue($result->rowCount() > 0);
         $salesChannelId = $result->fetchOne();
 
-        $result = $conn->executeQuery("SELECT HEX(id) as id FROM product ORDER BY RAND() LIMIT 1");
-        self::assertTrue($result->rowCount() > 0);
-        $productid = $result->fetchOne();
+        // Use the product just created (not a random one) so each SEO URL targets a distinct product.
+        // Otherwise two calls could pick the same product+channel and violate the seo_url unique index.
+        $productid = $data['id'];
 
         $path = sprintf($path, $productid);
 

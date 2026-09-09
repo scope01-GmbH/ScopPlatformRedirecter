@@ -110,6 +110,18 @@
                                     <code>{{ resolvedEntityUrl }}</code>
                                 </p>
                             </template>
+
+                            <template v-if="targetMode !== 'manual' && redirect.targetEntityId && seoUrlOptions.length">
+                                <sw-single-select
+                                        class="scop-platform-redirect-details__seo-url-select"
+                                        :label="$tc('scopplatformredirecter.detail.seoUrlLabel')"
+                                        :placeholder="$tc('scopplatformredirecter.detail.seoUrlPlaceholder')"
+                                        :helpText="$tc('scopplatformredirecter.detail.seoUrlHelpText')"
+                                        :value="selectedSeoUrlId"
+                                        :options="seoUrlOptions"
+                                        @update:value="onSeoUrlChange"
+                                />
+                            </template>
                         </template>
                     {% endblock %}
 

@@ -23,6 +23,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Shopware\Core\Content\Product\ProductDefinition;
+use Shopware\Core\System\Language\LanguageDefinition;
 use Shopware\Core\System\SalesChannel\SalesChannelDefinition;
 
 class RedirectDefinition extends EntityDefinition
@@ -79,6 +80,7 @@ class RedirectDefinition extends EntityDefinition
             new ManyToOneAssociationField('product', 'product_id', ProductDefinition::class, 'id', false),
             (new StringField('target_entity_type', 'targetEntityType'))->addFlags(new ApiAware()),
             (new IdField('target_entity_id', 'targetEntityId'))->addFlags(new ApiAware()),
+            (new FkField('target_language_id', 'targetLanguageId', LanguageDefinition::class))->addFlags(new ApiAware()),
         ]);
     }
 }

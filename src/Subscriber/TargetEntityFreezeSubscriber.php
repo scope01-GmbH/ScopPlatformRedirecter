@@ -61,7 +61,14 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
 
             foreach ($redirectRows as $redirect) {
                 $entityId = $redirect['targetEntityId'];
-                $frozenUrl = $seoUrls[$entityId] ?? $redirect['targetURL'];
+                $languageId = $redirect['targetLanguageId'];
+                $seoUrlsForEntity = $seoUrls[$entityId] ?? ['byLanguage' => [], 'default' => null];
+
+                // Freeze the SEO URL of the language chosen for this redirect; fall back to the
+                // first-canonical URL when no language was selected or that language has no SEO URL.
+                $frozenUrl = ($languageId !== null ? ($seoUrlsForEntity['byLanguage'][$languageId] ?? null) : null)
+                    ?? $seoUrlsForEntity['default']
+                    ?? $redirect['targetURL'];
                 if ($frozenUrl === null || $frozenUrl === '') {
                     $frozenUrl = '/';
                 }
@@ -71,6 +78,7 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
                     'targetURL' => $frozenUrl,
                     'targetEntityType' => null,
                     'targetEntityId' => null,
+                    'targetLanguageId' => null,
                 ];
             }
         }
@@ -90,7 +98,7 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
 
     /**
      * @param string[] $entityIds
-     * @return array<int, array{id: string, targetURL: string, targetEntityId: string}>
+     * @return array<int, array{id: string, targetURL: string, targetEntityId: string, targetLanguageId: string|null}>
      */
     private function findRedirectsLinkedTo(string $entityType, array $entityIds, Context $context): array
     {
@@ -106,6 +114,7 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
                 'id' => $redirect->getId(),
                 'targetURL' => $redirect->getTargetURL(),
                 'targetEntityId' => $redirect->getTargetEntityId(),
+                'targetLanguageId' => $redirect->getTargetLanguageId(),
             ];
         }
 
@@ -114,7 +123,8 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
 
     /**
      * @param string[] $entityIds
-     * @return array<string, string> entityId (lowercase hex) => seo path with leading slash
+     * @return array<string, array{byLanguage: array<string, string>, default: string|null}>
+     *         entityId (lowercase hex) => language-keyed and first-canonical seo paths (leading slash)
      */
     private function getCanonicalSeoUrlsByEntity(string $entityType, array $entityIds, Context $context): array
     {
@@ -138,9 +148,18 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
             if ($path === null || $path === '') {
                 continue;
             }
-            // first-canonical wins (per-sales-channel duplicates are normal)
+            $normalizedPath = '/' . ltrim($path, '/');
+
             if (!isset($result[$fk])) {
-                $result[$fk] = '/' . ltrim($path, '/');
+                $result[$fk] = ['byLanguage' => [], 'default' => null];
+            }
+            // first-canonical wins as the default (per-sales-channel duplicates are normal)
+            if ($result[$fk]['default'] === null) {
+                $result[$fk]['default'] = $normalizedPath;
+            }
+            $languageId = $seoUrl->getLanguageId();
+            if ($languageId !== null && !isset($result[$fk]['byLanguage'][$languageId])) {
+                $result[$fk]['byLanguage'][$languageId] = $normalizedPath;
             }
         }
 

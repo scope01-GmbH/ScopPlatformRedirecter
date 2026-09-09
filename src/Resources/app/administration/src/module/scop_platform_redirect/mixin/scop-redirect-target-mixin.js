@@ -19,6 +19,9 @@ export default {
             selectedCategoryId: null,
             categoryCollection: null,
             resolvedEntityUrl: null,
+            selectedLanguageId: null,
+            seoUrlOptions: [],
+            selectedSeoUrlId: null,
         };
     },
 
@@ -83,6 +86,10 @@ export default {
             }
             return null;
         },
+
+        targetLanguageIdForSave() {
+            return this.targetEntityTypeForSave ? (this.selectedLanguageId || null) : null;
+        },
     },
 
     created() {
@@ -118,51 +125,94 @@ export default {
             this.selectedProductId = null;
             this.selectedCategoryId = null;
             this.resolvedEntityUrl = null;
+            this.resetSeoUrlSelection();
             this.initCategoryCollection();
+        },
+
+        resetSeoUrlSelection() {
+            this.seoUrlOptions = [];
+            this.selectedSeoUrlId = null;
+            this.selectedLanguageId = null;
         },
 
         async onProductChange(productId) {
             this.selectedProductId = productId;
             this.resolvedEntityUrl = null;
+            this.resetSeoUrlSelection();
             if (!productId) {
                 return;
             }
-            await this.previewEntitySeoUrl('frontend.detail.page', productId);
+            await this.loadSeoUrlOptions('frontend.detail.page', productId);
         },
 
         async onCategoryChange(categoryId) {
             this.selectedCategoryId = categoryId;
             this.resolvedEntityUrl = null;
+            this.resetSeoUrlSelection();
             if (!categoryId) {
                 return;
             }
-            await this.previewEntitySeoUrl('frontend.navigation.page', categoryId);
+            await this.loadSeoUrlOptions('frontend.navigation.page', categoryId);
         },
 
-        async previewEntitySeoUrl(routeName, foreignKey) {
-            const criteria = new Criteria(1, 1);
+        async loadSeoUrlOptions(routeName, foreignKey) {
+            const criteria = new Criteria(1, 100);
             criteria.addFilter(Criteria.equals('routeName', routeName));
             criteria.addFilter(Criteria.equals('foreignKey', foreignKey));
             criteria.addFilter(Criteria.equals('isCanonical', true));
-
-            if (this.salesChannelId) {
-                criteria.addFilter(Criteria.equals('salesChannelId', this.salesChannelId));
-            }
-
-            criteria.addSorting(Criteria.sort('createdAt', 'DESC'));
+            criteria.addAssociation('language');
+            criteria.addAssociation('salesChannel');
 
             try {
                 const result = await this.seoUrlRepository.search(criteria);
-                if (result.total > 0 && result.first().seoPathInfo) {
-                    this.resolvedEntityUrl = '/' + result.first().seoPathInfo.replace(/^\/+/, '');
+                this.seoUrlOptions = result.map((seoUrl) => this.buildSeoUrlOption(seoUrl));
+                if (this.seoUrlOptions.length) {
+                    this.applySeoUrlOption(this.seoUrlOptions[0]);
                 } else {
-                    this.resolvedEntityUrl = null;
                     this.createNotificationWarning({
                         message: this.$tc('scopplatformredirecter.notFound.modal.noSeoUrlFound'),
                     });
                 }
             } catch {
+                this.resetSeoUrlSelection();
                 this.resolvedEntityUrl = null;
+            }
+        },
+
+        buildSeoUrlOption(seoUrl) {
+            const path = '/' + (seoUrl.seoPathInfo || '').replace(/^\/+/, '');
+            const languageName = seoUrl.language ? seoUrl.language.name : '';
+            const channelName = seoUrl.salesChannel
+                ? (seoUrl.salesChannel.translated?.name || seoUrl.salesChannel.name)
+                : this.$tc('scopplatformredirecter.detail.seoUrlAllChannels');
+            return {
+                value: seoUrl.id,
+                id: seoUrl.id,
+                languageId: seoUrl.languageId,
+                salesChannelId: seoUrl.salesChannelId,
+                seoPathInfo: path,
+                label: `${channelName} · ${languageName} · ${path}`,
+            };
+        },
+
+        onSeoUrlChange(seoUrlId) {
+            const option = this.seoUrlOptions.find((o) => o.value === seoUrlId);
+            if (!option) {
+                this.selectedSeoUrlId = null;
+                this.selectedLanguageId = null;
+                this.resolvedEntityUrl = null;
+                return;
+            }
+            this.applySeoUrlOption(option);
+        },
+
+        applySeoUrlOption(option) {
+            this.selectedSeoUrlId = option.value;
+            this.selectedLanguageId = option.languageId || null;
+            this.resolvedEntityUrl = option.seoPathInfo;
+            // A channel-specific SEO URL implies the redirect targets that channel; align the scope.
+            if (option.salesChannelId) {
+                this.salesChannelId = option.salesChannelId;
             }
         },
 

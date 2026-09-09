@@ -37,6 +37,8 @@ Component.register('scop-platform-redirect-details', {
             seoUrlRepository: null,
             resolvedEntityUrl: null,
             entityLookupDone: false,
+            seoUrlOptions: [],
+            selectedSeoUrlId: null,
         };
     },
 
@@ -93,11 +95,15 @@ Component.register('scop-platform-redirect-details', {
 
             this.repository.get(this.$route.params.id, Shopware.Context.api, criteria).then((entity) => {
                 this.redirect = entity;
-                this.refreshResolvedEntityUrl();
+                this.loadSeoUrlOptions();
             })
         },
 
         onTargetModeChange(mode) {
+            this.seoUrlOptions = [];
+            this.selectedSeoUrlId = null;
+            this.redirect.targetLanguageId = null;
+
             if (mode === 'manual') {
                 this.redirect.targetEntityType = null;
                 this.redirect.targetEntityId = null;
@@ -115,11 +121,14 @@ Component.register('scop-platform-redirect-details', {
             this.redirect.targetEntityType = entityType;
             this.redirect.targetEntityId = entityId || null;
             this.redirect.targetURL = '';
-            this.refreshResolvedEntityUrl();
+            this.redirect.targetLanguageId = null;
+            this.loadSeoUrlOptions();
         },
 
-        refreshResolvedEntityUrl() {
+        loadSeoUrlOptions() {
             this.resolvedEntityUrl = null;
+            this.seoUrlOptions = [];
+            this.selectedSeoUrlId = null;
             this.entityLookupDone = false;
 
             if (!this.redirect || !this.redirect.targetEntityType || !this.redirect.targetEntityId) {
@@ -132,20 +141,77 @@ Component.register('scop-platform-redirect-details', {
                 return;
             }
 
-            const criteria = new Shopware.Data.Criteria(1, 1);
+            const criteria = new Shopware.Data.Criteria(1, 100);
             criteria.addFilter(Shopware.Data.Criteria.equals('routeName', routeName));
             criteria.addFilter(Shopware.Data.Criteria.equals('foreignKey', this.redirect.targetEntityId));
             criteria.addFilter(Shopware.Data.Criteria.equals('isCanonical', true));
+            criteria.addAssociation('language');
+            criteria.addAssociation('salesChannel');
 
             this.seoUrlRepository.search(criteria, Shopware.Context.api).then((result) => {
-                const seoUrl = result.first();
-                if (seoUrl && seoUrl.seoPathInfo) {
-                    this.resolvedEntityUrl = '/' + seoUrl.seoPathInfo.replace(/^\/+/, '');
-                }
+                this.seoUrlOptions = result.map((seoUrl) => this.buildSeoUrlOption(seoUrl));
+                this.preselectSeoUrl();
                 this.entityLookupDone = true;
             }).catch(() => {
                 this.entityLookupDone = true;
             });
+        },
+
+        buildSeoUrlOption(seoUrl) {
+            const path = '/' + (seoUrl.seoPathInfo || '').replace(/^\/+/, '');
+            const languageName = seoUrl.language ? seoUrl.language.name : '';
+            const channelName = seoUrl.salesChannel
+                ? (seoUrl.salesChannel.translated?.name || seoUrl.salesChannel.name)
+                : this.$tc('scopplatformredirecter.detail.seoUrlAllChannels');
+            return {
+                value: seoUrl.id,
+                id: seoUrl.id,
+                languageId: seoUrl.languageId,
+                salesChannelId: seoUrl.salesChannelId,
+                seoPathInfo: path,
+                label: `${channelName} · ${languageName} · ${path}`,
+            };
+        },
+
+        preselectSeoUrl() {
+            if (!this.seoUrlOptions.length) {
+                return;
+            }
+
+            let option = null;
+            if (this.redirect.targetLanguageId) {
+                option = this.seoUrlOptions.find((o) =>
+                    o.languageId === this.redirect.targetLanguageId
+                    && (o.salesChannelId || null) === (this.redirect.salesChannelId || null),
+                ) || this.seoUrlOptions.find((o) => o.languageId === this.redirect.targetLanguageId);
+            }
+            if (!option) {
+                option = this.seoUrlOptions[0];
+            }
+
+            this.selectedSeoUrlId = option.value;
+            this.resolvedEntityUrl = option.seoPathInfo;
+            // Adopt the default language only when none was stored yet; never silently change the
+            // language (or sales-channel scope) of an existing redirect on load.
+            if (!this.redirect.targetLanguageId) {
+                this.redirect.targetLanguageId = option.languageId || null;
+            }
+        },
+
+        onSeoUrlChange(seoUrlId) {
+            this.selectedSeoUrlId = seoUrlId;
+            const option = this.seoUrlOptions.find((o) => o.value === seoUrlId);
+            if (!option) {
+                this.redirect.targetLanguageId = null;
+                this.resolvedEntityUrl = null;
+                return;
+            }
+            this.redirect.targetLanguageId = option.languageId || null;
+            // A channel-specific SEO URL implies the redirect targets that channel; align the scope.
+            if (option.salesChannelId) {
+                this.redirect.salesChannelId = option.salesChannelId;
+            }
+            this.resolvedEntityUrl = option.seoPathInfo;
         },
 
         onClickPurchase() {
@@ -157,10 +223,13 @@ Component.register('scop-platform-redirect-details', {
         onConvertDanglingToManual() {
             this.redirect.targetEntityType = null;
             this.redirect.targetEntityId = null;
+            this.redirect.targetLanguageId = null;
             if (!this.redirect.targetURL) {
                 this.redirect.targetURL = '/';
             }
             this.resolvedEntityUrl = null;
+            this.seoUrlOptions = [];
+            this.selectedSeoUrlId = null;
             this.entityLookupDone = true;
         },
 

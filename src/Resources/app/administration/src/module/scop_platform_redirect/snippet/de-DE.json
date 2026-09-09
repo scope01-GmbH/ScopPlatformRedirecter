@@ -188,6 +188,10 @@
         "category": "Kategorie"
       },
       "resolvedSeoUrlHint": "Aktuelle SEO-URL:",
+      "seoUrlLabel": "SEO-URL / Sprache",
+      "seoUrlPlaceholder": "Ziel-SEO-URL auswählen",
+      "seoUrlHelpText": "Wählen Sie, auf welche Sprach- und Verkaufskanal-SEO-URL diese Weiterleitung zeigen soll.",
+      "seoUrlAllChannels": "Alle Verkaufskanäle",
       "entityLinkIapRequired": "Diese Weiterleitung ist mit einem Produkt oder einer Kategorie verknüpft. Die dynamische Auflösung erfordert den Premium In-App Kauf.",
       "danglingEntity": {
         "product": "Das verlinkte Produkt existiert nicht mehr. Diese Weiterleitung läuft aktuell ins Leere.",

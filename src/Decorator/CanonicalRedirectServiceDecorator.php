@@ -60,7 +60,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         return $this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID);
     }
 
-    private function resolveEntityUrl(string $entityType, string $entityId, ?string $salesChannelId, Context $context): ?string
+    private function resolveEntityUrl(string $entityType, string $entityId, ?string $salesChannelId, ?string $targetLanguageId, Context $context): ?string
     {
         $routeName = self::ENTITY_ROUTE_MAP[$entityType] ?? null;
         if ($routeName === null) {
@@ -71,6 +71,12 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $criteria->addFilter(new EqualsFilter('routeName', $routeName));
         $criteria->addFilter(new EqualsFilter('foreignKey', $entityId));
         $criteria->addFilter(new EqualsFilter('isCanonical', true));
+        // When a specific target language was chosen for this redirect, resolve the SEO URL of that
+        // language instead of the default (system) language. seoPathInfo is a per-row field, so filtering
+        // by languageId here is sufficient regardless of the Context language.
+        if ($targetLanguageId !== null) {
+            $criteria->addFilter(new EqualsFilter('languageId', $targetLanguageId));
+        }
         if ($salesChannelId !== null) {
             $criteria->addFilter(new OrFilter([
                 new EqualsFilter('salesChannelId', $salesChannelId),
@@ -184,7 +190,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $entityId = $redirect->getTargetEntityId();
         $resolvedEntityUrl = null;
         if ($entityType !== null && $entityId !== null && $this->isEntityLinkFeatureEnabled()) {
-            $resolvedEntityUrl = $this->resolveEntityUrl($entityType, $entityId, $salesChannelId, $context);
+            $resolvedEntityUrl = $this->resolveEntityUrl($entityType, $entityId, $salesChannelId, $redirect->getTargetLanguageId(), $context);
         }
 
         $targetURL = $resolvedEntityUrl ?? $redirect->getTargetURL();
