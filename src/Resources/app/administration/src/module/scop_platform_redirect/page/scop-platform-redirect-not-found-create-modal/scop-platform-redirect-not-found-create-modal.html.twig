@@ -37,10 +37,6 @@
                     v-model:value="selectedProductId"
                     @update:value="onProductChange"
             />
-            <p v-if="resolvedEntityUrl" class="scop-platform-redirect-not-found-create-modal__entity-hint">
-                {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
-                <code>{{ resolvedEntityUrl }}</code>
-            </p>
         </template>
 
         {# Category picker #}
@@ -53,10 +49,6 @@
                     @selection-add="onCategoryChange($event.id)"
                     @selection-remove="onCategoryChange(null)"
             />
-            <p v-if="resolvedEntityUrl" class="scop-platform-redirect-not-found-create-modal__entity-hint">
-                {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
-                <code>{{ resolvedEntityUrl }}</code>
-            </p>
         </template>
 
         {# Language / SEO URL picker #}

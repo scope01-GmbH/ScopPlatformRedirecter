@@ -81,6 +81,7 @@ class RedirectDefinition extends EntityDefinition
             (new StringField('target_entity_type', 'targetEntityType'))->addFlags(new ApiAware()),
             (new IdField('target_entity_id', 'targetEntityId'))->addFlags(new ApiAware()),
             (new FkField('target_language_id', 'targetLanguageId', LanguageDefinition::class))->addFlags(new ApiAware()),
+            (new FkField('target_sales_channel_id', 'targetSalesChannelId', SalesChannelDefinition::class))->addFlags(new ApiAware()),
         ]);
     }
 }

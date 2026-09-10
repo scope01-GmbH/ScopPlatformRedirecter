@@ -20,6 +20,7 @@ export default {
             categoryCollection: null,
             resolvedEntityUrl: null,
             selectedLanguageId: null,
+            selectedTargetSalesChannelId: null,
             seoUrlOptions: [],
             selectedSeoUrlId: null,
         };
@@ -90,6 +91,10 @@ export default {
         targetLanguageIdForSave() {
             return this.targetEntityTypeForSave ? (this.selectedLanguageId || null) : null;
         },
+
+        targetSalesChannelIdForSave() {
+            return this.targetEntityTypeForSave ? (this.selectedTargetSalesChannelId || null) : null;
+        },
     },
 
     created() {
@@ -133,6 +138,7 @@ export default {
             this.seoUrlOptions = [];
             this.selectedSeoUrlId = null;
             this.selectedLanguageId = null;
+            this.selectedTargetSalesChannelId = null;
         },
 
         async onProductChange(productId) {
@@ -209,11 +215,10 @@ export default {
         applySeoUrlOption(option) {
             this.selectedSeoUrlId = option.value;
             this.selectedLanguageId = option.languageId || null;
+            // Store the target's sales channel separately; it must not change the redirect's own
+            // (source) sales-channel scope, otherwise cross-channel redirects would stop firing.
+            this.selectedTargetSalesChannelId = option.salesChannelId || null;
             this.resolvedEntityUrl = option.seoPathInfo;
-            // A channel-specific SEO URL implies the redirect targets that channel; align the scope.
-            if (option.salesChannelId) {
-                this.salesChannelId = option.salesChannelId;
-            }
         },
 
         transformHttpCodeValueToNumber() {

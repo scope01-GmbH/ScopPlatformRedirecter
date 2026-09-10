@@ -16,11 +16,13 @@
             <argument type="service" id="Shopware\Core\Framework\Extensions\ExtensionDispatcher"/>
             <argument type="service" id="seo_url.repository"/>
             <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
+            <argument type="service" id="sales_channel_domain.repository"/>
         </service>
 
         <service id="Scop\PlatformRedirecter\Subscriber\TargetEntityFreezeSubscriber">
             <argument type="service" id="scop_platform_redirecter_redirect.repository"/>
             <argument type="service" id="seo_url.repository"/>
+            <argument type="service" id="sales_channel_domain.repository"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 

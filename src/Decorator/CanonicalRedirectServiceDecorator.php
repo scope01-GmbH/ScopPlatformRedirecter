@@ -38,7 +38,9 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
 
     private InAppPurchase $inAppPurchase;
 
-    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository, ExtensionDispatcher $extensionDispatcher, EntityRepository $seoUrlRepository, InAppPurchase $inAppPurchase)
+    private EntityRepository $salesChannelDomainRepository;
+
+    public function __construct(CanonicalRedirectService $inner, SystemConfigService $configService, EntityRepository $redirectRepository, ExtensionDispatcher $extensionDispatcher, EntityRepository $seoUrlRepository, InAppPurchase $inAppPurchase, EntityRepository $salesChannelDomainRepository)
     {
         parent::__construct($configService, $extensionDispatcher);
         $this->configService = $configService;
@@ -46,6 +48,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $this->inner = $inner;
         $this->seoUrlRepository = $seoUrlRepository;
         $this->inAppPurchase = $inAppPurchase;
+        $this->salesChannelDomainRepository = $salesChannelDomainRepository;
     }
 
     private const IN_APP_PURCHASE_ID = 'scopPlatformRedirecterPremium';
@@ -60,42 +63,95 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         return $this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID);
     }
 
-    private function resolveEntityUrl(string $entityType, string $entityId, ?string $salesChannelId, ?string $targetLanguageId, Context $context): ?string
+    /**
+     * Resolve the target URL for an entity-linked redirect.
+     *
+     * The target language and sales channel are the ones chosen on the redirect (target_language_id /
+     * target_sales_channel_id), independent of the sales channel the visitor is currently browsing. This
+     * allows redirecting from one sales channel to a product/category URL of another sales channel.
+     *
+     * When the target lives on a different domain/subpath than the current request, an absolute URL to the
+     * target domain is returned so the redirect points to the correct storefront; otherwise a relative path.
+     */
+    private function resolveEntityUrl(string $entityType, string $entityId, ?string $targetSalesChannelId, ?string $targetLanguageId, ?string $requestBaseUrl, Context $context): ?string
     {
         $routeName = self::ENTITY_ROUTE_MAP[$entityType] ?? null;
         if ($routeName === null) {
             return null;
         }
 
-        $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('routeName', $routeName));
-        $criteria->addFilter(new EqualsFilter('foreignKey', $entityId));
-        $criteria->addFilter(new EqualsFilter('isCanonical', true));
-        // When a specific target language was chosen for this redirect, resolve the SEO URL of that
-        // language instead of the default (system) language. seoPathInfo is a per-row field, so filtering
-        // by languageId here is sufficient regardless of the Context language.
-        if ($targetLanguageId !== null) {
-            $criteria->addFilter(new EqualsFilter('languageId', $targetLanguageId));
+        $path = $this->findSeoPath($routeName, $entityId, $targetSalesChannelId, $targetLanguageId, $context);
+        if ($path === null) {
+            return null;
         }
-        if ($salesChannelId !== null) {
-            $criteria->addFilter(new OrFilter([
-                new EqualsFilter('salesChannelId', $salesChannelId),
-                new EqualsFilter('salesChannelId', null),
-            ]));
-        }
-        $criteria->setLimit(1);
 
-        $seoUrl = $this->seoUrlRepository->search($criteria, $context)->first();
+        // Prefix the target domain when it differs from the current request domain (cross-channel or a
+        // language living under a different subpath, e.g. "/de"). seoPathInfo is stored without that prefix.
+        $targetBaseUrl = $this->resolveTargetDomainBaseUrl($targetSalesChannelId, $targetLanguageId, $context);
+        if ($targetBaseUrl !== null && rtrim($targetBaseUrl, '/') !== rtrim((string) $requestBaseUrl, '/')) {
+            return rtrim($targetBaseUrl, '/') . '/' . ltrim($path, '/');
+        }
+
+        return '/' . ltrim($path, '/');
+    }
+
+    private function findSeoPath(string $routeName, string $entityId, ?string $salesChannelId, ?string $languageId, Context $context): ?string
+    {
+        $search = function (?string $channelMode, ?string $channelId) use ($routeName, $entityId, $languageId, $context) {
+            $criteria = new Criteria();
+            $criteria->addFilter(new EqualsFilter('routeName', $routeName));
+            $criteria->addFilter(new EqualsFilter('foreignKey', $entityId));
+            $criteria->addFilter(new EqualsFilter('isCanonical', true));
+            if ($languageId !== null) {
+                $criteria->addFilter(new EqualsFilter('languageId', $languageId));
+            }
+            // 'exact' -> a specific channel, 'null' -> channel-independent rows, null -> any channel
+            if ($channelMode === 'exact') {
+                $criteria->addFilter(new EqualsFilter('salesChannelId', $channelId));
+            } elseif ($channelMode === 'null') {
+                $criteria->addFilter(new EqualsFilter('salesChannelId', null));
+            }
+            $criteria->setLimit(1);
+
+            return $this->seoUrlRepository->search($criteria, $context)->first();
+        };
+
+        // Prefer the exact target sales channel, then a channel-independent URL. Only when no target
+        // channel was requested do we accept any channel (language-only / legacy redirects); this
+        // prevents pulling a different channel's URL for a channel-scoped target.
+        $seoUrl = $salesChannelId !== null ? $search('exact', $salesChannelId) : null;
+        if ($seoUrl === null) {
+            $seoUrl = $search('null', null);
+        }
+        if ($seoUrl === null && $salesChannelId === null) {
+            $seoUrl = $search(null, null);
+        }
+
         if ($seoUrl === null) {
             return null;
         }
 
         $path = $seoUrl->getSeoPathInfo();
-        if ($path === null || $path === '') {
+
+        return ($path === null || $path === '') ? null : $path;
+    }
+
+    private function resolveTargetDomainBaseUrl(?string $salesChannelId, ?string $languageId, Context $context): ?string
+    {
+        if ($salesChannelId === null) {
             return null;
         }
 
-        return '/' . ltrim($path, '/');
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('salesChannelId', $salesChannelId));
+        if ($languageId !== null) {
+            $criteria->addFilter(new EqualsFilter('languageId', $languageId));
+        }
+        $criteria->setLimit(1);
+
+        $domain = $this->salesChannelDomainRepository->search($criteria, $context)->first();
+
+        return $domain?->getUrl();
     }
 
     /**
@@ -190,7 +246,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         $entityId = $redirect->getTargetEntityId();
         $resolvedEntityUrl = null;
         if ($entityType !== null && $entityId !== null && $this->isEntityLinkFeatureEnabled()) {
-            $resolvedEntityUrl = $this->resolveEntityUrl($entityType, $entityId, $salesChannelId, $redirect->getTargetLanguageId(), $context);
+            $resolvedEntityUrl = $this->resolveEntityUrl($entityType, $entityId, $redirect->getTargetSalesChannelId(), $redirect->getTargetLanguageId(), $storefrontUri, $context);
         }
 
         $targetURL = $resolvedEntityUrl ?? $redirect->getTargetURL();

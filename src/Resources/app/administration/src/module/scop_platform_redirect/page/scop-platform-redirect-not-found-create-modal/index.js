@@ -73,6 +73,7 @@ Shopware.Component.register('scop-platform-redirect-not-found-create-modal', {
                 redirect.targetEntityType = entityType;
                 redirect.targetEntityId = entityId;
                 redirect.targetLanguageId = this.targetLanguageIdForSave;
+                redirect.targetSalesChannelId = this.targetSalesChannelIdForSave;
                 redirect.httpCode = this.httpCode;
                 redirect.enabled = true;
                 redirect.queryParamsHandling = this.queryParamsHandling;

@@ -65,7 +65,7 @@ class EntityLinkLanguageRedirectsTest extends RedirectTestCase
         static::assertNull($this->resolveEntityUrl('category', $categoryId, null, $langB));
     }
 
-    public function testLanguageResolutionIsScopedToRequestSalesChannel(): void
+    public function testSeoPathIsScopedToTargetSalesChannel(): void
     {
         $salesChannelIds = $this->getConnection()->fetchFirstColumn('SELECT LOWER(HEX(id)) FROM sales_channel LIMIT 2');
         if (\count($salesChannelIds) < 2) {
@@ -79,12 +79,12 @@ class EntityLinkLanguageRedirectsTest extends RedirectTestCase
         // SEO URL exists only for channel X.
         $this->insertSeoUrl($categoryId, $language, $channelX, $path);
 
-        // Requested from channel X -> resolves. Requested from channel Y -> nothing (would bail out).
-        static::assertSame('/' . $path, $this->resolveEntityUrl('category', $categoryId, $channelX, $language));
-        static::assertNull($this->resolveEntityUrl('category', $categoryId, $channelY, $language));
+        // Target channel X -> resolves. Target channel Y -> nothing (no channel-agnostic fallback exists).
+        static::assertSame($path, $this->findSeoPath('frontend.navigation.page', $categoryId, $channelX, $language));
+        static::assertNull($this->findSeoPath('frontend.navigation.page', $categoryId, $channelY, $language));
     }
 
-    public function testChannelAgnosticSeoUrlResolvesForAnyChannel(): void
+    public function testChannelAgnosticSeoPathResolvesForAnyTargetChannel(): void
     {
         $salesChannelIds = $this->getConnection()->fetchFirstColumn('SELECT LOWER(HEX(id)) FROM sales_channel LIMIT 2');
         if (\count($salesChannelIds) < 2) {
@@ -95,21 +95,30 @@ class EntityLinkLanguageRedirectsTest extends RedirectTestCase
 
         $categoryId = Uuid::randomHex();
         $path = 'channel-agnostic-' . Uuid::randomHex();
-        // Channel-independent SEO URL (sales_channel_id = NULL).
+        // Channel-independent SEO URL (sales_channel_id = NULL) is used as fallback for any target channel.
         $this->insertSeoUrl($categoryId, $language, null, $path);
 
-        // A NULL-channel SEO URL matches requests from any sales channel.
-        static::assertSame('/' . $path, $this->resolveEntityUrl('category', $categoryId, $channelY, $language));
+        static::assertSame($path, $this->findSeoPath('frontend.navigation.page', $categoryId, $channelY, $language));
     }
 
-    private function resolveEntityUrl(string $entityType, string $entityId, ?string $salesChannelId, ?string $targetLanguageId): ?string
+    private function resolveEntityUrl(string $entityType, string $entityId, ?string $targetSalesChannelId, ?string $targetLanguageId, ?string $requestBaseUrl = null): ?string
     {
         $decorator = $this->getContainer()->get(CanonicalRedirectService::class);
 
         $method = new \ReflectionMethod($decorator, 'resolveEntityUrl');
         $method->setAccessible(true);
 
-        return $method->invoke($decorator, $entityType, $entityId, $salesChannelId, $targetLanguageId, Context::createDefaultContext());
+        return $method->invoke($decorator, $entityType, $entityId, $targetSalesChannelId, $targetLanguageId, $requestBaseUrl, Context::createDefaultContext());
+    }
+
+    private function findSeoPath(string $routeName, string $entityId, ?string $salesChannelId, ?string $languageId): ?string
+    {
+        $decorator = $this->getContainer()->get(CanonicalRedirectService::class);
+
+        $method = new \ReflectionMethod($decorator, 'findSeoPath');
+        $method->setAccessible(true);
+
+        return $method->invoke($decorator, $routeName, $entityId, $salesChannelId, $languageId, Context::createDefaultContext());
     }
 
     private function insertSeoUrl(string $foreignKey, string $languageId, ?string $salesChannelId, string $seoPath): void

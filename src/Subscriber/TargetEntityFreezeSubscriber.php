@@ -15,7 +15,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * When a product or category that is referenced by a redirect (via target_entity_type / target_entity_id)
  * gets deleted, freeze the last known SEO URL into the redirect's targetURL column so the redirect stays
- * functional after the entity is gone.
+ * functional after the entity is gone. The frozen URL respects the redirect's chosen target language and
+ * sales channel and is stored as an absolute URL when the target lives on a specific domain, so a
+ * cross-channel redirect keeps pointing to the correct storefront.
  */
 class TargetEntityFreezeSubscriber implements EventSubscriberInterface
 {
@@ -27,6 +29,7 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly EntityRepository $redirectRepository,
         private readonly EntityRepository $seoUrlRepository,
+        private readonly EntityRepository $salesChannelDomainRepository,
     ) {
     }
 
@@ -52,23 +55,20 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $redirectRows = $this->findRedirectsLinkedTo($entityType, $entityIds, $context);
-            if (empty($redirectRows)) {
+            $routeName = self::ENTITY_ROUTE_MAP[$entityType] ?? null;
+            if ($routeName === null) {
                 continue;
             }
 
-            $seoUrls = $this->getCanonicalSeoUrlsByEntity($entityType, $entityIds, $context);
+            foreach ($this->findRedirectsLinkedTo($entityType, $entityIds, $context) as $redirect) {
+                $frozenUrl = $this->resolveFrozenUrl(
+                    $routeName,
+                    $redirect['targetEntityId'],
+                    $redirect['targetSalesChannelId'],
+                    $redirect['targetLanguageId'],
+                    $context
+                ) ?? $redirect['targetURL'];
 
-            foreach ($redirectRows as $redirect) {
-                $entityId = $redirect['targetEntityId'];
-                $languageId = $redirect['targetLanguageId'];
-                $seoUrlsForEntity = $seoUrls[$entityId] ?? ['byLanguage' => [], 'default' => null];
-
-                // Freeze the SEO URL of the language chosen for this redirect; fall back to the
-                // first-canonical URL when no language was selected or that language has no SEO URL.
-                $frozenUrl = ($languageId !== null ? ($seoUrlsForEntity['byLanguage'][$languageId] ?? null) : null)
-                    ?? $seoUrlsForEntity['default']
-                    ?? $redirect['targetURL'];
                 if ($frozenUrl === null || $frozenUrl === '') {
                     $frozenUrl = '/';
                 }
@@ -79,6 +79,7 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
                     'targetEntityType' => null,
                     'targetEntityId' => null,
                     'targetLanguageId' => null,
+                    'targetSalesChannelId' => null,
                 ];
             }
         }
@@ -98,7 +99,7 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
 
     /**
      * @param string[] $entityIds
-     * @return array<int, array{id: string, targetURL: string, targetEntityId: string, targetLanguageId: string|null}>
+     * @return array<int, array{id: string, targetURL: string, targetEntityId: string, targetLanguageId: string|null, targetSalesChannelId: string|null}>
      */
     private function findRedirectsLinkedTo(string $entityType, array $entityIds, Context $context): array
     {
@@ -115,54 +116,83 @@ class TargetEntityFreezeSubscriber implements EventSubscriberInterface
                 'targetURL' => $redirect->getTargetURL(),
                 'targetEntityId' => $redirect->getTargetEntityId(),
                 'targetLanguageId' => $redirect->getTargetLanguageId(),
+                'targetSalesChannelId' => $redirect->getTargetSalesChannelId(),
             ];
         }
 
         return $rows;
     }
 
-    /**
-     * @param string[] $entityIds
-     * @return array<string, array{byLanguage: array<string, string>, default: string|null}>
-     *         entityId (lowercase hex) => language-keyed and first-canonical seo paths (leading slash)
-     */
-    private function getCanonicalSeoUrlsByEntity(string $entityType, array $entityIds, Context $context): array
+    private function resolveFrozenUrl(string $routeName, string $entityId, ?string $salesChannelId, ?string $languageId, Context $context): ?string
     {
-        $routeName = self::ENTITY_ROUTE_MAP[$entityType] ?? null;
-        if ($routeName === null) {
-            return [];
+        $path = $this->findSeoPath($routeName, $entityId, $salesChannelId, $languageId, $context);
+        if ($path === null) {
+            return null;
+        }
+
+        // Store an absolute URL when the target has a specific domain, so the frozen redirect keeps
+        // working across sales channels / language subpaths after the entity is gone.
+        $baseUrl = $this->resolveTargetDomainBaseUrl($salesChannelId, $languageId, $context);
+        if ($baseUrl !== null) {
+            return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
+        }
+
+        return '/' . ltrim($path, '/');
+    }
+
+    private function findSeoPath(string $routeName, string $entityId, ?string $salesChannelId, ?string $languageId, Context $context): ?string
+    {
+        $search = function (?string $channelMode, ?string $channelId) use ($routeName, $entityId, $languageId, $context) {
+            $criteria = new Criteria();
+            $criteria->addFilter(new EqualsFilter('routeName', $routeName));
+            $criteria->addFilter(new EqualsFilter('foreignKey', $entityId));
+            $criteria->addFilter(new EqualsFilter('isCanonical', true));
+            if ($languageId !== null) {
+                $criteria->addFilter(new EqualsFilter('languageId', $languageId));
+            }
+            // 'exact' -> a specific channel, 'null' -> channel-independent rows, null -> any channel
+            if ($channelMode === 'exact') {
+                $criteria->addFilter(new EqualsFilter('salesChannelId', $channelId));
+            } elseif ($channelMode === 'null') {
+                $criteria->addFilter(new EqualsFilter('salesChannelId', null));
+            }
+            $criteria->setLimit(1);
+
+            return $this->seoUrlRepository->search($criteria, $context)->first();
+        };
+
+        $seoUrl = $salesChannelId !== null ? $search('exact', $salesChannelId) : null;
+        if ($seoUrl === null) {
+            $seoUrl = $search('null', null);
+        }
+        if ($seoUrl === null && $salesChannelId === null) {
+            $seoUrl = $search(null, null);
+        }
+
+        if ($seoUrl === null) {
+            return null;
+        }
+
+        $path = $seoUrl->getSeoPathInfo();
+
+        return ($path === null || $path === '') ? null : $path;
+    }
+
+    private function resolveTargetDomainBaseUrl(?string $salesChannelId, ?string $languageId, Context $context): ?string
+    {
+        if ($salesChannelId === null) {
+            return null;
         }
 
         $criteria = new Criteria();
-        $criteria->addFilter(new EqualsFilter('routeName', $routeName));
-        $criteria->addFilter(new EqualsAnyFilter('foreignKey', $entityIds));
-        $criteria->addFilter(new EqualsFilter('isCanonical', true));
-
-        $result = [];
-        foreach ($this->seoUrlRepository->search($criteria, $context) as $seoUrl) {
-            $fk = $seoUrl->getForeignKey();
-            if ($fk === null) {
-                continue;
-            }
-            $path = $seoUrl->getSeoPathInfo();
-            if ($path === null || $path === '') {
-                continue;
-            }
-            $normalizedPath = '/' . ltrim($path, '/');
-
-            if (!isset($result[$fk])) {
-                $result[$fk] = ['byLanguage' => [], 'default' => null];
-            }
-            // first-canonical wins as the default (per-sales-channel duplicates are normal)
-            if ($result[$fk]['default'] === null) {
-                $result[$fk]['default'] = $normalizedPath;
-            }
-            $languageId = $seoUrl->getLanguageId();
-            if ($languageId !== null && !isset($result[$fk]['byLanguage'][$languageId])) {
-                $result[$fk]['byLanguage'][$languageId] = $normalizedPath;
-            }
+        $criteria->addFilter(new EqualsFilter('salesChannelId', $salesChannelId));
+        if ($languageId !== null) {
+            $criteria->addFilter(new EqualsFilter('languageId', $languageId));
         }
+        $criteria->setLimit(1);
 
-        return $result;
+        $domain = $this->salesChannelDomainRepository->search($criteria, $context)->first();
+
+        return $domain?->getUrl();
     }
 }

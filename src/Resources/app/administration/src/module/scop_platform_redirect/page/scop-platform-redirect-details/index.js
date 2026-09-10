@@ -66,10 +66,13 @@ Component.register('scop-platform-redirect-details', {
             return options;
         },
 
-        isEntityDangling() {
+        hasNoSeoUrlForEntity() {
+            // The linked entity is selected but has no resolvable canonical SEO URL. This is not the
+            // same as "entity deleted": keep the selectors visible so the user can pick another target
+            // or switch to a manual URL.
             return this.entityLookupDone
                 && !!(this.redirect && this.redirect.targetEntityType && this.redirect.targetEntityId)
-                && !this.resolvedEntityUrl;
+                && this.seoUrlOptions.length === 0;
         },
 
         showIapLockedBanner() {
@@ -103,6 +106,7 @@ Component.register('scop-platform-redirect-details', {
             this.seoUrlOptions = [];
             this.selectedSeoUrlId = null;
             this.redirect.targetLanguageId = null;
+            this.redirect.targetSalesChannelId = null;
 
             if (mode === 'manual') {
                 this.redirect.targetEntityType = null;
@@ -122,6 +126,7 @@ Component.register('scop-platform-redirect-details', {
             this.redirect.targetEntityId = entityId || null;
             this.redirect.targetURL = '';
             this.redirect.targetLanguageId = null;
+            this.redirect.targetSalesChannelId = null;
             this.loadSeoUrlOptions();
         },
 
@@ -180,21 +185,26 @@ Component.register('scop-platform-redirect-details', {
 
             let option = null;
             if (this.redirect.targetLanguageId) {
+                // Honor the exact stored target (language + sales channel).
                 option = this.seoUrlOptions.find((o) =>
                     o.languageId === this.redirect.targetLanguageId
-                    && (o.salesChannelId || null) === (this.redirect.salesChannelId || null),
-                ) || this.seoUrlOptions.find((o) => o.languageId === this.redirect.targetLanguageId);
-            }
-            if (!option) {
+                    && (o.salesChannelId || null) === (this.redirect.targetSalesChannelId || null),
+                );
+                // Only fall back to a language-only match when no target channel was stored (legacy
+                // redirects). Never jump to a different channel than the one that was saved.
+                if (!option && !this.redirect.targetSalesChannelId) {
+                    option = this.seoUrlOptions.find((o) => o.languageId === this.redirect.targetLanguageId);
+                }
+            } else {
+                // No target stored yet (freshly picked entity): default to the first option and adopt it.
                 option = this.seoUrlOptions[0];
+                this.redirect.targetLanguageId = option.languageId || null;
+                this.redirect.targetSalesChannelId = option.salesChannelId || null;
             }
 
-            this.selectedSeoUrlId = option.value;
-            this.resolvedEntityUrl = option.seoPathInfo;
-            // Adopt the default language only when none was stored yet; never silently change the
-            // language (or sales-channel scope) of an existing redirect on load.
-            if (!this.redirect.targetLanguageId) {
-                this.redirect.targetLanguageId = option.languageId || null;
+            if (option) {
+                this.selectedSeoUrlId = option.value;
+                this.resolvedEntityUrl = option.seoPathInfo;
             }
         },
 
@@ -203,14 +213,14 @@ Component.register('scop-platform-redirect-details', {
             const option = this.seoUrlOptions.find((o) => o.value === seoUrlId);
             if (!option) {
                 this.redirect.targetLanguageId = null;
+                this.redirect.targetSalesChannelId = null;
                 this.resolvedEntityUrl = null;
                 return;
             }
             this.redirect.targetLanguageId = option.languageId || null;
-            // A channel-specific SEO URL implies the redirect targets that channel; align the scope.
-            if (option.salesChannelId) {
-                this.redirect.salesChannelId = option.salesChannelId;
-            }
+            // Store the target's sales channel separately. It must not overwrite the redirect's own
+            // (source) sales-channel scope, otherwise a cross-channel redirect would stop firing.
+            this.redirect.targetSalesChannelId = option.salesChannelId || null;
             this.resolvedEntityUrl = option.seoPathInfo;
         },
 
@@ -224,6 +234,7 @@ Component.register('scop-platform-redirect-details', {
             this.redirect.targetEntityType = null;
             this.redirect.targetEntityId = null;
             this.redirect.targetLanguageId = null;
+            this.redirect.targetSalesChannelId = null;
             if (!this.redirect.targetURL) {
                 this.redirect.targetURL = '/';
             }

@@ -187,11 +187,11 @@
         "product": "Product",
         "category": "Category"
       },
-      "resolvedSeoUrlHint": "Current SEO URL:",
       "seoUrlLabel": "SEO URL / language",
       "seoUrlPlaceholder": "Select the target SEO URL",
       "seoUrlHelpText": "Choose which language and sales channel SEO URL this redirect should point to.",
       "seoUrlAllChannels": "All sales channels",
+      "noSeoUrlForEntity": "No SEO URL was found for the selected product or category. Pick a different one or use a manual URL.",
       "entityLinkIapRequired": "This redirect is linked to a product or category. Dynamic resolution requires the Premium In-App Purchase.",
       "danglingEntity": {
         "product": "The linked product no longer exists. This redirect is currently broken.",

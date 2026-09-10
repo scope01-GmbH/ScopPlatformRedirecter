@@ -211,6 +211,7 @@ class Redirect extends Entity
     protected ?string $targetEntityType = null;
     protected ?string $targetEntityId = null;
     protected ?string $targetLanguageId = null;
+    protected ?string $targetSalesChannelId = null;
 
     public function getTargetEntityType(): ?string
     {
@@ -240,5 +241,15 @@ class Redirect extends Entity
     public function setTargetLanguageId(?string $targetLanguageId): void
     {
         $this->targetLanguageId = $targetLanguageId;
+    }
+
+    public function getTargetSalesChannelId(): ?string
+    {
+        return $this->targetSalesChannelId;
+    }
+
+    public function setTargetSalesChannelId(?string $targetSalesChannelId): void
+    {
+        $this->targetSalesChannelId = $targetSalesChannelId;
     }
 }

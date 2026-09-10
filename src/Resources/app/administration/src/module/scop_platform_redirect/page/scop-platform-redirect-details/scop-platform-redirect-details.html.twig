@@ -53,13 +53,13 @@
                         </mt-banner>
 
                         <mt-banner
-                                v-if="isEntityDangling && !showIapLockedBanner"
-                                variant="critical"
+                                v-if="hasNoSeoUrlForEntity && !showIapLockedBanner"
+                                variant="attention"
                                 class="scop-platform-redirect-details__dangling-banner"
                         >
-                            <p>{{ $tc('scopplatformredirecter.detail.danglingEntity.' + redirect.targetEntityType) }}</p>
+                            <p>{{ $tc('scopplatformredirecter.detail.noSeoUrlForEntity') }}</p>
                             <mt-button
-                                    variant="primary"
+                                    variant="secondary"
                                     size="small"
                                     @click="onConvertDanglingToManual"
                             >
@@ -67,7 +67,7 @@
                             </mt-button>
                         </mt-banner>
 
-                        <template v-if="entityLookupDone && !isEntityDangling && !showIapLockedBanner">
+                        <template v-if="entityLookupDone && !showIapLockedBanner">
                             <sw-single-select
                                     :label="$tc('scopplatformredirecter.detail.targetModeLabel')"
                                     :value="targetMode"
@@ -91,10 +91,6 @@
                                         :value="redirect.targetEntityId"
                                         @update:value="onEntityChange('product', $event)"
                                 />
-                                <p v-if="resolvedEntityUrl" class="scop-platform-redirect-details__entity-hint">
-                                    {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
-                                    <code>{{ resolvedEntityUrl }}</code>
-                                </p>
                             </template>
 
                             <template v-if="targetMode === 'category'">
@@ -105,10 +101,6 @@
                                         :value="redirect.targetEntityId"
                                         @update:value="onEntityChange('category', $event)"
                                 />
-                                <p v-if="resolvedEntityUrl" class="scop-platform-redirect-details__entity-hint">
-                                    {{ $tc('scopplatformredirecter.detail.resolvedSeoUrlHint') }}
-                                    <code>{{ resolvedEntityUrl }}</code>
-                                </p>
                             </template>
 
                             <template v-if="targetMode !== 'manual' && redirect.targetEntityId && seoUrlOptions.length">
