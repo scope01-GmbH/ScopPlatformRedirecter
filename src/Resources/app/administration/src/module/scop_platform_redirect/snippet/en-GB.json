@@ -17,6 +17,7 @@
       "columnHttpCode": "HTTP Status Code",
       "columnEnabled": "Enabled",
       "columnQueryParamsHandling": "Query Parameter Handling",
+      "statusExpired": "Expired",
       "columnDate": "Created at",
       "createButton": "Add Redirect",
       "exportAllButton": "Export All",
@@ -212,6 +213,15 @@
       "salesChannel": {
         "select": "Sales Channel",
         "all": "All Sales Channels"
+      },
+      "temporary": {
+        "cardTitle": "Temporary redirect",
+        "activeFromLabel": "Start date",
+        "activeFromHelpText": "Leave empty to activate immediately. The redirect only fires from this date on.",
+        "activeUntilLabel": "End date",
+        "activeUntilHelpText": "Leave empty for no expiry. After this date the redirect stops firing and is deactivated automatically.",
+        "expiredNotice": "This redirect has expired and no longer fires. Adjust the end date and re-enable it to use it again.",
+        "iapRequired": "Scheduling redirects with a start and end date requires the Premium In-App Purchase."
       }
     }
   }

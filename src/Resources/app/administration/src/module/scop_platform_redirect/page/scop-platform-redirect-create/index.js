@@ -12,6 +12,8 @@ Shopware.Component.extend('scop-platform-redirect-create', 'scop-platform-redire
             this.redirect.targetEntityId = null;
             this.redirect.targetLanguageId = null;
             this.redirect.targetSalesChannelId = null;
+            this.redirect.activeFrom = null;
+            this.redirect.activeUntil = null;
             this.resolvedEntityUrl = null;
             this.seoUrlOptions = [];
             this.selectedSeoUrlId = null;

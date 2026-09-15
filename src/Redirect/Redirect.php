@@ -252,4 +252,27 @@ class Redirect extends Entity
     {
         $this->targetSalesChannelId = $targetSalesChannelId;
     }
+
+    protected ?\DateTimeInterface $activeFrom = null;
+    protected ?\DateTimeInterface $activeUntil = null;
+
+    public function getActiveFrom(): ?\DateTimeInterface
+    {
+        return $this->activeFrom;
+    }
+
+    public function setActiveFrom(?\DateTimeInterface $activeFrom): void
+    {
+        $this->activeFrom = $activeFrom;
+    }
+
+    public function getActiveUntil(): ?\DateTimeInterface
+    {
+        return $this->activeUntil;
+    }
+
+    public function setActiveUntil(?\DateTimeInterface $activeUntil): void
+    {
+        $this->activeUntil = $activeUntil;
+    }
 }

@@ -12,6 +12,7 @@ namespace Scop\PlatformRedirecter\Redirect;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\DateTimeField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\ApiAware;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
@@ -82,6 +83,8 @@ class RedirectDefinition extends EntityDefinition
             (new IdField('target_entity_id', 'targetEntityId'))->addFlags(new ApiAware()),
             (new FkField('target_language_id', 'targetLanguageId', LanguageDefinition::class))->addFlags(new ApiAware()),
             (new FkField('target_sales_channel_id', 'targetSalesChannelId', SalesChannelDefinition::class))->addFlags(new ApiAware()),
+            (new DateTimeField('active_from', 'activeFrom'))->addFlags(new ApiAware()),
+            (new DateTimeField('active_until', 'activeUntil'))->addFlags(new ApiAware()),
         ]);
     }
 }

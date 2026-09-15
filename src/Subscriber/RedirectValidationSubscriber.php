@@ -63,10 +63,12 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
             }
             $payload = $command->getPayload();
 
-            // Entity-link feature is gated behind the Premium IAP. Block writes that try to set the
-            // entity-link columns when the IAP is not active.
+            // Entity-link and temporary-scheduling features are gated behind the Premium IAP. Block
+            // writes that try to set those columns when the IAP is not active.
+            $iapActive = $this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID);
+
             $writesEntityLink = !empty($payload['target_entity_type']) || !empty($payload['target_entity_id']);
-            if ($writesEntityLink && !$this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID)) {
+            if ($writesEntityLink && !$iapActive) {
                 $violationList->add(new ConstraintViolation(
                     $this->translator->trans('Scop.PlatformRedirecter.validation.entityLinkRequiresIap'),
                     null,
@@ -74,6 +76,23 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
                     '',
                     rtrim(str_replace('[', '/', $command->getPath()), ']') . '/targetEntityType',
                     $payload['target_entity_type'] ?? null,
+                    null,
+                    null,
+                    null
+                ));
+                $writeException->add(new WriteConstraintViolationException($violationList));
+                continue;
+            }
+
+            $writesDateWindow = !empty($payload['active_from']) || !empty($payload['active_until']);
+            if ($writesDateWindow && !$iapActive) {
+                $violationList->add(new ConstraintViolation(
+                    $this->translator->trans('Scop.PlatformRedirecter.validation.temporaryRequiresIap'),
+                    null,
+                    [],
+                    '',
+                    rtrim(str_replace('[', '/', $command->getPath()), ']') . '/activeUntil',
+                    $payload['active_until'] ?? null,
                     null,
                     null,
                     null
@@ -146,6 +165,9 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
                 'salesChannelId' => [
                     new Assert\Callback([$this, 'validateId']),
                     new Assert\Callback([$this, 'validateSaleChannelId']),
+                ],
+                'active_from' => [
+                    new Assert\Callback([$this, 'validateActiveWindow']),
                 ]
             ],
             'allowExtraFields' => true,
@@ -167,6 +189,34 @@ class RedirectValidationSubscriber implements EventSubscriberInterface
         $salesChannelsIds = $this->salesChannelRepository->searchIds(new Criteria(), $this->context)->getIds();
         if (!in_array(strtolower($id), $salesChannelsIds, true) && !in_array(Uuid::fromBytesToHex($id), $salesChannelsIds, true)) {
             $assertContext->buildViolation('Sales channel is not exist')
+                ->addViolation();
+        }
+    }
+
+    /**
+     * Ensures activeFrom is before activeUntil when both are present in the write payload.
+     */
+    public function validateActiveWindow(mixed $activeFrom, ExecutionContextInterface $assertContext): void
+    {
+        if (empty($activeFrom)) {
+            return;
+        }
+
+        $root = $assertContext->getRoot();
+        $activeUntil = is_array($root) ? ($root['active_until'] ?? null) : null;
+        if (empty($activeUntil)) {
+            return;
+        }
+
+        try {
+            $from = $activeFrom instanceof \DateTimeInterface ? $activeFrom : new \DateTime((string) $activeFrom);
+            $until = $activeUntil instanceof \DateTimeInterface ? $activeUntil : new \DateTime((string) $activeUntil);
+        } catch (\Exception) {
+            return;
+        }
+
+        if ($from >= $until) {
+            $assertContext->buildViolation($this->translator->trans('Scop.PlatformRedirecter.validation.activeWindowOrder'))
                 ->addViolation();
         }
     }

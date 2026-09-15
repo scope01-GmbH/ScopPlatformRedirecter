@@ -152,6 +152,9 @@ Shopware.Component.register('scop-platform-redirect-list', {
         formatDate(date) {
             return Shopware.Filter.getByName('date')(date);
         },
+        isExpired(item) {
+            return !!(item.activeUntil) && new Date(item.activeUntil) < new Date();
+        },
         async loadOpenNotFoundCount() {
             if (!this.inAppActive) {
                 this.openNotFoundCount = 0;

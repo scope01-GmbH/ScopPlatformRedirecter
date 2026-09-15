@@ -180,3 +180,4 @@
 # v4.5.5
 
 - When redirecting to a product or category, the target SEO URL can now be selected per language and sales channel, so redirects can point to the correct language variant (Premium feature)
+- Redirects can now be scheduled with an optional start and end date. Outside this window the redirect no longer fires, expired redirects are disabled automatically, and they are marked as expired in the admin (Premium feature)

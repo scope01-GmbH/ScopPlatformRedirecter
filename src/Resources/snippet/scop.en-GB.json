@@ -5,7 +5,9 @@
                 "choice": "This value {{ value }} is not a valid choice. Allowed: {{ choices }}",
                 "homeSourceUrl": "The source url {{ value }} is not allowed and should be redirected via the htaccess file.",
                 "notBeginWith": "The source url {{ value }} is not allowed. Source urls must not begin with %forbidden%.",
-                "entityLinkRequiresIap": "Linking a redirect to a product or category requires the Premium In-App Purchase."
+                "entityLinkRequiresIap": "Linking a redirect to a product or category requires the Premium In-App Purchase.",
+                "temporaryRequiresIap": "Scheduling a redirect with a start or end date requires the Premium In-App Purchase.",
+                "activeWindowOrder": "The start date must be before the end date."
             }
         }
     }

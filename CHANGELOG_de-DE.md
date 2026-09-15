@@ -180,3 +180,4 @@
 # v4.5.5
 
 - Bei Weiterleitungen auf ein Produkt oder eine Kategorie kann die Ziel-SEO-URL nun pro Sprache und Verkaufskanal ausgewählt werden, sodass auf die richtige Sprachvariante weitergeleitet wird (Premium-Feature)
+- Weiterleitungen können nun mit einem optionalen Start- und Enddatum zeitgesteuert werden. Außerhalb dieses Zeitfensters greift die Weiterleitung nicht, abgelaufene Weiterleitungen werden automatisch deaktiviert und im Admin als abgelaufen gekennzeichnet (Premium-Feature)

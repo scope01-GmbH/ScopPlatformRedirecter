@@ -17,6 +17,7 @@
       "columnHttpCode": "HTTP Status Code",
       "columnEnabled": "Aktiviert",
       "columnQueryParamsHandling": "Umgang mit Query Parametern",
+      "statusExpired": "Abgelaufen",
       "columnDate": "Erstellt am",
       "createButton": "Weiterleitung anlegen",
       "exportAllButton": "Alle Exportieren",
@@ -212,6 +213,15 @@
       "salesChannel": {
         "select": "Verkaufskanal",
         "all": "Alle Verkaufskanäle"
+      },
+      "temporary": {
+        "cardTitle": "Temporäre Weiterleitung",
+        "activeFromLabel": "Startdatum",
+        "activeFromHelpText": "Leer lassen für sofortige Aktivierung. Die Weiterleitung greift erst ab diesem Datum.",
+        "activeUntilLabel": "Enddatum",
+        "activeUntilHelpText": "Leer lassen für kein Ablaufdatum. Nach diesem Datum greift die Weiterleitung nicht mehr und wird automatisch deaktiviert.",
+        "expiredNotice": "Diese Weiterleitung ist abgelaufen und greift nicht mehr. Passen Sie das Enddatum an und aktivieren Sie sie erneut, um sie wieder zu verwenden.",
+        "iapRequired": "Das zeitgesteuerte Planen von Weiterleitungen mit Start- und Enddatum erfordert den Premium In-App Kauf."
       }
     }
   }

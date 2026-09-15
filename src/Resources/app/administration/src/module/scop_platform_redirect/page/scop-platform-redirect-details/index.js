@@ -53,6 +53,11 @@ Component.register('scop-platform-redirect-details', {
             return Shopware.InAppPurchase.isActive('ScopPlatformRedirecter', IN_APP_PURCHASE_ID);
         },
 
+        isExpired() {
+            return !!(this.redirect && this.redirect.activeUntil)
+                && new Date(this.redirect.activeUntil) < new Date();
+        },
+
         targetModeOptions() {
             const options = [
                 {value: 'manual', label: this.$tc('scopplatformredirecter.detail.targetMode.manual')},

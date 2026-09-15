@@ -66,6 +66,9 @@
                         <sw-label v-if="item.productId" variant="info" appearance="pill" size="medium" style="margin-left: 8px;">
                             {{ $tc('scopplatformredirecter.list.autoCreated') }}
                         </sw-label>
+                        <sw-label v-if="isExpired(item)" variant="danger" appearance="pill" size="medium" style="margin-left: 8px;">
+                            {{ $tc('scopplatformredirecter.list.statusExpired') }}
+                        </sw-label>
                     </template>
                     <template #column-targetURL="{ item }">
                         <template v-if="item.targetEntityType">

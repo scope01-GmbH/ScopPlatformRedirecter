@@ -8,6 +8,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\OrFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\RangeFilter;
 use Shopware\Core\Framework\Routing\CanonicalRedirectService;
 use Shopware\Core\Framework\Extensions\ExtensionDispatcher;
 use Shopware\Core\Framework\Store\InAppPurchase;
@@ -61,6 +62,25 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
     private function isEntityLinkFeatureEnabled(): bool
     {
         return $this->inAppPurchase->isActive('ScopPlatformRedirecter', self::IN_APP_PURCHASE_ID);
+    }
+
+    /**
+     * Restrict matches to redirects whose optional activeFrom/activeUntil window contains the current
+     * time. A null bound means "no lower/upper limit". Enforced at request time regardless of IAP so a
+     * lapsed premium never revives expired redirects; the premium boundary is on writing the dates.
+     */
+    private function applyTimeWindowFilter(Criteria $criteria): void
+    {
+        $now = (new \DateTimeImmutable())->format(\DateTime::ATOM);
+
+        $criteria->addFilter(new OrFilter([
+            new EqualsFilter('activeFrom', null),
+            new RangeFilter('activeFrom', [RangeFilter::LTE => $now]),
+        ]));
+        $criteria->addFilter(new OrFilter([
+            new EqualsFilter('activeUntil', null),
+            new RangeFilter('activeUntil', [RangeFilter::GTE => $now]),
+        ]));
     }
 
     /**
@@ -208,8 +228,10 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
         ];
 
         // search for the redirect in the database
-        $redirects = $this->repository->search((new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))->addFilter(new OrFilter([new EqualsFilter('salesChannelId', $salesChannelId), new EqualsFilter('salesChannelId', null)]))
-            ->setLimit(1), $context);
+        $criteria = (new Criteria())->addFilter(new EqualsAnyFilter('sourceURL', $search))->addFilter(new EqualsFilter('enabled', true))->addFilter(new OrFilter([new EqualsFilter('salesChannelId', $salesChannelId), new EqualsFilter('salesChannelId', null)]))
+            ->setLimit(1);
+        $this->applyTimeWindowFilter($criteria);
+        $redirects = $this->repository->search($criteria, $context);
 
         if ($redirects->count() === 0) {
             // Checks if the requested URL contains Query parameters, and if so, checks if a redirect can be found with the ignoreQueryParams option
@@ -224,6 +246,7 @@ class CanonicalRedirectServiceDecorator extends CanonicalRedirectService
                 $criteria->addFilter(new EqualsAnyFilter('queryParamsHandling', [1, 2]));
                 $criteria->addFilter(new OrFilter([new EqualsFilter('salesChannelId', $salesChannelId), new EqualsFilter('salesChannelId', null)]));
                 $criteria->setLimit(1);
+                $this->applyTimeWindowFilter($criteria);
 
                 $redirects = $this->repository->search($criteria, $context);
                 

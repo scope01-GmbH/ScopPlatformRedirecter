@@ -92,6 +92,18 @@
             <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
             <tag name="messenger.message_handler"/>
         </service>
+
+        <service id="Scop\PlatformRedirecter\MessageQueue\ScheduledTask\ExpireRedirectsTask">
+            <tag name="shopware.scheduled.task"/>
+        </service>
+
+        <service id="Scop\PlatformRedirecter\MessageQueue\ScheduledTask\ExpireRedirectsTaskHandler">
+            <argument type="service" id="scheduled_task.repository"/>
+            <argument type="service" id="logger"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Shopware\Core\Framework\Store\InAppPurchase"/>
+            <tag name="messenger.message_handler"/>
+        </service>
     </services>
 
 </container>
