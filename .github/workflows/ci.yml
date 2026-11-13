@@ -21,7 +21,7 @@ jobs:
         include:
           # Lowest version allowed by composer.json (shopware/core ^6.7.4)
           - shopware-version: v6.7.4.0
-            php-version: '8.2'
+            php-version: '8.3'
           # Version the plugin is developed against
           - shopware-version: v6.7.15.1
             php-version: '8.4'
@@ -74,7 +74,9 @@ jobs:
       # Installed separately and pinned, so the result does not depend on Shopware's own PHPStan
       # setup and the baseline stays valid. Bump together with phpstan-baseline.neon.
       - name: Install PHPStan
-        run: composer require phpstan/phpstan:2.3.5 --working-dir="$RUNNER_TEMP/phpstan" --no-interaction --no-progress
+        run: |
+          mkdir -p "$RUNNER_TEMP/phpstan"
+          composer require phpstan/phpstan:2.3.5 --working-dir="$RUNNER_TEMP/phpstan" --no-interaction --no-progress
 
       - name: Run PHPStan
         working-directory: custom/plugins/ScopPlatformRedirecter
