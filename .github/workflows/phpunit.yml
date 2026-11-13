@@ -1,0 +1,50 @@
+name: PHPUnit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpunit:
+    name: Shopware ${{ matrix.shopware-version }} / PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Lowest version allowed by composer.json (shopware/core ^6.7.4)
+          - shopware-version: v6.7.4.0
+            php-version: '8.2'
+          # Version the plugin is developed against
+          - shopware-version: v6.7.15.1
+            php-version: '8.4'
+
+    steps:
+      - name: Setup Shopware
+        uses: shopware/setup-shopware@main
+        with:
+          env: test
+          shopware-version: ${{ matrix.shopware-version }}
+          php-version: ${{ matrix.php-version }}
+          install: true
+
+      # Checked out after Shopware, because setup-shopware clones Shopware into the workspace root
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+        with:
+          path: custom/plugins/ScopPlatformRedirecter
+
+      - name: Refresh plugin list
+        run: php bin/console plugin:refresh
+
+      # The TestBootstrap force-installs and activates the plugin
+      - name: Run PHPUnit
+        working-directory: custom/plugins/ScopPlatformRedirecter
+        run: php ../../../vendor/bin/phpunit
