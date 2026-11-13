@@ -76,7 +76,11 @@ jobs:
       - name: Install PHPStan
         run: |
           mkdir -p "$RUNNER_TEMP/phpstan"
-          composer require phpstan/phpstan:2.3.5 --working-dir="$RUNNER_TEMP/phpstan" --no-interaction --no-progress
+          cd "$RUNNER_TEMP/phpstan"
+          composer config allow-plugins.phpstan/extension-installer true
+          # The extension installer registers an (empty) extension list of our own. Without it,
+          # PHPStan picks up the one from Shopware's vendor and enables Shopware's extra rule sets.
+          composer require phpstan/phpstan:2.3.5 phpstan/extension-installer --no-interaction --no-progress
 
       - name: Run PHPStan
         working-directory: custom/plugins/ScopPlatformRedirecter
