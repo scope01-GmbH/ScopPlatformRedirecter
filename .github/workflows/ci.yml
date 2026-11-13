@@ -77,10 +77,19 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/phpstan"
           cd "$RUNNER_TEMP/phpstan"
+          echo '{}' > composer.json
           composer config allow-plugins.phpstan/extension-installer true
-          # The extension installer registers an (empty) extension list of our own. Without it,
-          # PHPStan picks up the one from Shopware's vendor and enables Shopware's extra rule sets.
           composer require phpstan/phpstan:2.3.5 phpstan/extension-installer --no-interaction --no-progress
+
+      # Shopware's dev dependencies register PHPStan extensions (strict and deprecation rules) through
+      # their own extension list, which PHPStan loads via Shopware's autoloader. Replace it with our
+      # empty list, so CI checks the same rules as a local run against a normal Shopware install.
+      - name: Disable Shopware's PHPStan extensions
+        run: |
+          target=vendor/phpstan/extension-installer/src/GeneratedConfig.php
+          if [ -f "$target" ]; then
+            cp "$RUNNER_TEMP/phpstan/vendor/phpstan/extension-installer/src/GeneratedConfig.php" "$target"
+          fi
 
       - name: Run PHPStan
         working-directory: custom/plugins/ScopPlatformRedirecter
