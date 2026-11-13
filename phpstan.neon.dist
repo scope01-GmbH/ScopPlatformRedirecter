@@ -1,0 +1,11 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+    excludePaths:
+        - src/Resources
+    tmpDir: var/cache/phpstan
+    treatPhpDocTypesAsCertain: false

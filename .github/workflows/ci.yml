@@ -1,4 +1,4 @@
-name: PHPUnit
+name: CI
 
 on:
   push:
@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   phpunit:
-    name: Shopware ${{ matrix.shopware-version }} / PHP ${{ matrix.php-version }}
+    name: PHPUnit (Shopware ${{ matrix.shopware-version }} / PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -25,6 +25,8 @@ jobs:
           # Version the plugin is developed against
           - shopware-version: v6.7.15.1
             php-version: '8.4'
+          - shopware-version: v6.7.15.1
+            php-version: '8.5'
 
     steps:
       - name: Setup Shopware
@@ -51,3 +53,35 @@ jobs:
       - name: Run PHPUnit
         working-directory: custom/plugins/ScopPlatformRedirecter
         run: php ../../../vendor/bin/phpunit
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Shopware
+        uses: shopware/setup-shopware@main
+        with:
+          shopware-version: v6.7.15.1
+          php-version: '8.4'
+          install: false
+          allow-insecure-versions: true
+
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+        with:
+          path: custom/plugins/ScopPlatformRedirecter
+
+      # Installed separately and pinned, so the result does not depend on Shopware's own PHPStan
+      # setup and the baseline stays valid. Bump together with phpstan-baseline.neon.
+      - name: Install PHPStan
+        run: composer require phpstan/phpstan:2.3.5 --working-dir="$RUNNER_TEMP/phpstan" --no-interaction --no-progress
+
+      - name: Run PHPStan
+        working-directory: custom/plugins/ScopPlatformRedirecter
+        run: >
+          "$RUNNER_TEMP/phpstan/vendor/bin/phpstan" analyse
+          -c phpstan.neon.dist
+          --autoload-file=../../../vendor/autoload.php
+          --no-progress
+          --memory-limit=1G
+          --error-format=github
