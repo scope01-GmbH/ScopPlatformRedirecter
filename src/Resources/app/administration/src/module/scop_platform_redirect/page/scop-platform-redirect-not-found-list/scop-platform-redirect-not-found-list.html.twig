@@ -32,15 +32,7 @@
                         <strong>{{ stats.ignored }}</strong>
                     </span>
                 </span>
-                <sw-single-select
-                    v-if="inAppActive"
-                    :value="filterLinked"
-                    :options="filterOptions"
-                    @update:value="onFilterChange"
-                    size="small"
-                    style="min-width: 180px; text-align: left; margin-left: 10px"
-                />
-                <mt-button v-else variant="primary" @click="onClickIap">
+                <mt-button v-if="!inAppActive" variant="primary" @click="onClickIap">
                     {{ $t('scopplatformredirecter.list.iap') }} <mt-icon name="regular-shopping-cart" />
                 </mt-button>
                 <sw-button-group v-if="inAppActive" split-button>
@@ -63,6 +55,7 @@
                             </mt-button>
                         </template>
                         <sw-context-menu-item
+                            :disabled="!sidebarFiltersReady"
                             @click="onExportCsv('filtered')"
                         >
                             {{ $tc('scopplatformredirecter.notFound.exportCsvFilteredButton') }}
@@ -320,5 +313,72 @@
                 </sw-modal>
             {% endblock %}
         </template>
+
+        {% block scop_platform_redirect_not_found_list_sidebar %}
+            <template #sidebar>
+                <sw-sidebar v-if="inAppActive">
+                    <sw-sidebar-item
+                        icon="regular-undo"
+                        :title="$t('scopplatformredirecter.notFound.refresh')"
+                        :disabled="!sidebarFiltersReady || isLoading"
+                        @click="getList"
+                    />
+                    <sw-sidebar-item
+                        class="sw-sidebar-filter-panel"
+                        icon="regular-filter"
+                        :disabled="!sidebarFiltersReady"
+                        :badge="activeFilterCount"
+                        :title="$t('sw-filter-panel.titleSidebarItemFilter')"
+                    >
+                        <div class="scop-platform-redirect-not-found-list__filters">
+                            <div>
+                                <scop-404-number-filter
+                                    :filter="sidebarFilters.hitCount"
+                                    :active="!!sidebarFilterValues.hitCount"
+                                    :min="0"
+                                    :step="1"
+                                    :digits="0"
+                                    number-type="int"
+                                    allow-empty
+                                    @filter-update="onSidebarFilterUpdate"
+                                    @filter-reset="onSidebarFilterReset"
+                                />
+                            </div>
+                            <div>
+                                <scop-404-date-filter
+                                    :filter="sidebarFilters.lastHitAt"
+                                    :active="!!sidebarFilterValues.lastHitAt"
+                                    @filter-update="onSidebarFilterUpdate"
+                                    @filter-reset="onSidebarFilterReset"
+                                />
+                            </div>
+                            <div>
+                                <sw-multi-select-filter
+                                    :filter="sidebarFilters.salesChannel"
+                                    :active="!!sidebarFilterValues.salesChannel"
+                                    @filter-update="onSidebarFilterUpdate"
+                                    @filter-reset="onSidebarFilterReset"
+                                />
+                            </div>
+                            <div>
+                                <sw-base-filter
+                                    :title="$tc('scopplatformredirecter.notFound.columnStatus')"
+                                    :active="!!sidebarFilterValues.status?.length"
+                                    :show-reset-button="!!sidebarFilterValues.status?.length"
+                                    @filter-reset="onSidebarFilterReset('status')"
+                                >
+                                    <sw-multi-select
+                                        :value="sidebarFilterValues.status ?? []"
+                                        :options="statusOptions"
+                                        :placeholder="$tc('scopplatformredirecter.notFound.filterAll')"
+                                        @update:value="setSidebarFilter('status', $event)"
+                                    />
+                                </sw-base-filter>
+                            </div>
+                        </div>
+                    </sw-sidebar-item>
+                </sw-sidebar>
+            </template>
+        {% endblock %}
     </sw-page>
 {% endblock %}

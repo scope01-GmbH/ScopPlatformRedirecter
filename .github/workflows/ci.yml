@@ -22,10 +22,12 @@ jobs:
           # Lowest version allowed by composer.json (shopware/core ^6.7.4)
           - shopware-version: v6.7.4.0
             php-version: '8.3'
-          # Version the plugin is developed against
+          # Previous Shopware patch release
           - shopware-version: v6.7.15.1
             php-version: '8.4'
           - shopware-version: v6.7.15.1
+            php-version: '8.5'
+          - shopware-version: v6.7.16.1
             php-version: '8.5'
 
     steps:

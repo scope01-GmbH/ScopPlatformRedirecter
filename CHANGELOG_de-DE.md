@@ -184,5 +184,7 @@
 
 # v4.5.6
 
-- Das 404-Log kann jetzt über Shopware-Exportprofile als CSV exportiert werden. Zur Auswahl stehen alle Einträge oder nur die Treffer zum aktuellen Suchbegriff und Statusfilter (Premium-Funktion).
+- Das 404-Log kann jetzt über Shopware-Exportprofile als CSV exportiert werden. Zur Auswahl stehen alle Einträge oder nur die Treffer zum aktuellen Suchbegriff und zu den Filtern in der Seitenleiste (Premium-Funktion).
 - Das eigene Standard-Exportprofil für das 404-Log wird bei der Installation oder beim Update automatisch angelegt.
+- In der Seitenleiste lässt sich das 404-Log nach Aufrufzahl, Datum des letzten Aufrufs, Verkaufskanälen und Status filtern. Die Filterauswahl wird pro Admin-Benutzer gespeichert und beim Neuladen wiederhergestellt.
+- Über „Aktualisieren“ in der Seitenleiste werden die Einträge und Statistikzähler neu geladen. Die aktiven Filter bleiben für die Liste gesetzt.

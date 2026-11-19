@@ -1,4 +1,19 @@
 .scop-platform-redirect-not-found-list {
+    &__filters {
+        display: grid;
+        gap: var(--scale-size-24, 24px);
+        padding: var(--scale-size-24, 24px);
+
+        > div {
+            min-width: 0;
+
+            .sw-field,
+            .mt-field {
+                margin-bottom: 0;
+            }
+        }
+    }
+
     &__stats-inline {
         display: inline-flex;
         align-items: center;

@@ -43,6 +43,7 @@
 | 4.5.3   | All migrations are now repeatable and can be executed multiple times without errors                                                                                                                             | 6.7.4.0          |
 | 4.5.4   | Fixed plugin configuration values not being saved correctly; fixed update foreign-key error on MySQL 8.0.30+                                                                                                    | 6.7.4.0          |
 | 4.5.5   | Select the target SEO URL per language and sales channel when redirecting to a product or category (Premium feature) <br> Redirects can now be scheduled with an optional start and end date. (Premium feature) | 6.7.4.0          |
+| 4.5.6   | Added profile-based CSV export and persistent sidebar filters for the 404 log (Premium feature). | 6.7.4.0 |
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
 > Version 3.0.0 is no longer compatible with Shopware 6.5 or below!\
@@ -65,3 +66,9 @@
 
 * manage redirects in the administration
 * redirect to the target in frontend
+
+## 404 log (Premium)
+
+In the administration, open **Redirects → 404 Log**. The filter sidebar supports a minimum and maximum hit count, a last-hit date range, and multiple sales channels and statuses. Shopware restores the sidebar filters for each admin user after reloading the page. Use **Refresh** in the sidebar to reload the list and summary counts with the current filters still applied to the list.
+
+**Export All** opens the Shopware profile dialog for the complete 404 log. The dropdown option **Export filtered entries** uses the current search and sidebar filters across all pages. Select an export profile, start the export, then download the CSV from the export history. The **Default 404 log** profile is created automatically on plugin installation or update.
