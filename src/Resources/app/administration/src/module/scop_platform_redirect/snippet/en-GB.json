@@ -63,6 +63,8 @@
     },
     "notFound": {
       "title": "404 Log",
+      "exportCsvFilteredButton": "Export filtered entries",
+      "exportCsvOptions": "Export options",
       "columnUrl": "URL",
       "columnHitCount": "Hits",
       "columnLastHit": "Last Hit",

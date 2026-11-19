@@ -22,6 +22,7 @@ Shopware.Component.register('scop-platform-redirect-not-found-list', {
     data() {
         return {
             isLoading: false,
+            exportConfig: null,
             notFoundLogs: null,
             total: 0,
             page: 1,
@@ -73,19 +74,7 @@ Shopware.Component.register('scop-platform-redirect-not-found-list', {
             criteria.addAssociation('redirect');
             criteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
 
-            if (this.term) {
-                criteria.setTerm(this.term);
-            }
-
-            if (this.filterLinked === 'open') {
-                criteria.addFilter(Criteria.equals('redirectId', null));
-                criteria.addFilter(Criteria.equals('ignored', false));
-            } else if (this.filterLinked === 'linked') {
-                criteria.addFilter(Criteria.not('AND', [Criteria.equals('redirectId', null)]));
-            } else if (this.filterLinked === 'ignored') {
-                criteria.addFilter(Criteria.equals('ignored', true));
-            }
-
+            this.applyNotFoundLogFilters(criteria);
             return criteria;
         },
 
@@ -179,6 +168,40 @@ Shopware.Component.register('scop-platform-redirect-not-found-list', {
 
         onClickIap() {
             this.inAppPurchaseCheckout.request({ identifier: inAppPurchaseId }, 'ScopPlatformRedirecter');
+        },
+
+        applyNotFoundLogFilters(criteria) {
+            if (this.term) {
+                criteria.setTerm(this.term);
+            }
+
+            if (this.filterLinked === 'open') {
+                criteria.addFilter(Criteria.equals('redirectId', null));
+                criteria.addFilter(Criteria.equals('ignored', false));
+            } else if (this.filterLinked === 'linked') {
+                criteria.addFilter(Criteria.not('AND', [Criteria.equals('redirectId', null)]));
+            } else if (this.filterLinked === 'ignored') {
+                criteria.addFilter(Criteria.equals('ignored', true));
+            }
+        },
+
+        onExportCsv(mode) {
+            if (!this.inAppActive) {
+                return;
+            }
+
+            this.exportConfig = mode === 'filtered' ? {
+                parameters: {
+                    scopNotFoundLogFilter: {
+                        term: this.term,
+                        status: this.filterLinked,
+                    },
+                },
+            } : {};
+        },
+
+        onCloseExport() {
+            this.exportConfig = null;
         },
 
         async getList() {

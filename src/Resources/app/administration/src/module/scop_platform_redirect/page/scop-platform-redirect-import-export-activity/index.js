@@ -2,6 +2,12 @@ const Criteria = Shopware.Data.Criteria;
 const {Component} = Shopware;
 
 Component.extend('scop-platform-redirect-import-export-activity', 'sw-import-export-activity', {
+    props: {
+        sourceEntity: {
+            type: String,
+            default: 'scop_platform_redirecter_redirect',
+        },
+    },
     computed: {
         activityCriteria() {
             const criteria = new Shopware.Data.Criteria();
@@ -17,7 +23,7 @@ Component.extend('scop-platform-redirect-import-export-activity', 'sw-import-exp
             } else if (this.type === 'export') {
                 criteria.addFilter(Criteria.equals('activity', 'export'));
             }
-            criteria.addFilter(Criteria.equals('profile.sourceEntity', 'scop_platform_redirecter_redirect'));
+            criteria.addFilter(Criteria.equals('profile.sourceEntity', this.sourceEntity));
             criteria.addSorting(Criteria.sort('createdAt', 'DESC'));
 
             criteria.setPage(1);

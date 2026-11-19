@@ -8,6 +8,10 @@ Component.override('sw-import-export-edit-profile-general', {
                 value: 'scop_platform_redirecter_redirect',
                 label: this.$tc('scopplatformredirecter.general.title'),
                 type: 'import-export',
+            }, {
+                value: 'scop_platform_redirecter_404',
+                label: this.$tc('scopplatformredirecter.notFound.title'),
+                type: 'export',
             });
 
             return supportedEntities;

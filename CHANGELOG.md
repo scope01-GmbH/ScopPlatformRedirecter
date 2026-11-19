@@ -181,3 +181,8 @@
 
 - When redirecting to a product or category, the target SEO URL can now be selected per language and sales channel, so redirects can point to the correct language variant (Premium feature)
 - Redirects can now be scheduled with an optional start and end date. Outside this window the redirect no longer fires, expired redirects are disabled automatically, and they are marked as expired in the admin (Premium feature)
+
+# v4.5.6
+
+- The 404 log can now be exported as CSV using Shopware export profiles. Export all entries or only those matching the current search and status filter (Premium feature).
+- A dedicated default export profile for the 404 log is created automatically on installation or update.

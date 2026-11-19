@@ -181,3 +181,8 @@
 
 - Bei Weiterleitungen auf ein Produkt oder eine Kategorie kann die Ziel-SEO-URL nun pro Sprache und Verkaufskanal ausgewählt werden, sodass auf die richtige Sprachvariante weitergeleitet wird (Premium-Feature)
 - Weiterleitungen können nun mit einem optionalen Start- und Enddatum zeitgesteuert werden. Außerhalb dieses Zeitfensters greift die Weiterleitung nicht, abgelaufene Weiterleitungen werden automatisch deaktiviert und im Admin als abgelaufen gekennzeichnet (Premium-Feature)
+
+# v4.5.6
+
+- Das 404-Log kann jetzt über Shopware-Exportprofile als CSV exportiert werden. Zur Auswahl stehen alle Einträge oder nur die Treffer zum aktuellen Suchbegriff und Statusfilter (Premium-Funktion).
+- Das eigene Standard-Exportprofil für das 404-Log wird bei der Installation oder beim Update automatisch angelegt.

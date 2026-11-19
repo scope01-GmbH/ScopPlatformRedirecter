@@ -36,10 +36,18 @@ Component.register('scop-platform-redirect-import-export-modal', {
             type: String,
             required: true,
             default: 'import',
+        },
+        sourceEntity: {
+            type: String,
+            default: 'scop_platform_redirecter_redirect',
+        },
+        exportConfig: {
+            type: Object,
+            default: () => ({}),
         }
     },
 
-    emits: ['import-started', 'export-started'],
+    emits: ['close', 'import-started', 'export-started', 'updateList'],
 
     metaInfo() {
         return {
@@ -56,42 +64,40 @@ Component.register('scop-platform-redirect-import-export-modal', {
             criteria.addSorting(Criteria.sort('label'));
 
             criteria.addFilter(
-                Criteria.equals('sourceEntity', 'scop_platform_redirecter_redirect'),
+                Criteria.equals('sourceEntity', this.sourceEntity),
             );
-            criteria.addQuery(Criteria.contains('type', 'import'));
+            criteria.addFilter(Criteria.equalsAny('type', [this.type, 'import-export']));
 
             return criteria;
         },
     },
 
     created() {
-        const criteria = new Criteria(1, 25);
-        criteria.addFilter(
-            Criteria.equals('technicalName', 'default_scop_platform_redirecter_redirect')
-        );
-        this.importExportProfileRepository.search(criteria).then((result) => {
-            if (result[0]) {
-                this.selectedProfileId = result[0].id;
-            }
-        })
+        this.loadDefaultProfile();
     },
 
     watch: {
-
+        type: 'loadDefaultProfile',
+        sourceEntity: 'loadDefaultProfile',
     },
 
     methods: {
-        async activityLoaded() {
-            const activityGrid = this.$refs.activityGrid;
-            if (activityGrid) {
-                const criteria = activityGrid.activityCriteria;
-                // Check if 'activityCriteria.filters' contains an filter with name 'profile.sourceEntity'
-                const hasFilter = criteria.filters.some(filter => filter.field === 'profile.sourceEntity');
+        async loadDefaultProfile() {
+            const { sourceEntity, type } = this;
+            this.selectedProfileId = null;
 
-                if (!hasFilter) {
-                    criteria.addFilter(Criteria.equals('profile.sourceEntity', 'scop_platform_redirecter_redirect'));
-                    await activityGrid.fetchActivities();
+            const criteria = new Criteria(1, 1);
+            criteria.addFilter(Criteria.equals('sourceEntity', sourceEntity));
+            criteria.addFilter(Criteria.equalsAny('type', [type, 'import-export']));
+            criteria.addFilter(Criteria.equals('technicalName', `default_${sourceEntity}`));
+
+            try {
+                const result = await this.importExportProfileRepository.search(criteria);
+                if (this.sourceEntity === sourceEntity && this.type === type && !this.selectedProfileId) {
+                    this.selectedProfileId = result[0]?.id ?? null;
                 }
+            } catch {
+                // The profile can still be selected manually if the default lookup fails.
             }
         },
         onClose() {
@@ -135,9 +141,12 @@ Component.register('scop-platform-redirect-import-export-modal', {
             });
         },
         async startExport() {
+            if (!this.selectedProfileId || this.processing) {
+                return;
+            }
             this.processing = true;
 
-            this.importExport.export(this.selectedProfileId, this.handleProgress, this.config).catch((error) => {
+            this.importExport.export(this.selectedProfileId, this.handleProgress, this.exportConfig).catch((error) => {
                 if (!error.response || !error.response.data || !error.response.data.errors) {
                     this.createNotificationError({
                         message: error.message,

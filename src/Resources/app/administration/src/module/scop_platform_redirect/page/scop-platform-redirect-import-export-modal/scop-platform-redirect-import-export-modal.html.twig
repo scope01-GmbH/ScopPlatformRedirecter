@@ -30,7 +30,8 @@
                 <div class="scop-platform-redirect-import-export-modal-activity">
                     <scop-platform-redirect-import-export-activity
                             ref="activityGrid"
-                            :type="type"></scop-platform-redirect-import-export-activity>
+                            :type="type"
+                            :source-entity="sourceEntity"></scop-platform-redirect-import-export-activity>
                 </div>
             {% endblock %}
             {% block scop_platform_redirect_import_modal_footer %}
@@ -38,7 +39,7 @@
                     <mt-button variant="secondary" @click="onClose" :disabled="processing">
                         {{ $t('scopplatformredirecter.list.' + type + 'Modal.cancel') }}
                     </mt-button>
-                    <mt-button variant="primary" :disabled="noFile && type !== 'export'" :isLoading="processing" @click="startProcess">
+                    <mt-button variant="primary" :disabled="processing || !selectedProfileId || (noFile && type !== 'export')" :isLoading="processing" @click="startProcess">
                         {{ $t('scopplatformredirecter.list.' + type + 'Modal.start') }}
                     </mt-button>
                 </template>

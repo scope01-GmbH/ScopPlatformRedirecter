@@ -43,10 +43,44 @@
                 <mt-button v-else variant="primary" @click="onClickIap">
                     {{ $t('scopplatformredirecter.list.iap') }} <mt-icon name="regular-shopping-cart" />
                 </mt-button>
+                <sw-button-group v-if="inAppActive" split-button>
+                    <mt-button
+                        variant="secondary"
+                        @click="onExportCsv('all')"
+                    >
+                        {{ $t('scopplatformredirecter.list.exportAllButton') }}
+                    </mt-button>
+                    <sw-context-button
+                        aria-label="scopplatformredirecter.notFound.exportCsvOptions"
+                    >
+                        <template #button>
+                            <mt-button
+                                variant="secondary"
+                                square
+                                tabindex="-1"
+                            >
+                                <mt-icon name="regular-chevron-down-xs" size="16" />
+                            </mt-button>
+                        </template>
+                        <sw-context-menu-item
+                            @click="onExportCsv('filtered')"
+                        >
+                            {{ $tc('scopplatformredirecter.notFound.exportCsvFilteredButton') }}
+                        </sw-context-menu-item>
+                    </sw-context-button>
+                </sw-button-group>
             {% endblock %}
         </template>
 
         <template #content>
+            <scop-platform-redirect-import-export-modal
+                v-if="inAppActive && exportConfig"
+                :show="true"
+                type="export"
+                source-entity="scop_platform_redirecter_404"
+                :export-config="exportConfig"
+                @close="onCloseExport"
+            />
             {% block scop_platform_redirect_not_found_list_iap_teaser %}
                 <mt-banner v-if="!inAppActive" variant="info" style="margin: 24px;">
                     {{ $tc('scopplatformredirecter.notFound.iapTeaser') }}
