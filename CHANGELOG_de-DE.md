@@ -188,3 +188,5 @@
 - Das eigene Standard-Exportprofil für das 404-Log wird bei der Installation oder beim Update automatisch angelegt.
 - In der Seitenleiste lässt sich das 404-Log nach Aufrufzahl, Datum des letzten Aufrufs, Verkaufskanälen und Status filtern. Die Filterauswahl wird pro Admin-Benutzer gespeichert und beim Neuladen wiederhergestellt.
 - Über „Aktualisieren“ in der Seitenleiste werden die Einträge und Statistikzähler neu geladen. Die aktiven Filter bleiben für die Liste gesetzt.
+- **Bugfix** – Wird ein zuvor deaktiviertes Produkt oder eine zuvor deaktivierte Variante gelöscht, erhält die passende automatische Weiterleitung den konfigurierten HTTP-Statuscode für gelöschte Produkte. Die Ziel-URL bleibt erhalten (Premium-Funktion).
+- **Bugfix** – Automatische Weiterleitungen berücksichtigen jetzt den wirksamen Aktivstatus einer Variante. Das gilt auch, wenn die Variante bei einer Mehrfachänderung den Status vom Hauptartikel übernimmt (Premium-Funktion).

@@ -43,7 +43,7 @@
 | 4.5.3   | All migrations are now repeatable and can be executed multiple times without errors                                                                                                                             | 6.7.4.0          |
 | 4.5.4   | Fixed plugin configuration values not being saved correctly; fixed update foreign-key error on MySQL 8.0.30+                                                                                                    | 6.7.4.0          |
 | 4.5.5   | Select the target SEO URL per language and sales channel when redirecting to a product or category (Premium feature) <br> Redirects can now be scheduled with an optional start and end date. (Premium feature) | 6.7.4.0          |
-| 4.5.6   | Added profile-based CSV export and persistent sidebar filters for the 404 log (Premium feature). | 6.7.4.0 |
+| 4.5.6   | Added profile-based CSV export and persistent sidebar filters for the 404 log.<br>Fixed automatic redirects for variant activation changes and for deleting previously deactivated products (Premium features). | 6.7.4.0 |
 > [!Important]\
 > Version 2.0.0 is no longer compatible with Shopware 6.4 or below!\
 > Version 3.0.0 is no longer compatible with Shopware 6.5 or below!\
@@ -66,6 +66,12 @@
 
 * manage redirects in the administration
 * redirect to the target in frontend
+
+## Automatic product redirects (Premium)
+
+Enable **Auto-Redirect for deactivated products** in the plugin configuration to create a 302 redirect when a product or variant becomes inactive. The plugin removes that automatic redirect when the product or variant becomes active again. The plugin uses the parent product's **Active** setting for variants that inherit it, including during bulk edits.
+
+When **Auto-Redirect for deleted products** is enabled, deleting a previously deactivated product or variant reuses the automatic redirect for the same source URL and sales channel. The plugin updates its HTTP status code to the one configured for deletion (301 by default) and keeps its target URL.
 
 ## 404 log (Premium)
 

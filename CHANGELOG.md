@@ -188,3 +188,5 @@
 - A dedicated default export profile for the 404 log is created automatically on installation or update.
 - The 404 log sidebar supports filtering by hit count, last hit date, sales channels, and statuses. Each admin user's filter selections are restored when the page is reloaded.
 - The sidebar's refresh action reloads the 404 entries and summary counts with the current filters still applied to the list.
+- **Bugfix** – Deleting a previously deactivated product or variant now updates its matching automatic redirect to the configured deletion status code and preserves the target URL (Premium feature).
+- **Bugfix** – Automatic redirects now respect the effective activation status of variants, including when they inherit it from the parent product during bulk edits (Premium feature).
