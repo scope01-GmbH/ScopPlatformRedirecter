@@ -109,25 +109,13 @@ parameters:
 			path: src/Subscriber/ProductDeactivationSubscriber.php
 
 		-
-			message: '#^Instanceof between Shopware\\Core\\Framework\\DataAbstractionLayer\\Write\\Command\\UpdateCommand and Shopware\\Core\\Framework\\DataAbstractionLayer\\Write\\Command\\ChangeSetAware will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Subscriber/ProductDeactivationSubscriber.php
-
-		-
 			message: '#^Call to an undefined method Shopware\\Core\\Framework\\DataAbstractionLayer\\Entity\:\:getLanguageId\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: src/Subscriber/ProductDeletionSubscriber.php
 
 		-
 			message: '#^Call to an undefined method Shopware\\Core\\Framework\\DataAbstractionLayer\\Entity\:\:getSalesChannelId\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Subscriber/ProductDeletionSubscriber.php
-
-		-
-			message: '#^Call to an undefined method Shopware\\Core\\Framework\\DataAbstractionLayer\\Entity\:\:getSeoPathInfo\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: src/Subscriber/ProductDeletionSubscriber.php
