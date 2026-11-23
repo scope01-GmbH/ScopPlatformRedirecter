@@ -2,7 +2,9 @@
 
 namespace Scop\PlatformRedirecter\Subscriber;
 
+use Scop\PlatformRedirecter\Redirect\Redirect;
 use Shopware\Core\Content\Product\ProductDefinition;
+use Shopware\Core\Content\Seo\SeoUrl\SeoUrlEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityDeleteEvent;
@@ -60,10 +62,16 @@ class ProductDeletionSubscriber implements EventSubscriberInterface
 
         $domainPrefixes = $this->getDomainPrefixes($context);
         $httpCode = $this->getHttpCode();
+        try {
+            $existingRedirectIds = $this->findAutomaticRedirectIds($allProductIds, $context);
+        } catch (\Throwable) {
+            // Without the lookup we cannot safely distinguish new redirects from existing ones.
+            return;
+        }
 
         // Register a callback that runs only after the delete succeeded.
-        $event->addSuccess(function () use ($seoUrls, $domainPrefixes, $httpCode, $context): void {
-            $this->createRedirectsForDeletedProducts($seoUrls, $domainPrefixes, $httpCode, $context);
+        $event->addSuccess(function () use ($seoUrls, $domainPrefixes, $httpCode, $existingRedirectIds, $context): void {
+            $this->writeRedirectsForDeletedProducts($seoUrls, $domainPrefixes, $httpCode, $existingRedirectIds, $context);
         });
     }
 
@@ -102,7 +110,7 @@ class ProductDeletionSubscriber implements EventSubscriberInterface
 
     /**
      * @param string[] $productIds
-     * @return array<int, array{seoPathInfo: string, salesChannelId: ?string, languageId: ?string}>
+     * @return array<int, array{productId: string, seoPathInfo: string, salesChannelId: ?string, languageId: ?string}>
      */
     private function getSeoUrlsForProducts(array $productIds, Context $context): array
     {
@@ -118,8 +126,13 @@ class ProductDeletionSubscriber implements EventSubscriberInterface
         $seoUrls = $this->seoUrlRepository->search($criteria, $context);
 
         $result = [];
-        foreach ($seoUrls as $seoUrl) {
+        foreach ($seoUrls->getEntities() as $seoUrl) {
+            if (!$seoUrl instanceof SeoUrlEntity) {
+                continue;
+            }
+
             $result[] = [
+                'productId' => $seoUrl->getForeignKey(),
                 'seoPathInfo' => $seoUrl->getSeoPathInfo(),
                 'salesChannelId' => $seoUrl->getSalesChannelId(),
                 'languageId' => $seoUrl->getLanguageId(),
@@ -130,13 +143,41 @@ class ProductDeletionSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param array<int, array{seoPathInfo: string, salesChannelId: ?string, languageId: ?string}> $seoUrls
-     * @param array<string, string> $domainPrefixes
+     * @param string[] $productIds
+     * @return array<string, string>
      */
-    private function createRedirectsForDeletedProducts(
+    private function findAutomaticRedirectIds(array $productIds, Context $context): array
+    {
+        $criteria = (new Criteria())->addFilter(new EqualsAnyFilter('productId', $productIds));
+        $ids = [];
+
+        foreach ($this->redirectRepository->search($criteria, $context)->getEntities() as $redirect) {
+            if (!$redirect instanceof Redirect || $redirect->getProductId() === null) {
+                continue;
+            }
+
+            $key = $this->redirectKey($redirect->getProductId(), $redirect->getSalesChannelId(), $redirect->getSourceURL());
+            $ids[$key] ??= $redirect->getId();
+        }
+
+        return $ids;
+    }
+
+    private function redirectKey(string $productId, ?string $salesChannelId, string $sourceUrl): string
+    {
+        return $productId . ':' . $salesChannelId . ':' . $sourceUrl;
+    }
+
+    /**
+     * @param array<int, array{productId: string, seoPathInfo: string, salesChannelId: ?string, languageId: ?string}> $seoUrls
+     * @param array<string, string> $domainPrefixes
+     * @param array<string, string> $existingRedirectIds
+     */
+    private function writeRedirectsForDeletedProducts(
         array $seoUrls,
         array $domainPrefixes,
         int $httpCode,
+        array $existingRedirectIds,
         Context $context,
     ): void {
         $redirectData = [];
@@ -151,8 +192,18 @@ class ProductDeletionSubscriber implements EventSubscriberInterface
             }
 
             $sourceUrl = \rtrim($prefix, '/') . '/' . $seoPath;
+            $key = $this->redirectKey($seoUrl['productId'], $salesChannelId, $sourceUrl);
 
-            $redirectData[] = [
+            if (isset($existingRedirectIds[$key])) {
+                $redirectData[$key] = [
+                    'id' => $existingRedirectIds[$key],
+                    'httpCode' => $httpCode,
+                    'productId' => null,
+                ];
+                continue;
+            }
+
+            $redirectData[$key] ??= [
                 'id' => Uuid::randomHex(),
                 'sourceURL' => $sourceUrl,
                 'targetURL' => '/',
@@ -167,7 +218,7 @@ class ProductDeletionSubscriber implements EventSubscriberInterface
         }
 
         try {
-            $this->redirectRepository->upsert($redirectData, $context);
+            $this->redirectRepository->upsert(array_values($redirectData), $context);
         } catch (\Throwable) {
             // Auto-redirect on delete must never block the delete operation.
         }
