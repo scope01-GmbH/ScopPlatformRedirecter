@@ -4,6 +4,7 @@ namespace Scop\PlatformRedirecter\Test\RedirectTests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Scop\PlatformRedirecter\Subscriber\ProductDeactivationSubscriber;
 use Shopware\Core\Content\Product\ProductCollection;
@@ -36,7 +37,7 @@ final class ProductDeactivationSubscriberTest extends TestCase
     private EntityRepository&MockObject $products;
     private EntityRepository&MockObject $redirects;
     private EntityRepository&MockObject $seoUrls;
-    private EntityRepository $domains;
+    private EntityRepository&Stub $domains;
     private ProductDeactivationSubscriber $subscriber;
 
     protected function setUp(): void
